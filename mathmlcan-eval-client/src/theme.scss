@@ -1,0 +1,72 @@
+@import '~@angular/material/theming';
+@import '~@covalent/core/theming/all-theme';
+@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+@import '~@covalent/highlight/highlight-theme';
+// @import '~@covalent/markdown/markdown-theme';
+// @import '~@covalent/highlight/highlight-theme';
+// Plus imports for other components in your app.
+
+// Define a custom typography config that overrides the font-family
+// or any typography level.
+
+
+$mathmlcan-eval-palette: (
+  50 : #fff9f0,
+  100 : #fff0d9,
+  200 : #ffe6bf,
+  300 : #ffdba5,
+  400 : #ffd492,
+  500 : #ffcc7f,
+  600 : #ffc777,
+  700 : #ffc06c,
+  800 : #ffb962,
+  900 : #ffad4f,
+  A100 : #ffffff,
+  A200 : #ffffff,
+  A400 : #fffaf5,
+  A700 : #ffeedb,
+  contrast: (
+    50 : #000000,
+    100 : #000000,
+    200 : #000000,
+    300 : #000000,
+    400 : #000000,
+    500 : #000000,
+    600 : #000000,
+    700 : #000000,
+    800 : #000000,
+    900 : #000000,
+    A100 : #000000,
+    A200 : #000000,
+    A400 : #000000,
+    A700 : #000000,
+  )
+);
+
+
+//@include mat-core($typography); // $typography is an **optional** argument for the mat-core
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue.
+$primary: mat-palette($mathmlcan-eval-palette, 700);
+$accent:  mat-palette($mathmlcan-eval-palette, 800, A100, A400);
+
+// The warn palette is optional (defaults to red).
+$warn:    mat-palette($mat-red, 600);
+
+// Create the theme object (a Sass map containing all of the palettes).
+$theme: mat-light-theme($primary, $accent, $warn);
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include angular-material-theme($theme);
+@include covalent-theme($theme); // $typography is an **optional** argument for the covalent-theme
+//@include covalent-theme($theme, $typography); // $typography is an **optional** argument for the covalent-theme
+// @include covalent-markdown-theme($theme);
+// @include covalent-highlight-theme();
+
+
+
+@include covalent-highlight-theme();

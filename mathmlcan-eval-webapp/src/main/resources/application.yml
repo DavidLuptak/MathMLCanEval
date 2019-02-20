@@ -1,0 +1,49 @@
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    org.springframework.transaction.interceptor: TRACE
+    cz.muni.fi.mir.mathmlcaneval: TRACE
+    com.zaxxer.hikari: trace
+
+server:
+  compression:
+    enabled: true
+  http2:
+    enabled: true
+spring:
+  application:
+    name: MathMlCanEval
+  data:
+    rest:
+      base-path: /api
+    web:
+      pageable:
+        max-page-size: 50
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate.dialect: org.hibernate.dialect.PostgreSQL95Dialect
+      hibernate.connection.provider_disables_autocommit: true
+  mvc:
+    favicon:
+      enabled: false
+    throw-exception-if-no-handler-found: true
+  datasource:
+    hikari:
+      auto-commit: false
+    username: mathml
+    password: mathml
+    url: jdbc:postgresql://localhost:5432/mathmleval
+    driver-class-name: org.postgresql.Driver
+  liquibase:
+    change-log: classpath:/db-changelog.xml
+    drop-first: true
+    contexts: test
+
+application:
+  oauth:
+    keyPass: pEfIlNEvJd51
+    tokenValidity: 3600

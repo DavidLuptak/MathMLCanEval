@@ -1,0 +1,28 @@
+<h1 mat-dialog-title>{{translations.configs.create}}</h1>
+<div mat-dialog-content>
+  <div>
+    <mat-form-field>
+      <input matInput placeholder="Name">
+    </mat-form-field>
+  </div>
+  <div>
+    <mat-form-field>
+      <textarea matInput placeholder="Note"></textarea>
+    </mat-form-field>
+  </div>
+  <mat-tab-group>
+    <mat-tab label="Dropzone">
+      <div class="dropzone" [ngxFileDropzone]="readMode" (fileDrop)="processFile($event)">Drop a file in this zone.</div>
+    </mat-tab>
+    <mat-tab label="Copy paste">
+      <mat-form-field *ngIf="newResource.content">
+        <textarea matInput placeholder="Content">{{newResource.content}}</textarea>
+      </mat-form-field>
+    </mat-tab>
+  </mat-tab-group>
+
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="cancel()">{{translations.generic.cancel}}</button>
+  <button mat-button (click)="save()" cdkFocusInitial>{{translations.generic.save}}</button>
+</div>

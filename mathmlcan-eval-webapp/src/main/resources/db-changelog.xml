@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.6.xsd">
+
+  <changeSet id="2018.02.18.01" author="dominik.szalai">
+
+    <createSequence sequenceName="hibernate_sequence" incrementBy="1" startValue="300"/>
+
+    <createTable tableName="roles">
+      <column name="id" type="bigint">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="pk_roles"/>
+      </column>
+      <column name="role_name" type="varchar(255)">
+        <constraints nullable="false" unique="true" uniqueConstraintName="uq_roles_name"/>
+      </column>
+    </createTable>
+
+    <createTable tableName="revisions">
+      <column name="id" type="bigint">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="pk_revisions"/>
+      </column>
+      <column name="sha1" type="varchar(255)">
+        <constraints nullable="false" unique="true" uniqueConstraintName="uq_revisions_sha"/>
+      </column>
+      <column name="commit_time" type="timestamp">
+        <constraints nullable="false"/>
+      </column>
+      <column name="sync_time" type="timestamp">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+
+    <createTable tableName="labels">
+      <column name="id" type="bigint">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="pk_labels"/>
+      </column>
+      <column name="label_value" type="varchar(255)">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+
+    <createTable tableName="configurations">
+      <column name="id" type="bigint">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="pk_configurations"/>
+      </column>
+      <column name="content" type="text">
+        <constraints nullable="false"/>
+      </column>
+      <column name="note" type="varchar(512)"/>
+      <column name="name" type="varchar(64)">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+
+    <createTable tableName="users">
+      <column name="id" type="bigint">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="pk_users"/>
+      </column>
+      <column name="username" type="varchar(255)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="password" type="varchar(60)">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+
+
+    <createTable tableName="users_roles">
+      <column name="user" type="bigint">
+        <constraints nullable="false"/>
+      </column>
+      <column name="role" type="bigint">
+        <constraints nullable="false"/>
+      </column>
+    </createTable>
+
+    <addPrimaryKey tableName="users_roles" columnNames="user,role"/>
+
+    <addForeignKeyConstraint
+      baseTableName="users_roles"
+      baseColumnNames="user"
+      constraintName="fk_user_roles_user"
+      referencedTableName="users"
+      referencedColumnNames="id"
+    />
+
+    <addForeignKeyConstraint
+      baseTableName="users_roles"
+      baseColumnNames="role"
+      constraintName="fk_user_roles_role"
+      referencedTableName="roles"
+      referencedColumnNames="id"
+    />
+  </changeSet>
+
+  <changeSet id="2018.02.18.02" author="dominik.szalai">
+    <createTable tableName="oauth_access_token">
+      <column name="authentication_id" type="VARCHAR(256)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="token_id" type="VARCHAR(256)"/>
+      <column name="token" type="blob"/>
+      <column name="user_name" type="VARCHAR(256)"/>
+      <column name="client_id" type="VARCHAR(256)"/>
+      <column name="authentication" type="blob"/>
+      <column name="refresh_token" type="VARCHAR(256)"/>
+    </createTable>
+
+    <createTable tableName="oauth_approvals">
+      <column name="userid" type="VARCHAR(256)"/>
+      <column name="clientid" type="VARCHAR(256)"/>
+      <column name="scope" type="VARCHAR(256)"/>
+      <column name="status" type="VARCHAR(10)"/>
+      <column name="expiresat" type="TIMESTAMP"/>
+      <column name="lastmodifiedat" type="TIMESTAMP"/>
+    </createTable>
+
+    <createTable tableName="oauth_client_details">
+      <column name="client_id" type="VARCHAR(256)">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="resource_ids" type="VARCHAR(256)"/>
+      <column name="client_secret" type="VARCHAR(256)"/>
+      <column name="scope" type="VARCHAR(256)"/>
+      <column name="authorized_grant_types" type="VARCHAR(256)"/>
+      <column name="web_server_redirect_uri" type="VARCHAR(256)"/>
+      <column name="authorities" type="VARCHAR(256)"/>
+      <column name="access_token_validity" type="INT"/>
+      <column name="refresh_token_validity" type="INT"/>
+      <column name="additional_information" type="VARCHAR(4000)"/>
+      <column name="autoapprove" type="VARCHAR(256)"/>
+    </createTable>
+
+    <createTable tableName="oauth_client_token">
+      <column name="token_id" type="VARCHAR(256)"/>
+      <column name="token" type="blob"/>
+      <column name="authentication_id" type="VARCHAR(256)">
+        <constraints nullable="false" primaryKey="true"/>
+      </column>
+      <column name="user_name" type="VARCHAR(256)"/>
+      <column name="client_id" type="VARCHAR(256)"/>
+    </createTable>
+
+    <createTable tableName="oauth_code">
+      <column name="code" type="VARCHAR(256)"/>
+      <column name="authentication" type="blob"/>
+    </createTable>
+
+    <createTable tableName="oauth_refresh_token">
+      <column name="token_id" type="VARCHAR(256)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="token" type="blob"/>
+      <column name="authentication" type="blob"/>
+    </createTable>
+  </changeSet>
+  
+  <changeSet id="2018.02.18.03" author="dominik.szalai">
+    <insert tableName="roles">
+      <column name="id" type="bigint" value="1" />
+      <column name="role_name" type="varchar(255)" value="admin" />
+    </insert>
+
+    <insert tableName="roles">
+      <column name="id" type="bigint" value="2" />
+      <column name="role_name" type="varchar(255)" value="mod" />
+    </insert>
+
+    <insert tableName="roles">
+      <column name="id" type="bigint" value="3" />
+      <column name="role_name" type="varchar(255)" value="user" />
+    </insert>
+  </changeSet>
+
+  <changeSet id="2018.02.18.04" author="dominik.szalai" context="test">
+    <insert tableName="oauth_client_details">
+      <column name="client_id" type="varchar(255)" value="test" />
+      <column name="resource_ids" type="varchar(255)" value="mathmleval" />
+      <column name="client_secret" type="varchar(255)" value="$2a$10$XNQrm.QKAeox2wR1oCCBpOhprAuf/AV0uxoqTBM0LBhCAq9lAHswS" />
+      <column name="scope" type="varchar(255)" value="read,write" />
+      <column name="access_token_validity" type="int" value="3600" />
+      <column name="authorized_grant_types" type="varchar(255)" value="password" />
+    </insert>
+  </changeSet>
+  
+  <changeSet id="2018.02.18.05" author="dominik.szalai" context="test">
+    <sqlFile path="test-data/configurations.sql" />
+  </changeSet>
+</databaseChangeLog>

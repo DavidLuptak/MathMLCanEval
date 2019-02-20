@@ -1,0 +1,9 @@
+.dropzone {
+  align-items: center;
+  background:  #fff0d9; /* todo match with sass **/
+  border: dashed 1px grey;
+  display: flex;
+  justify-content: center;
+  height: 350px;
+  width: 500px;
+}
