@@ -1,4 +1,4 @@
-insert into configurations (id, content, note, name, visible_to_public, "user") values (1, '<?xml version="1.0" encoding="UTF-8"?>
+insert into configurations (id, content, note, name, visible_to_public, user_id) values (1, '<?xml version="1.0" encoding="UTF-8"?>
 <config>
   <module name="ElementMinimizer">
     <property name="keepAttributes.mfrac">linethickness=0 linethickness=1</property>

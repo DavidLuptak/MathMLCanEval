@@ -43,6 +43,6 @@
   </mat-card>
 </div>
 
-<a mat-fab color="accent" matTooltip="{{translations.configs.create}}" matTooltipPosition="before" class="mat-fab-bottom-right z-3 fixed fab-pad" (click)="newConfigModal()">
+<a mat-fab color="accent" matTooltip="{{translations.configs.create}}" matTooltipPosition="before" class="mat-fab-bottom-right z-3 fixed fab-pad" (click)="newConfigModal()" *authenticated>
   <mat-icon>add</mat-icon>
 </a>

@@ -35,6 +35,6 @@ public class InputConfiguration extends BaseEntity {
   private String name;
   private Boolean visibleToPublic;
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "user")
+  @JoinColumn(name = "user_id")
   private User user;
 }

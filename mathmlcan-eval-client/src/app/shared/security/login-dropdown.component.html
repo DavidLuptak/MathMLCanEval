@@ -1,0 +1,18 @@
+<ng-container *ngIf="securityService.isAuthenticated(); else loggedOut">
+
+  <button mat-icon-button><mat-icon>apps</mat-icon></button>
+  <button mat-icon-button><mat-icon>notifications</mat-icon></button>
+  <button mat-icon-button (click)="displayLoginModal()"><mat-icon>account_circle</mat-icon></button>
+  <button mat-button [matMenuTriggerFor]="menu">Team Name <mat-icon>arrow_drop_down</mat-icon></button>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item>Set a status</button>
+    <button mat-menu-item>Profile &amp; account</button>
+    <button mat-menu-item>Preferences</button>
+    <button mat-menu-item>Set yourself to away</button>
+    <button mat-menu-item>Help &amp; feedback</button>
+  </mat-menu>
+</ng-container>
+
+<ng-template #loggedOut>
+  <button mat-icon-button (click)="displayLoginModal()"><mat-icon>account_circle</mat-icon></button>
+</ng-template>

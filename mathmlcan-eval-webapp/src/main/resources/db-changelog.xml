@@ -102,10 +102,10 @@
         <constraints nullable="false"/>
       </column>
       <column name="token_id" type="VARCHAR(256)"/>
-      <column name="token" type="blob"/>
+      <column name="token" type="bytea"/>
       <column name="user_name" type="VARCHAR(256)"/>
       <column name="client_id" type="VARCHAR(256)"/>
-      <column name="authentication" type="blob"/>
+      <column name="authentication" type="bytea"/>
       <column name="refresh_token" type="VARCHAR(256)"/>
     </createTable>
 
@@ -136,7 +136,7 @@
 
     <createTable tableName="oauth_client_token">
       <column name="token_id" type="VARCHAR(256)"/>
-      <column name="token" type="blob"/>
+      <column name="token" type="bytea"/>
       <column name="authentication_id" type="VARCHAR(256)">
         <constraints nullable="false" primaryKey="true"/>
       </column>
@@ -146,15 +146,15 @@
 
     <createTable tableName="oauth_code">
       <column name="code" type="VARCHAR(256)"/>
-      <column name="authentication" type="blob"/>
+      <column name="authentication" type="bytea"/>
     </createTable>
 
     <createTable tableName="oauth_refresh_token">
       <column name="token_id" type="VARCHAR(256)">
         <constraints nullable="false"/>
       </column>
-      <column name="token" type="blob"/>
-      <column name="authentication" type="blob"/>
+      <column name="token" type="bytea"/>
+      <column name="authentication" type="bytea"/>
     </createTable>
   </changeSet>
   
@@ -211,14 +211,14 @@
 
     <addColumn tableName="configurations">
       <column name="visible_to_public" type="boolean" />
-      <column name="user" type="bigint">
+      <column name="user_id" type="bigint">
         <constraints nullable="false" />
       </column>
     </addColumn>
 
     <addForeignKeyConstraint
       baseTableName="configurations"
-      baseColumnNames="user"
+      baseColumnNames="user_id"
       constraintName="fk_config_user"
       referencedTableName="users"
       referencedColumnNames="id"

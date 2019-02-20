@@ -44,5 +44,10 @@ export class ConfigurationListComponent extends TableComponent<ConfigurationResp
     const ref = this.dialog.open(NewConfigurationComponent, {
       minWidth: 550
     });
+
+    ref.afterClosed()
+    .subscribe((conf: ConfigurationResponse) => {
+      this.pushRow(conf);
+    });
   }
 }

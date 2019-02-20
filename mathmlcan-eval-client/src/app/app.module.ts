@@ -7,21 +7,37 @@ import {GenericModule} from './shared/generic.module';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {ConfigurationModule} from './parts/configurations/configuration.module';
 import {DashboardModule} from './parts/dashboard/dashboard.module';
+import {HTTP_INTERCEPTORS} from '@angular/common/http';
+import {AuthInterceptor} from './shared/security/auth.interceptor';
+import {SecurityService} from './shared/security/security.service';
+import {WebStorageModule} from 'ngx-store';
+import {LoginModal} from './shared/security/login.modal';
+import {ReactiveFormsModule} from '@angular/forms';
+import {LoginDropdownComponent} from './shared/security/login-dropdown.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    LoginModal,
+    LoginDropdownComponent
   ],
   imports: [
     BrowserAnimationsModule,
     BrowserModule,
     AppRoutingModule,
     GenericModule,
+    ReactiveFormsModule,
     ConfigurationModule,
-    DashboardModule
+    DashboardModule,
+    WebStorageModule
   ],
-  providers: [],
-  bootstrap: [AppComponent]
+  providers: [[{
+    provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true
+  }],
+    SecurityService
+  ],
+  bootstrap: [AppComponent],
+  entryComponents: [LoginModal]
 })
 export class AppModule {
 }

@@ -1,0 +1,33 @@
+<h1 mat-dialog-title>Please log in</h1>
+<div mat-dialog-content>
+  <form [formGroup]="form" (submit)="login($event)">
+    <div layout="row">
+      <mat-form-field flex>
+        <input matInput
+               id="username"
+               formControlName="username"
+               placeholder="usrn">
+      </mat-form-field>
+    </div>
+
+    <div layout="row">
+      <mat-form-field flex>
+        <input matInput
+               id="password"
+               formControlName="password"
+               placeholder="pass"
+               [type]="hide ? 'password' : 'text'">
+        <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility'
+          : 'visibility_off'}}</mat-icon>
+      </mat-form-field>
+    </div>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button type="button"
+          mat-raised-button
+          color="primary"
+          (click)="handleLogin()">login</button>
+</div>
+
+

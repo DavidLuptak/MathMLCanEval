@@ -35,7 +35,7 @@ export class SecurityService {
 
     return this.httpClient
     .post<OauthModel>(`${API_URL}/api/oauth/token`, body, OAUTH_HEADERS)
-    .pipe(map((res: any) => this.convert(res)),
+    .pipe(map((res: any) => this.convert(res.body)),
       map((res: OauthModel) => {
         this.localStorageService.set(TOKEN_NAME, res.accessToken);
 
@@ -58,7 +58,7 @@ export class SecurityService {
   }
 
   isTokenExpired(): boolean {
-    return this.jwtHelper.isTokenExpired(this.getToken());
+    return !this.jwtHelper.isTokenExpired(this.getToken());
   }
 
   isAuthenticated(): boolean {
@@ -70,6 +70,4 @@ export class SecurityService {
       accessToken: json.access_token
     } as OauthModel;
   }
-
-
 }

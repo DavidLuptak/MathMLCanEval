@@ -42,6 +42,7 @@ import {
   CovalentMessageModule
 } from '@covalent/core';
 import {HttpClientModule} from '@angular/common/http';
+import {AuthenticatedDirective} from './security/authenticated.directive';
 
 @NgModule({
   imports: [
@@ -85,7 +86,7 @@ import {HttpClientModule} from '@angular/common/http';
     CovalentMenuModule,
     CovalentDataTableModule,
     CovalentMessageModule,
-    HttpClientModule
+    HttpClientModule,
   ],
   exports: [
     /** Material Modules */
@@ -128,8 +129,11 @@ import {HttpClientModule} from '@angular/common/http';
     CovalentMenuModule,
     CovalentDataTableModule,
     CovalentMessageModule,
-    HttpClientModule
-  ]
+    HttpClientModule,
+    /** */
+    AuthenticatedDirective
+  ],
+  declarations: [AuthenticatedDirective]
 })
 export class GenericModule {
 

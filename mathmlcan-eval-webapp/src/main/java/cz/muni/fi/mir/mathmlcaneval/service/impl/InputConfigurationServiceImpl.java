@@ -1,9 +1,11 @@
 package cz.muni.fi.mir.mathmlcaneval.service.impl;
 
+import cz.muni.fi.mir.mathmlcaneval.domain.User;
 import cz.muni.fi.mir.mathmlcaneval.mappers.ConfigurationMapper;
 import cz.muni.fi.mir.mathmlcaneval.repository.InputConfigurationRepository;
 import cz.muni.fi.mir.mathmlcaneval.requests.CreateConfigurationRequest;
 import cz.muni.fi.mir.mathmlcaneval.responses.ConfigurationResponse;
+import cz.muni.fi.mir.mathmlcaneval.security.SecurityService;
 import cz.muni.fi.mir.mathmlcaneval.service.InputConfigurationService;
 import cz.muni.fi.mir.mathmlcaneval.support.ReadOnly;
 import java.util.List;
@@ -16,6 +18,7 @@ import org.springframework.stereotype.Service;
 public class InputConfigurationServiceImpl implements InputConfigurationService {
   private final ConfigurationMapper configurationMapper;
   private final InputConfigurationRepository inputConfigurationRepository;
+  private final SecurityService securityService;
 
   @ReadOnly
   @Override
@@ -31,7 +34,10 @@ public class InputConfigurationServiceImpl implements InputConfigurationService 
 
   @Override
   public ConfigurationResponse save(CreateConfigurationRequest create) {
-    final var saved = inputConfigurationRepository.save(configurationMapper.map(create));
+    final var preSave = configurationMapper.map(create);
+    preSave.setUser(new User(securityService.getCurrentUserId()));
+
+    final var saved = inputConfigurationRepository.save(preSave);
 
     return configurationMapper.map(saved);
   }

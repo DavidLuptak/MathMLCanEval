@@ -23,12 +23,14 @@ import javax.persistence.JoinTable;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Entity
 @Table(name = "users")
+@NoArgsConstructor
 public class User extends BaseEntity {
 
   private static final long serialVersionUID = -2938764962736840966L;
@@ -42,4 +44,8 @@ public class User extends BaseEntity {
     joinColumns = @JoinColumn(name = "user", referencedColumnName = "id"),
     inverseJoinColumns = @JoinColumn(name = "role", referencedColumnName = "id"))
   private Set<UserRole> roles = new HashSet<>();
+
+  public User(Long id) {
+    super.id = id;
+  }
 }
