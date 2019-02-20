@@ -4,7 +4,7 @@ import {ConfigurationNew} from '../../models/configuration.new';
 import {MatDialogRef, MatTabGroup} from '@angular/material';
 import {ConfigurationService} from './configuration.service';
 import {NewResourceComponent} from '../../shared/new-resource.component';
-import { ReadFile, ReadMode } from 'ngx-file-helpers';
+import {ReadFile, ReadMode} from 'ngx-file-helpers';
 
 @Component({
   selector: 'new-configuration-component',
@@ -25,7 +25,7 @@ export class NewConfigurationComponent extends NewResourceComponent<Configuratio
   }
 
   processFile(file: ReadFile): void {
-    this.newResource.content = atob(file.content.substring(file.content.indexOf('base64') +7));
+    this.newResource.content = atob(file.content.substring(file.content.indexOf('base64') + 7));
 
     this.tabGroup.selectedIndex = 1;
   }

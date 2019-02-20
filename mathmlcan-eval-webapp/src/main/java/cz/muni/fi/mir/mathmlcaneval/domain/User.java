@@ -35,6 +35,7 @@ public class User extends BaseEntity {
 
   private String username;
   private String password;
+  private Boolean enabled;
 
   @OneToMany
   @JoinTable(name = "users_roles",

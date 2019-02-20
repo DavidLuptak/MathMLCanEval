@@ -23,7 +23,7 @@ import {
   MatNativeDateModule,
   MatSliderModule,
   MatAutocompleteModule,
-  MatTableModule
+  MatTableModule, MatCheckboxModule
 } from '@angular/material';
 
 import {
@@ -70,6 +70,7 @@ import {HttpClientModule} from '@angular/common/http';
     MatSliderModule,
     MatAutocompleteModule,
     MatTableModule,
+    MatCheckboxModule,
     /** Covalent Modules */
     CovalentCommonModule,
     CovalentLayoutModule,
@@ -112,6 +113,7 @@ import {HttpClientModule} from '@angular/common/http';
     MatSliderModule,
     MatAutocompleteModule,
     MatTableModule,
+    MatCheckboxModule,
     /** Covalent Modules */
     CovalentCommonModule,
     CovalentLayoutModule,

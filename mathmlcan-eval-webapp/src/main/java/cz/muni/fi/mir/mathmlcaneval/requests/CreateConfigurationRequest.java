@@ -11,4 +11,5 @@ public class CreateConfigurationRequest {
   @NotEmpty
   private String content;
   private String note;
+  private Boolean visibleToPublic;
 }

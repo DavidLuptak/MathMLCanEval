@@ -41,6 +41,8 @@ export class ConfigurationListComponent extends TableComponent<ConfigurationResp
   }
 
   newConfigModal() : void {
-    const ref = this.dialog.open(NewConfigurationComponent);
+    const ref = this.dialog.open(NewConfigurationComponent, {
+      minWidth: 550
+    });
   }
 }

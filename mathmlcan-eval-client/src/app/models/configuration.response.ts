@@ -5,4 +5,6 @@ export class ConfigurationResponse extends Resource {
   content: string;
   note: string;
   name: string;
+  visibleToPublic: boolean;
+  userId: number;
 }

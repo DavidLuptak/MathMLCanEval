@@ -16,6 +16,9 @@
 package cz.muni.fi.mir.mathmlcaneval.domain;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,4 +33,8 @@ public class InputConfiguration extends BaseEntity {
   private String content;
   private String note;
   private String name;
+  private Boolean visibleToPublic;
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "user")
+  private User user;
 }

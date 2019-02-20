@@ -9,4 +9,6 @@ public class ConfigurationResponse {
   private String content;
   private String note;
   private String name;
+  private Boolean visibleToPublic;
+  private Long userId;
 }

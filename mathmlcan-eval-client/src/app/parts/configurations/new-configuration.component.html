@@ -1,25 +1,21 @@
 <h1 mat-dialog-title>{{translations.configs.create}}</h1>
 <div mat-dialog-content>
   <div>
-    <mat-form-field>
-      <input matInput placeholder="Name">
+    <mat-form-field class="full-width">
+      <input matInput placeholder="Name" [(ngModel)]="newResource.name">
     </mat-form-field>
   </div>
   <div>
-    <mat-form-field>
-      <textarea matInput placeholder="Note"></textarea>
+    <mat-form-field class="full-width">
+      <textarea matInput placeholder="Note" [(ngModel)]="newResource.note"></textarea>
     </mat-form-field>
   </div>
-  <mat-tab-group>
-    <mat-tab label="Dropzone">
-      <div class="dropzone" [ngxFileDropzone]="readMode" (fileDrop)="processFile($event)">Drop a file in this zone.</div>
-    </mat-tab>
-    <mat-tab label="Copy paste">
-      <mat-form-field *ngIf="newResource.content">
-        <textarea matInput placeholder="Content">{{newResource.content}}</textarea>
-      </mat-form-field>
-    </mat-tab>
-  </mat-tab-group>
+  <div class="full-width">
+    <mat-checkbox class="example-margin" [(ngModel)]="newResource.visibleToPublic">Visible to public</mat-checkbox>
+  </div>
+  <mat-form-field class="full-width">
+    <textarea matInput placeholder="Content" [(ngModel)]="newResource.content"></textarea>
+  </mat-form-field>
 
 </div>
 <div mat-dialog-actions>

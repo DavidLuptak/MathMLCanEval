@@ -185,8 +185,47 @@
       <column name="authorized_grant_types" type="varchar(255)" value="password" />
     </insert>
   </changeSet>
+
   
-  <changeSet id="2018.02.18.05" author="dominik.szalai" context="test">
+  <changeSet id="2018.02.20.01" author="dominik.szalai">
+    <addColumn tableName="users">
+      <column name="enabled" type="boolean" defaultValueComputed="true" />
+    </addColumn>
+    <!-- pass is YI0WL8qUF8cw-->
+    <insert tableName="users">
+      <column name="id" type="bigint" value="1" />
+      <column name="username" type="varchar(255)" value="system" />
+      <column name="password" type="varchar(60)" value="$2a$10$EfKe6KAXDaW9m46k31J5w.hc925AZXAYbx8kjj0CtSuCZmQx.oViq" />
+      <column name="enabled" type="boolean" value="true" />
+    </insert>
+
+    <insert tableName="users_roles">
+      <column name="user" value="1" />
+      <column name="role" value="1" />
+    </insert>
+
+    <insert tableName="users_roles">
+      <column name="user" value="1" />
+      <column name="role" value="2" />
+    </insert>
+
+    <addColumn tableName="configurations">
+      <column name="visible_to_public" type="boolean" />
+      <column name="user" type="bigint">
+        <constraints nullable="false" />
+      </column>
+    </addColumn>
+
+    <addForeignKeyConstraint
+      baseTableName="configurations"
+      baseColumnNames="user"
+      constraintName="fk_config_user"
+      referencedTableName="users"
+      referencedColumnNames="id"
+    />
+  </changeSet>
+
+  <changeSet id="2018.02.20.02" author="dominik.szalai" context="test">
     <sqlFile path="test-data/configurations.sql" />
   </changeSet>
 </databaseChangeLog>

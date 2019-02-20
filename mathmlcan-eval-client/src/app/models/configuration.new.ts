@@ -4,4 +4,5 @@ export class ConfigurationNew extends Resource {
   content: string;
   note: string;
   name: string;
+  visibleToPublic: boolean;
 }

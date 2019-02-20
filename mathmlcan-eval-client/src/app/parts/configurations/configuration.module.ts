@@ -4,11 +4,10 @@ import {GenericModule} from '../../shared/generic.module';
 import {ConfigurationService} from './configuration.service';
 import {CovalentHighlightModule} from '@covalent/highlight';
 import {NewConfigurationComponent} from './new-configuration.component';
-import { FileHelpersModule } from 'ngx-file-helpers';
 
 @NgModule({
   declarations: [ConfigurationListComponent, NewConfigurationComponent],
-  imports: [GenericModule, CovalentHighlightModule, FileHelpersModule ],
+  imports: [GenericModule, CovalentHighlightModule],
   providers: [ConfigurationService],
   entryComponents: [NewConfigurationComponent]
 })
