@@ -1,4 +1,4 @@
-import {Directive, ElementRef, Input, OnInit, TemplateRef, ViewContainerRef} from '@angular/core';
+import {Directive, ElementRef, OnInit, TemplateRef, ViewContainerRef} from '@angular/core';
 import {SecurityService} from './security.service';
 
 @Directive({
@@ -13,8 +13,14 @@ export class AuthenticatedDirective implements OnInit {
   }
 
   ngOnInit(): void {
-    if(this.securityService.isAuthenticated()) {
-      console.log('authenticated');
+    this.refreshView();
+
+    this.securityService.userLoggedIn()
+    .subscribe(() => this.refreshView());
+  }
+
+  refreshView(): void {
+    if (this.securityService.isAuthenticated()) {
       this.viewContainer.createEmbeddedView(this.templateRef);
     } else {
       this.viewContainer.clear();

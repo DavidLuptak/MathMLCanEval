@@ -228,4 +228,15 @@
   <changeSet id="2018.02.20.02" author="dominik.szalai" context="test">
     <sqlFile path="test-data/configurations.sql" />
   </changeSet>
+
+  <changeSet id="2018.02.21.01" author="dominik.szalai">
+    <addColumn tableName="revisions">
+      <column name="name" type="varchar(128)"/>
+      <column name="note" type="text" />
+    </addColumn>
+    
+    <sqlFile path="default-data/quartz.sql" />
+  </changeSet>
+  
+  
 </databaseChangeLog>

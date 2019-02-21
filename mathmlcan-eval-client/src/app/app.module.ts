@@ -14,6 +14,7 @@ import {WebStorageModule} from 'ngx-store';
 import {LoginModal} from './shared/security/login.modal';
 import {ReactiveFormsModule} from '@angular/forms';
 import {LoginDropdownComponent} from './shared/security/login-dropdown.component';
+import {RevisionModule} from './parts/revisions/revision.module';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import {LoginDropdownComponent} from './shared/security/login-dropdown.component
     GenericModule,
     ReactiveFormsModule,
     ConfigurationModule,
+    RevisionModule,
     DashboardModule,
     WebStorageModule
   ],

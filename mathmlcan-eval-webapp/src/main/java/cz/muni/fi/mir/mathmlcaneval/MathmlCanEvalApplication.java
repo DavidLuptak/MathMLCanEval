@@ -15,18 +15,25 @@
  */
 package cz.muni.fi.mir.mathmlcaneval;
 
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class MathmlCanEvalApplication {
+public class MathmlCanEvalApplication implements CommandLineRunner {
 
   static {
     // fixme jaxb 2.3.0 produces error
     System.setProperty("com.sun.xml.bind.v2.bytecode.ClassTailor.noOptimize", "true");
   }
 
+
   public static void main(String[] args) {
     SpringApplication.run(MathmlCanEvalApplication.class, args);
+  }
+
+  @Override
+  public void run(String... args) throws Exception {
+
   }
 }

@@ -15,6 +15,12 @@
               (click)="selectConfig(element.id)"> {{element.name}} </td>
         </ng-container>
 
+        <ng-container matColumnDef="user">
+          <th mat-header-cell *matHeaderCellDef> user</th>
+          <td mat-cell *matCellDef="let element"
+              (click)="selectConfig(element.id)"> {{element.userId}} </td>
+        </ng-container>
+
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
       </table>

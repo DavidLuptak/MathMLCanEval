@@ -31,7 +31,8 @@ public class SecurityConstants {
   };
 
   public static final String[] GET_PUBLIC_RESOURCES = {
-    "/api/configurations"
+    "/api/configurations",
+    "/api/revisions"
   };
 
   public static final String[] PUT_PUBLIC_RESOURCES = {

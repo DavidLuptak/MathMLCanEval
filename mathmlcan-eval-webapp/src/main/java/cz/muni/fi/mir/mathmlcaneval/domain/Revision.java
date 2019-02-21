@@ -18,13 +18,18 @@ package cz.muni.fi.mir.mathmlcaneval.domain;
 import java.time.LocalDateTime;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
+@Setter
+@Getter
 @Entity
 @Table(name = "revisions")
 public class Revision extends BaseEntity {
 
   private static final long serialVersionUID = -7738917977580794290L;
-
+  private String name;
+  private String note;
   private String sha1; //40 chars
   private LocalDateTime commitTime;
   private LocalDateTime syncTime;

@@ -1,6 +1,6 @@
 import {environment} from '../../../environments/environment';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
-import {Injectable} from '@angular/core';
+import {EventEmitter, Injectable} from '@angular/core';
 import {JwtHelperService} from '@auth0/angular-jwt';
 import {LocalStorageService} from 'ngx-store';
 import {LoginModel} from './login.model';
@@ -22,6 +22,7 @@ const OAUTH_HEADERS = {
 @Injectable({providedIn: 'root'})
 export class SecurityService {
   jwtHelper = new JwtHelperService();
+  eventEmitter = new EventEmitter<boolean>();
 
   constructor(private httpClient: HttpClient,
               private localStorageService: LocalStorageService) {
@@ -38,11 +39,15 @@ export class SecurityService {
     .pipe(map((res: any) => this.convert(res.body)),
       map((res: OauthModel) => {
         this.localStorageService.set(TOKEN_NAME, res.accessToken);
-
+        this.eventEmitter.emit(true);
         return true;
       }, () => {
         return false;
       }));
+  }
+
+  userLoggedIn(): Observable<boolean> {
+    return this.eventEmitter;
   }
 
   logout(): void {

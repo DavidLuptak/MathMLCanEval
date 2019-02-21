@@ -14,7 +14,7 @@ import {NewConfigurationComponent} from './new-configuration.component';
 export class ConfigurationListComponent extends TableComponent<ConfigurationResponse> implements OnInit {
   @ViewChild(TdHighlightComponent) preview: TdHighlightComponent;
 
-  displayedColumns: string[] = ['id', 'name'];
+  displayedColumns: string[] = ['id', 'name', 'user'];
   previewSelected = false;
 
   constructor(private configurationService: ConfigurationService,
@@ -32,15 +32,15 @@ export class ConfigurationListComponent extends TableComponent<ConfigurationResp
   }
 
   selectConfig(id: number): void {
-    for(const c of this.dataSource.data) {
-      if(c.id === id) {
+    for (const c of this.dataSource.data) {
+      if (c.id === id) {
         this.previewSelected = true;
         setTimeout(() => this.preview.content = c.content);
       }
     }
   }
 
-  newConfigModal() : void {
+  newConfigModal(): void {
     const ref = this.dialog.open(NewConfigurationComponent, {
       minWidth: 550
     });
