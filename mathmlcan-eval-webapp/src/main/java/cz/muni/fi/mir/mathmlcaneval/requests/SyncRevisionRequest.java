@@ -16,12 +16,16 @@
 package cz.muni.fi.mir.mathmlcaneval.requests;
 
 import java.time.LocalDateTime;
+import javax.validation.constraints.FutureOrPresent;
+import javax.validation.constraints.PastOrPresent;
 import lombok.Data;
 
 @Data
 public class SyncRevisionRequest {
 
+  @PastOrPresent
   private LocalDateTime from;
+  @FutureOrPresent
   private LocalDateTime to;
   private String sha1;
 }

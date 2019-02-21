@@ -15,10 +15,21 @@
  */
 package cz.muni.fi.mir.mathmlcaneval.exceptions;
 
-import lombok.RequiredArgsConstructor;
+import static cz.muni.fi.mir.mathmlcaneval.support.GlobalConstants.PROBLEM_ROOT;
 
-@RequiredArgsConstructor
-public class InvalidCronTriggerException extends RuntimeException {
+import java.net.URI;
+import lombok.Getter;
+import org.zalando.problem.AbstractThrowableProblem;
+import org.zalando.problem.Status;
 
+public class InvalidCronTriggerException extends AbstractThrowableProblem {
+
+  @Getter
   private final String cron;
+
+  public InvalidCronTriggerException(String cron) {
+    super(URI.create(PROBLEM_ROOT + "/invalid-input"), "Invalid Cron Trigger expression",
+      Status.BAD_REQUEST);
+    this.cron = cron;
+  }
 }

@@ -15,6 +15,16 @@
  */
 package cz.muni.fi.mir.mathmlcaneval.exceptions;
 
-public class JobAlreadyExistsException extends RuntimeException {
+import static cz.muni.fi.mir.mathmlcaneval.support.GlobalConstants.PROBLEM_ROOT;
 
+import java.net.URI;
+import org.zalando.problem.AbstractThrowableProblem;
+import org.zalando.problem.Status;
+
+public class JobAlreadyExistsException extends AbstractThrowableProblem {
+
+  public JobAlreadyExistsException() {
+    super(URI.create(PROBLEM_ROOT + "/already-exists"), "Job with such identifier already exists",
+      Status.BAD_REQUEST);
+  }
 }

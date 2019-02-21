@@ -15,6 +15,16 @@
  */
 package cz.muni.fi.mir.mathmlcaneval.exceptions;
 
-public class JobDeleteFailedException extends RuntimeException {
+import static cz.muni.fi.mir.mathmlcaneval.support.GlobalConstants.PROBLEM_ROOT;
 
+import java.net.URI;
+import org.zalando.problem.AbstractThrowableProblem;
+import org.zalando.problem.Status;
+
+public class JobDeleteFailedException extends AbstractThrowableProblem {
+
+  public JobDeleteFailedException() {
+    super(URI.create(PROBLEM_ROOT + "/failed-operation"), "Could not delete job",
+      Status.INTERNAL_SERVER_ERROR);
+  }
 }
