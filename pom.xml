@@ -90,6 +90,16 @@
         <artifactId>maven-invoker-plugin</artifactId>
         <version>3.2.0</version>
       </dependency>
+      <dependency>
+        <groupId>com.github.romankh3</groupId>
+        <artifactId>image-comparison</artifactId>
+        <version>708fb5f630</version>
+      </dependency>
+      <dependency>
+        <groupId>de.rototor.jeuclid</groupId>
+        <artifactId>jeuclid-core</artifactId>
+        <version>3.1.13</version>
+      </dependency>
 
       <!-- jdk11 deps -->
       <dependency>
@@ -190,4 +200,11 @@
       </plugins>
     </pluginManagement>
   </build>
+
+  <repositories>
+    <repository>
+      <id>jitpack.io</id>
+      <url>https://jitpack.io</url>
+    </repository>
+  </repositories>
 </project>

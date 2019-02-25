@@ -17,7 +17,6 @@ package cz.muni.fi.mir.mathmlcaneval.service.impl;
 
 import cz.muni.fi.mir.mathmlcaneval.service.MavenService;
 import java.io.File;
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -31,7 +30,6 @@ import javax.xml.xpath.XPathFactory;
 import lombok.extern.log4j.Log4j2;
 import org.apache.maven.shared.invoker.DefaultInvocationRequest;
 import org.apache.maven.shared.invoker.DefaultInvoker;
-import org.apache.maven.shared.invoker.InvocationOutputHandler;
 import org.apache.maven.shared.invoker.MavenInvocationException;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.NodeList;
@@ -63,12 +61,7 @@ public class MavenServiceImpl implements MavenService {
     try {
       final var invoker = new DefaultInvoker();
       invoker.setMavenHome(new File(M2_HOME));
-      invoker.setOutputHandler(new InvocationOutputHandler() {
-        @Override
-        public void consumeLine(String s) throws IOException {
-          log.trace(s);
-        }
-      });
+      invoker.setOutputHandler(log::trace);
       invoker.execute(request);
     } catch (MavenInvocationException ex) {
       throw new RuntimeException(ex);

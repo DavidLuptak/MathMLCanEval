@@ -15,7 +15,7 @@
             <a mat-list-item [routerLink]="['/dashboard']" routerLinkActive="active"><mat-icon matListIcon>dashboard</mat-icon>{{translations.sidebar.dash}} </a>
             <a mat-list-item routerLinkActive="active"><mat-icon matListIcon>history</mat-icon>{{translations.sidebar.runs}}</a>
             <a mat-list-item [routerLink]="['/revisions']" routerLinkActive="active"><mat-icon matListIcon>code</mat-icon>{{translations.sidebar.revisions}}</a>
-            <a mat-list-item routerLinkActive="active"><mat-icon matListIcon>functions</mat-icon>{{translations.sidebar.formulas}}</a>
+            <a mat-list-item [routerLink]="['/formulas']" routerLinkActive="active"><mat-icon matListIcon>functions</mat-icon>{{translations.sidebar.formulas}}</a>
             <a mat-list-item routerLinkActive="active"><mat-icon matListIcon>poll</mat-icon>!Running tasks</a>
             <a mat-list-item [routerLink]="['/configurations']" routerLinkActive="active"><mat-icon matListIcon>tune</mat-icon>{{translations.sidebar.configs}}</a>
             <mat-divider></mat-divider>

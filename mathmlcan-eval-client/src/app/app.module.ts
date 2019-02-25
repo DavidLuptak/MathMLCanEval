@@ -15,6 +15,7 @@ import {LoginModal} from './shared/security/login.modal';
 import {ReactiveFormsModule} from '@angular/forms';
 import {LoginDropdownComponent} from './shared/security/login-dropdown.component';
 import {RevisionModule} from './parts/revisions/revision.module';
+import {FormulaModule} from './parts/formula/formula.module';
 
 @NgModule({
   declarations: [
@@ -31,6 +32,7 @@ import {RevisionModule} from './parts/revisions/revision.module';
     ConfigurationModule,
     RevisionModule,
     DashboardModule,
+    FormulaModule,
     WebStorageModule
   ],
   providers: [[{

@@ -1,48 +1,51 @@
 import {NgModule} from '@angular/core';
 import {
-  MatButtonModule,
-  MatListModule,
-  MatIconModule,
-  MatCardModule,
-  MatMenuModule,
-  MatInputModule,
-  MatButtonToggleModule,
-  MatProgressSpinnerModule,
-  MatSelectModule,
-  MatSlideToggleModule,
-  MatDialogModule,
-  MatSnackBarModule,
-  MatToolbarModule,
-  MatTabsModule,
-  MatSidenavModule,
-  MatTooltipModule,
-  MatRippleModule,
-  MatRadioModule,
-  MatGridListModule,
-  MatDatepickerModule,
-  MatNativeDateModule,
-  MatSliderModule,
   MatAutocompleteModule,
-  MatTableModule, MatCheckboxModule
+  MatButtonModule,
+  MatButtonToggleModule,
+  MatCardModule,
+  MatCheckboxModule,
+  MatDatepickerModule,
+  MatDialogModule, MatExpansionModule,
+  MatGridListModule,
+  MatIconModule,
+  MatInputModule,
+  MatListModule,
+  MatMenuModule,
+  MatNativeDateModule,
+  MatProgressSpinnerModule,
+  MatRadioModule,
+  MatRippleModule,
+  MatSelectModule,
+  MatSidenavModule,
+  MatSliderModule,
+  MatSlideToggleModule,
+  MatSnackBarModule,
+  MatTableModule,
+  MatTabsModule,
+  MatToolbarModule,
+  MatTooltipModule
 } from '@angular/material';
 
 import {
   CovalentCommonModule,
-  CovalentLayoutModule,
-  CovalentMediaModule,
-  CovalentExpansionPanelModule,
-  CovalentStepsModule,
-  CovalentLoadingModule,
-  CovalentDialogsModule,
-  CovalentSearchModule,
-  CovalentPagingModule,
-  CovalentNotificationsModule,
-  CovalentMenuModule,
   CovalentDataTableModule,
-  CovalentMessageModule
+  CovalentDialogsModule,
+  CovalentExpansionPanelModule,
+  CovalentLayoutModule,
+  CovalentLoadingModule,
+  CovalentMediaModule,
+  CovalentMenuModule,
+  CovalentMessageModule,
+  CovalentNotificationsModule,
+  CovalentPagingModule,
+  CovalentSearchModule,
+  CovalentStepsModule
 } from '@covalent/core';
 import {HttpClientModule} from '@angular/common/http';
+import {MathJaxModule} from 'ngx-mathjax';
 import {AuthenticatedDirective} from './security/authenticated.directive';
+import {KeepHtmlPipe} from './keep-html.pipe';
 
 @NgModule({
   imports: [
@@ -72,6 +75,7 @@ import {AuthenticatedDirective} from './security/authenticated.directive';
     MatAutocompleteModule,
     MatTableModule,
     MatCheckboxModule,
+    MatExpansionModule,
     /** Covalent Modules */
     CovalentCommonModule,
     CovalentLayoutModule,
@@ -87,6 +91,12 @@ import {AuthenticatedDirective} from './security/authenticated.directive';
     CovalentDataTableModule,
     CovalentMessageModule,
     HttpClientModule,
+    /** */
+    MathJaxModule.config({
+      version: '2.7.5',
+      config: 'MML_SVG',
+      hostname: 'cdnjs.cloudflare.com'
+    })
   ],
   exports: [
     /** Material Modules */
@@ -115,6 +125,7 @@ import {AuthenticatedDirective} from './security/authenticated.directive';
     MatAutocompleteModule,
     MatTableModule,
     MatCheckboxModule,
+    MatExpansionModule,
     /** Covalent Modules */
     CovalentCommonModule,
     CovalentLayoutModule,
@@ -131,9 +142,11 @@ import {AuthenticatedDirective} from './security/authenticated.directive';
     CovalentMessageModule,
     HttpClientModule,
     /** */
-    AuthenticatedDirective
+    AuthenticatedDirective,
+    MathJaxModule,
+    KeepHtmlPipe
   ],
-  declarations: [AuthenticatedDirective]
+  declarations: [AuthenticatedDirective, KeepHtmlPipe]
 })
 export class GenericModule {
 

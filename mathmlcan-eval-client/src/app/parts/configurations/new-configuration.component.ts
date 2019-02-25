@@ -4,7 +4,6 @@ import {ConfigurationNew} from '../../models/configuration.new';
 import {MatDialogRef, MatTabGroup} from '@angular/material';
 import {ConfigurationService} from './configuration.service';
 import {NewResourceComponent} from '../../shared/new-resource.component';
-import {ReadFile, ReadMode} from 'ngx-file-helpers';
 
 @Component({
   selector: 'new-configuration-component',
@@ -12,7 +11,6 @@ import {ReadFile, ReadMode} from 'ngx-file-helpers';
   styleUrls: ['new-configuration.component.css']
 })
 export class NewConfigurationComponent extends NewResourceComponent<ConfigurationResponse, ConfigurationNew, number> {
-  readMode = ReadMode.dataURL;
   @ViewChild(MatTabGroup) tabGroup;
 
   constructor(public dialogRef: MatDialogRef<NewConfigurationComponent>,
@@ -24,9 +22,4 @@ export class NewConfigurationComponent extends NewResourceComponent<Configuratio
     return new ConfigurationNew;
   }
 
-  processFile(file: ReadFile): void {
-    this.newResource.content = atob(file.content.substring(file.content.indexOf('base64') + 7));
-
-    this.tabGroup.selectedIndex = 1;
-  }
 }

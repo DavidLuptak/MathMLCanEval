@@ -237,6 +237,56 @@
     
     <sqlFile path="default-data/quartz.sql" />
   </changeSet>
+
+  <changeSet id="2018.02.23.01" author="dominik.szalai">
+    <createTable tableName="application_runs">
+      <column name="id" type="bigint">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="pk_app_run" />
+      </column>
+      <column name="start" type="datetime"/>
+      <column name="end" type="datetime"/>
+      <column name="configuration" type="bigint" />
+      <column name="revision" type="bigint" />
+      <column name="users" type="bigint" />
+    </createTable>
+
+    <createTable tableName="formulas">
+      <column name="id" type="bigint">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="pk_formulas" />
+      </column>
+      <column name="xml" type="xml" />
+      <column name="note" type="varchar(512)" />
+      <column name="hash_value" type="varchar(128)" />
+      <column name="insert_time" type="datetime" />
+      <column name="thumbnail" type="bytea" />
+    </createTable>
+
+    <createTable tableName="canonic_outputs">
+      <column name="id" type="bigint">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="pk_canonic_outpus" />
+      </column>
+      <column name="xml" type="xml" />
+      <column name="hash" type="varchar(128)" />
+      <column name="thumbnail" type="bytea" />
+      <column name="ocr_changed" type="boolean" />
+      <column name="formula" type="bigint" />
+      <column name="application_run" type="bigint" />
+    </createTable>
+
+    <createTable tableName="formula_collections">
+      <column name="id" type="bigint">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="pk_collections" />
+      </column>
+      <column name="name" type="varchar(120)" />
+      <column name="note" type="varchar(512)" />
+      <column name="visible_to_public" type="boolean" />
+      <column name="creator" type="bigint" />
+    </createTable>
+  </changeSet>
+
+  <changeSet id="2018.02.24.01" author="dominik.szalai" context="test">
+    <sqlFile path="test-data/formulas.sql" />
+  </changeSet>
   
   
 </databaseChangeLog>
