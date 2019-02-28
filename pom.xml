@@ -1,4 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    Copyright © 2013 the original author or authors (webmias@fi.muni.cz)
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+        http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
 <project xmlns="http://maven.apache.org/POM/4.0.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
@@ -18,7 +35,47 @@
   <artifactId>mathmlcan-eval-parent</artifactId>
   <version>2.0.0-SNAPSHOT</version>
   <name>mathmlcan-eval-parent</name>
-  <description>Demo project for Spring Boot</description>
+  <inceptionYear>2013</inceptionYear>
+
+  <url>https://mir.fi.muni.cz/mathml-normalization/</url>
+
+  <developers>
+    <developer>
+      <id>dominik.szalai</id>
+      <email>emptulik@gmail.com</email>
+      <name>Dominik Szalai</name>
+    </developer>
+    <developer>
+      <id>siska</id>
+      <email>xsiska2@mail.muni.cz</email>
+      <name>Robert Šiška</name>
+    </developer>
+  </developers>
+
+  <description>
+    The development of the MathML Canonicalizer requires proper testing. To meet these needs, we
+    have developed MathMLCanEval – a web application with the aim to create a large test database of
+    mathematical formulae covering the entire MathML 3.0 Presentation markup. We use the database to
+    evaluate the correctness and effectiveness of the MathML Canonicalizer.
+  </description>
+
+  <issueManagement>
+    <system>GitHub Issues</system>
+    <url>https://github.com/MIR-MU/MathMLCanEval/issues</url>
+  </issueManagement>
+
+  <organization>
+    <name>Maths Information Retrieval research group at Masaryk University</name>
+    <url>https://mir.fi.muni.cz/</url>
+  </organization>
+
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
 
   <properties>
     <java.version>11</java.version>
@@ -193,6 +250,34 @@
               <phase>prepare-package</phase>
               <goals>
                 <goal>report</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
+        <plugin>
+          <groupId>com.mycila</groupId>
+          <artifactId>license-maven-plugin</artifactId>
+          <version>3.0</version>
+          <configuration>
+            <header>com/mycila/maven/plugin/license/templates/APACHE-2.txt</header>
+            <properties>
+              <owner>the original author or authors</owner>
+              <email>webmias@fi.muni.cz</email>
+            </properties>
+            <excludes>
+              <exclude>**/README</exclude>
+              <exclude>src/test/resources/**</exclude>
+              <exclude>src/main/resources/**</exclude>
+            </excludes>
+            <mapping>
+              <java>SLASHSTAR_STYLE</java>
+              <proto>SLASHSTAR_STYLE</proto>
+            </mapping>
+          </configuration>
+          <executions>
+            <execution>
+              <goals>
+                <goal>check</goal>
               </goals>
             </execution>
           </executions>
