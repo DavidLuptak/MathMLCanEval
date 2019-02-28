@@ -1,0 +1,80 @@
+<mat-horizontal-stepper [linear]="isLinear" #stepper>
+  <mat-step [stepControl]="revisionFormGroup">
+    <form [formGroup]="revisionFormGroup">
+      <ng-template matStepLabel>!Choose revision</ng-template>
+      <mat-form-field flex="30" *ngIf="filteredRevisions">
+        <input type="text" placeholder="Pick one" aria-label="Number" matInput  [matAutocomplete]="revisionsAuto" formControlName="revisionControl">
+        <mat-autocomplete #revisionsAuto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="selected($event, 'revision')">
+          <mat-option *ngFor="let option of filteredRevisions | async" [value]="option">
+            {{option.name}}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </form>
+    <mat-divider></mat-divider>
+    <div>
+      <button mat-button matStepperNext>Next</button>
+    </div>
+  </mat-step>
+  <mat-step [stepControl]="configurationFormGroup">
+    <form [formGroup]="configurationFormGroup">
+      <ng-template matStepLabel>!Choose configuration</ng-template>
+      <mat-form-field flex="30" *ngIf="filteredConfigurations">
+        <input type="text" placeholder="Pick one" aria-label="Number" matInput  [matAutocomplete]="configurationsAuto" formControlName="configurationControl">
+        <mat-autocomplete #configurationsAuto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="selected($event, 'configuration')">
+          <mat-option *ngFor="let option of filteredConfigurations | async" [value]="option">
+            {{option.name}}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </form>
+    <mat-divider></mat-divider>
+    <div>
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button matStepperNext>Next</button>
+    </div>
+  </mat-step>
+  <mat-step [stepControl]="collectionFormGroup">
+    <form [formGroup]="collectionFormGroup">
+      <ng-template matStepLabel>!Choose collections</ng-template>
+      <mat-form-field flex="30" *ngIf="filteredCollections">
+        <input type="text" placeholder="Pick one" aria-label="Number" matInput  [matAutocomplete]="collectionsAuto" formControlName="collectionControl">
+        <mat-autocomplete #collectionsAuto="matAutocomplete" [displayWith]="displayFn" (optionSelected)="selected($event, 'collection')">
+          <mat-option *ngFor="let option of filteredCollections | async" [value]="option">
+            {{option.name}}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
+    </form>
+    <mat-divider></mat-divider>
+    <div>
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button (click)="stepper.reset()">Reset</button>
+      <button mat-button matStepperNext>Next</button>
+    </div>
+  </mat-step>
+  <mat-step>
+    <ng-template matStepLabel>Done</ng-template>
+    <div layout="row">
+      <div flex="50">
+        <mat-card class="example-card">
+          <mat-card-header>
+            <mat-card-title>!chosen configuration</mat-card-title>
+          </mat-card-header>
+          <mat-card-content *ngIf="selectedConfiguration">
+            <configuration-preview-component [configuration]="selectedConfiguration"></configuration-preview-component>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      <div flex="50">
+        right
+      </div>
+    </div>
+    <mat-divider></mat-divider>
+    <div>
+      <button mat-button matStepperPrevious>Back</button>
+      <button mat-button (click)="stepper.reset()">Reset</button>
+      <button mat-flat-button color="accent">Submit</button>
+    </div>
+  </mat-step>
+</mat-horizontal-stepper>

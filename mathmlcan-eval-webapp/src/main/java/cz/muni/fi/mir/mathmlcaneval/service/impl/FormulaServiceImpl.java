@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class FormulaServiceImpl implements FormulaService {
+
   private final FormulaRepository formulaRepository;
   private final FormulaMapper formulaMapper;
 
@@ -36,5 +37,11 @@ public class FormulaServiceImpl implements FormulaService {
   @Override
   public List<FormulaResponse> findAll(Pageable pageable) {
     return formulaMapper.map(formulaRepository.findAll(pageable).getContent());
+  }
+
+  @ReadOnly
+  @Override
+  public List<FormulaResponse> getFormulasForCollection(Long collection) {
+    return formulaMapper.map(formulaRepository.getFormulasInCollection(collection));
   }
 }

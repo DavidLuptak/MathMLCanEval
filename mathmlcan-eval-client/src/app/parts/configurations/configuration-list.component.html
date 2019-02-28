@@ -44,7 +44,8 @@
     </mat-card-title>
     <mat-divider></mat-divider>
     <mat-card-content>
-      <td-highlight lang="xml" #preview *ngIf="previewSelected"></td-highlight>
+      <!--<td-highlight lang="xml" #preview *ngIf="previewSelected"></td-highlight>-->
+      <configuration-preview-component [configurationEmitter]="selectedConfiguration"></configuration-preview-component>
     </mat-card-content>
   </mat-card>
 </div>

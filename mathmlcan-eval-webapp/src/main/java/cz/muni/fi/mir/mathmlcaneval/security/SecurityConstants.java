@@ -32,7 +32,8 @@ public class SecurityConstants {
   public static final String[] GET_PUBLIC_RESOURCES = {
     "/api/configurations",
     "/api/revisions",
-    "/api/formulas"
+    "/api/formulas",
+    "/api/collections"
   };
 
   public static final String[] PUT_PUBLIC_RESOURCES = {
@@ -43,7 +44,7 @@ public class SecurityConstants {
 
   };
 
-  public static String RESOURCE_ID = "mathmleval";
+  public static final String RESOURCE_ID = "mathmleval";
 
   private SecurityConstants() {
     // prevent new

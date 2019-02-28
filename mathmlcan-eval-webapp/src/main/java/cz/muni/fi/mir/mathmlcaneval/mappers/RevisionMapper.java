@@ -16,6 +16,8 @@
 package cz.muni.fi.mir.mathmlcaneval.mappers;
 
 import cz.muni.fi.mir.mathmlcaneval.domain.Revision;
+import cz.muni.fi.mir.mathmlcaneval.events.SyncRevisionEvent;
+import cz.muni.fi.mir.mathmlcaneval.requests.SyncRevisionRequest;
 import cz.muni.fi.mir.mathmlcaneval.responses.RevisionResponse;
 import java.util.List;
 import org.mapstruct.Mapper;
@@ -26,4 +28,8 @@ public interface RevisionMapper {
   RevisionResponse map(Revision revision);
 
   List<RevisionResponse> map(List<Revision> revision);
+
+  default SyncRevisionEvent map(SyncRevisionRequest request) {
+    return new SyncRevisionEvent(this, request.getFrom(), request.getTo(), request.getSha1());
+  }
 }

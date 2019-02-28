@@ -4,6 +4,10 @@ import {IPageChangeEvent, TdMediaService} from '@covalent/core';
 import {FormulaService} from './formula.service';
 import {FormulaResponse} from '../../models/formula.response';
 import {QueryParamsBuilder} from '../../shared/query-params-builder';
+import {CollectionsService} from '../collections/collections.service';
+import {MatDialog} from '@angular/material';
+import {NewCollectionComponent} from '../collections/new-collection.component';
+import {FormulaCollectionNew} from '../../models/formula-collection.new';
 
 @Component({
   selector: 'formula-list',
@@ -15,9 +19,12 @@ export class FormulaListComponent extends BaseComponent implements OnInit {
   eventResponsive: IPageChangeEvent;
   pageSizeResponsive: number = 25;
   formulas: FormulaResponse[];
+  selectedFormulas = new Set();
 
   constructor(private formulaService: FormulaService,
-              public media: TdMediaService) {
+              public media: TdMediaService,
+              private dialog: MatDialog,
+              private collectionsService: CollectionsService) {
     super();
   }
 
@@ -41,6 +48,25 @@ export class FormulaListComponent extends BaseComponent implements OnInit {
   }
 
   switchSelectMode(): void {
-    this.selectMode = !this.selectMode
+    this.selectMode = !this.selectMode;
+    console.log(`FormulaListComponent@ is in select mode : ${this.selectMode}`);
+  }
+
+  formulaClicked(id: number, add: boolean) {
+    if (add) {
+      this.selectedFormulas.add(id);
+      console.log(`FormulaListComponent@ Formula ${id} selected`);
+    } else {
+      this.selectedFormulas.delete(id);
+      console.log(`FormulaListComponent@ Formula ${id} unselected`);
+    }
+  }
+
+  displayNewCollectionModal(): void {
+    const ref = this.dialog.open(NewCollectionComponent,{
+      data: {selectedFormulas: this.selectedFormulas}
+    });
+
+    ref.afterClosed().subscribe((col: FormulaCollectionNew) => console.log(col));
   }
 }

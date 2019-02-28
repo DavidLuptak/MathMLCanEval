@@ -15,8 +15,8 @@
  */
 package cz.muni.fi.mir.mathmlcaneval.service.impl;
 
+import cz.muni.fi.mir.mathmlcaneval.configurations.props.LocationProperties;
 import cz.muni.fi.mir.mathmlcaneval.service.MavenService;
-import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -27,6 +27,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.maven.shared.invoker.DefaultInvocationRequest;
 import org.apache.maven.shared.invoker.DefaultInvoker;
@@ -36,13 +37,15 @@ import org.w3c.dom.NodeList;
 
 @Log4j2
 @Component
+@RequiredArgsConstructor
 public class MavenServiceImpl implements MavenService {
 
   private static final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
   private static final XPathFactory xPathfactory = XPathFactory.newInstance();
   private static final XPath xpath = xPathfactory.newXPath();
   private static final Properties properties = new Properties();
-  private static final String M2_HOME = "C:\\Program Files\\JetBrains\\IntelliJ IDEA 191.5109.14\\plugins\\maven\\lib\\maven3"; //todo
+
+  private final LocationProperties locationProperties;
 
   @PostConstruct
   public void init() {
@@ -60,7 +63,7 @@ public class MavenServiceImpl implements MavenService {
 
     try {
       final var invoker = new DefaultInvoker();
-      invoker.setMavenHome(new File(M2_HOME));
+      invoker.setMavenHome(locationProperties.getM2Home().toFile());
       invoker.setOutputHandler(log::trace);
       invoker.execute(request);
     } catch (MavenInvocationException ex) {

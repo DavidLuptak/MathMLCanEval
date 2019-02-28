@@ -1,0 +1,20 @@
+<h1 mat-dialog-title>!! new collection</h1>
+<div mat-dialog-content>
+  <div>
+    <mat-form-field class="full-width">
+      <input matInput placeholder="Name" [(ngModel)]="formulaCollection.name">
+    </mat-form-field>
+  </div>
+  <div>
+    <mat-form-field class="full-width">
+      <textarea matInput placeholder="Note" [(ngModel)]="formulaCollection.note"></textarea>
+    </mat-form-field>
+  </div>
+  <div class="full-width">
+    <mat-checkbox class="example-margin" [(ngModel)]="formulaCollection.visibleToPublic">Visible to public</mat-checkbox>
+  </div>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="cancel()">{{translations.generic.cancel}}</button>
+  <button mat-button (click)="save()" cdkFocusInitial>{{translations.generic.save}}</button>
+</div>

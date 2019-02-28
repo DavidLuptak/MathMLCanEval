@@ -56,3 +56,7 @@ application:
   oauth:
     keyPass: pEfIlNEvJd51
     tokenValidity: 3600
+  location:
+    build-folder: ${java.io.tmpdir}/math-temp-builds
+    repository-folder: ${java.io.tmpdir}/math-repository
+    m2Home: C:\Program Files\JetBrains\IntelliJ IDEA 191.5109.14\plugins\maven\lib\maven3

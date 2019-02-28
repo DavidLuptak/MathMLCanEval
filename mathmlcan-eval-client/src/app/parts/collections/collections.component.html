@@ -1,0 +1,24 @@
+<table mat-table [dataSource]="dataSource" #table style="width: 100%">
+  <ng-container matColumnDef="id">
+    <th mat-header-cell *matHeaderCellDef> id</th>
+    <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef> name</th>
+    <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="visibleToPublic">
+    <th mat-header-cell *matHeaderCellDef> visibleToPublic</th>
+    <td mat-cell *matCellDef="let element"> {{element.visibleToPublic}} </td>
+  </ng-container>
+
+  <ng-container matColumnDef="creator">
+    <th mat-header-cell *matHeaderCellDef> creator</th>
+    <td mat-cell *matCellDef="let element"> {{element.creatorId}} </td>
+  </ng-container>
+
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+</table>

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cz.muni.fi.mir.mathmlcaneval.scheduling;
+package cz.muni.fi.mir.mathmlcaneval.scheduling.jobs;
 
 import cz.muni.fi.mir.mathmlcaneval.domain.Revision;
 import cz.muni.fi.mir.mathmlcaneval.repository.RevisionRepository;

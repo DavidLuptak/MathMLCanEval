@@ -15,24 +15,26 @@
  */
 package cz.muni.fi.mir.mathmlcaneval.service.impl;
 
+import cz.muni.fi.mir.mathmlcaneval.configurations.props.LocationProperties;
 import cz.muni.fi.mir.mathmlcaneval.service.DeployService;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.file.Files;
-import java.nio.file.Paths;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 
 @Log4j2
 @Component
+@RequiredArgsConstructor
 public class DeployServiceImpl implements DeployService {
+  private final LocationProperties locationProperties;
 
   @Override
   public void deploy(InputStream jarFile, String revision) throws IOException {
-    final var location = Paths.get(System.getProperty("java.io.tmpdir"), "math-builds");
-    final var jarLocation = location.resolve(revision + ".jar");
+    final var jarLocation = locationProperties.getRepositoryFolder().resolve(revision + ".jar");
 
     if(Files.exists(jarLocation)) {
       Files.delete(jarLocation);

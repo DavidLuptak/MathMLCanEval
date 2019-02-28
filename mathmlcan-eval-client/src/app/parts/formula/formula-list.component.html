@@ -1,22 +1,19 @@
 <mat-toolbar-row>
   <span>Third Line</span>
   <span class="toolbar-spacer"></span>
-  <mat-icon class="toolbar-icon">favorite</mat-icon>
-  <mat-icon class="toolbar-icon">delete</mat-icon>
-  <mat-menu #appMenu="matMenu">
-    <button mat-menu-item>Settings</button>
-    <button mat-menu-item (click)="switchSelectMode()">Help</button>
-  </mat-menu>
-
-  <button mat-icon-button [matMenuTriggerFor]="appMenu">
-    <mat-icon>more_vert</mat-icon>
-  </button>
+  <span *ngIf="selectMode">!in bookmark select mode</span>
+  <mat-icon class="toolbar-icon" (click)="switchSelectMode()">bookmark</mat-icon>
+  <button type="button" mat-raised-button *ngIf="selectMode" (click)="displayNewCollectionModal()">Create Collection</button>
+  <button type="button" mat-raised-button *ngIf="selectMode">Add to collection</button>
 </mat-toolbar-row>
 <mat-grid-list cols="5" rowHeight="2:1" gutterSize="2">
   <mat-grid-tile *ngFor="let f of formulas">
     <formula-preview style="width: 100%" [formula]="f"
                      [class.fake-link]="selectMode"
-                     [selectMode]="selectMode"></formula-preview>
+                     [selectMode]="selectMode"
+                      (selectedFormula)="formulaClicked($event, true)"
+                       (unselectedFormula)="formulaClicked($event, false)"
+    ></formula-preview>
   </mat-grid-tile>
 </mat-grid-list>
 <td-paging-bar #pagingBarResponsive

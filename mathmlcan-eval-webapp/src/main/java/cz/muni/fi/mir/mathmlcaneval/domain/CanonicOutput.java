@@ -18,6 +18,7 @@ public class CanonicOutput extends BaseEntity {
   @Column(columnDefinition = "xml")
   private String xml;
   private String hash;
+  private String error;
   private byte[] thumbnail;
   private boolean ocrChanged;
 

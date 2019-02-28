@@ -1,10 +1,9 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, EventEmitter, OnInit} from '@angular/core';
 import {TableComponent} from '../../shared/table.component';
 import {ConfigurationResponse} from '../../models/configuration.response';
 import {ConfigurationService} from './configuration.service';
 import {Router} from '@angular/router';
 import {MatDialog, MatTableDataSource} from '@angular/material';
-import {TdHighlightComponent} from '@covalent/highlight';
 import {NewConfigurationComponent} from './new-configuration.component';
 
 @Component({
@@ -12,10 +11,9 @@ import {NewConfigurationComponent} from './new-configuration.component';
   templateUrl: 'configuration-list.component.html'
 })
 export class ConfigurationListComponent extends TableComponent<ConfigurationResponse> implements OnInit {
-  @ViewChild(TdHighlightComponent) preview: TdHighlightComponent;
+  selectedConfiguration = new EventEmitter<ConfigurationResponse>();
 
   displayedColumns: string[] = ['id', 'name', 'user'];
-  previewSelected = false;
 
   constructor(private configurationService: ConfigurationService,
               private router: Router,
@@ -34,8 +32,8 @@ export class ConfigurationListComponent extends TableComponent<ConfigurationResp
   selectConfig(id: number): void {
     for (const c of this.dataSource.data) {
       if (c.id === id) {
-        this.previewSelected = true;
-        setTimeout(() => this.preview.content = c.content);
+        this.selectedConfiguration.emit(c);
+        break;
       }
     }
   }

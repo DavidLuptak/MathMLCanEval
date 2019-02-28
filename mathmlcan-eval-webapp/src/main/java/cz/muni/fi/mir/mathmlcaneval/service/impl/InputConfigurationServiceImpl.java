@@ -44,7 +44,9 @@ public class InputConfigurationServiceImpl implements InputConfigurationService 
   @ReadOnly
   @Override
   public Optional<ConfigurationResponse> findById(Long id) {
-    return Optional.empty();
+    return inputConfigurationRepository
+      .findById(id)
+      .map(configurationMapper::map);
   }
 
   @Override

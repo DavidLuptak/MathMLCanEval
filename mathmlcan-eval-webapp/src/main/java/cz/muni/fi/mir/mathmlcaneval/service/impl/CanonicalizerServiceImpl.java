@@ -1,65 +1,84 @@
 package cz.muni.fi.mir.mathmlcaneval.service.impl;
 
+import cz.muni.fi.mir.mathmlcaneval.configurations.props.LocationProperties;
+import cz.muni.fi.mir.mathmlcaneval.domain.ApplicationRun;
+import cz.muni.fi.mir.mathmlcaneval.domain.CanonicOutput;
+import cz.muni.fi.mir.mathmlcaneval.domain.Formula;
 import cz.muni.fi.mir.mathmlcaneval.service.CanonicalizerService;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.List;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 
 @Log4j2
 @Component
+@RequiredArgsConstructor
 public class CanonicalizerServiceImpl implements CanonicalizerService {
+  private final LocationProperties locationProperties;
 
   @Override
-  public void fireCanonicalizer(String revision, Long configurationId, List<Long> formulas) {
-    final String FORMULA = "";
+  public List<CanonicOutput> fireCanonicalizer(String revision, String configuration,
+    List<Formula> formulas, ApplicationRun run) {
+    final var result = new ArrayList<CanonicOutput>();
+
     try {
-      Path jar1 = Paths.get("C:\\Users\\emptak\\AppData\\Local\\Temp\\math-builds",
-        "3d66b66bb73b0c6193df6871c51d2b1a3dabad9c.jar");
-      Path config = Paths.get("C:\\Users\\emptak\\Desktop\\sample.xml");
-      URL[] urls = {jar1.toUri().toURL()};
-      URLClassLoader loader = new URLClassLoader(urls);
-      Class<?> cls = loader.loadClass("cz.muni.fi.mir.mathmlcanonicalization.MathMLCanonicalizer");
+      final var jar = locationProperties.getRepositoryFolder().resolve(revision + ".jar");
+      // todo try reinit ?
+      if(!Files.exists(jar)) {
+        throw new RuntimeException();
+      }
 
-      Constructor constructor = null;
-      Method canonicalize = null;
-      Object canonicalizer = null;
+      try(URLClassLoader classLoader = new URLClassLoader(new URL[]{jar.toUri().toURL()})) {
+        Class<?> cls = classLoader.loadClass("cz.muni.fi.mir.mathmlcanonicalization.MathMLCanonicalizer");
 
-      constructor = cls.getConstructor(InputStream.class);
-      canonicalize = cls.getMethod("canonicalize", InputStream.class, OutputStream.class);
+        final var constructor = cls.getConstructor(InputStream.class);
+        final var canonicalize = cls.getMethod("canonicalize", InputStream.class, OutputStream.class);
 
-      if (constructor != null) {
-        try (InputStream c = Files.newInputStream(config)) {
+        try(InputStream configStream = new ByteArrayInputStream(configuration.getBytes())) {
+          final var canonicalizer = constructor.newInstance(configStream);
 
-          canonicalizer = constructor.newInstance(c);
-
-          InputStream input = new ByteArrayInputStream(FORMULA.getBytes());
-          OutputStream out = new ByteArrayOutputStream();
-          canonicalize.invoke(canonicalizer, input, out);
-
-          System.out.println(out.toString());
-
+          for(Formula f : formulas) {
+            result.add(canonicalize(f, run, canonicalizer, canonicalize));
+          }
         }
       }
-    } catch (IOException | InvocationTargetException | IllegalAccessException | InstantiationException | NoSuchMethodException | SecurityException | ClassNotFoundException ex) {
-      log.error(ex.getMessage(), ex);
+
+    } catch (IOException | ClassNotFoundException | NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException ex ) {
+      log.error(ex);
     }
+
+    return result;
   }
 
-  @Override
-  public void fireCanonicalizer(String revision, Long configurationId, Long collectionId) {
+  private CanonicOutput canonicalize(Formula f, ApplicationRun run, Object canonicalizer,
+    Method canonicalize) {
+    final var result = new CanonicOutput();
+    final var start = System.currentTimeMillis();
 
+    try (InputStream in = new ByteArrayInputStream(f.getXml().getBytes());
+      OutputStream out = new ByteArrayOutputStream()) {
+      canonicalize.invoke(canonicalizer, in, out);
+      result.setXml(out.toString());
+    } catch (IOException | IllegalAccessException | InvocationTargetException ex) {
+      log.info(ex);
+      result.setError(ex.getMessage());
+    }
+
+    final var stop = System.currentTimeMillis() - start; // todo
+    result.setApplicationRun(run);
+    result.setFormula(f);
+
+    return result;
   }
 }

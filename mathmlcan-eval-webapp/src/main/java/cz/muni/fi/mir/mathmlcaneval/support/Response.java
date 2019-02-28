@@ -16,7 +16,8 @@
 package cz.muni.fi.mir.mathmlcaneval.support;
 
 public interface Response {
-  Response OK = new ResponseOk();
+  Response OK = () -> "OK";
+  Response NOK = () -> "NOK";
 
   String getStatus();
 }

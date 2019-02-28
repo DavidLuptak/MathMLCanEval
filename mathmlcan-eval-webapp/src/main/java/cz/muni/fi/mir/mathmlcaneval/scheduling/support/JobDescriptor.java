@@ -13,12 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cz.muni.fi.mir.mathmlcaneval.support;
+package cz.muni.fi.mir.mathmlcaneval.scheduling.support;
 
-public class ResponseOk implements Response {
+import java.time.LocalDateTime;
+import java.util.Map;
+import lombok.Data;
 
-  @Override
-  public String getStatus() {
-    return "OK";
-  }
+@Data
+public class JobDescriptor {
+
+  private String jobId;
+  private String jobGroup;
+  private LocalDateTime lastExecutionDate;
+  private LocalDateTime createdDate;
+  private LocalDateTime nextExceutionDate;
+  private Map<String, Object> data;
 }

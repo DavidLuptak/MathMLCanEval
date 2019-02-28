@@ -15,11 +15,12 @@
  */
 package cz.muni.fi.mir.mathmlcaneval.service.impl;
 
+import cz.muni.fi.mir.mathmlcaneval.configurations.props.LocationProperties;
 import cz.muni.fi.mir.mathmlcaneval.service.RemoteRepositoryService;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.ResetCommand.ResetType;
@@ -27,12 +28,14 @@ import org.springframework.stereotype.Component;
 
 @Log4j2
 @Component
+@RequiredArgsConstructor
 public class RemoteRepositoryServiceImpl implements RemoteRepositoryService {
+  private final LocationProperties locationProperties;
 
   @Override
   public Path cloneAndCheckout(String revision) {
     try {
-      final var location = Paths.get(System.getProperty("java.io.tmpdir"), "git-test", revision);
+      final var location = locationProperties.getBuildFolder().resolve(revision);
       final Git git;
 
       if (!Files.exists(location)) {
@@ -62,7 +65,7 @@ public class RemoteRepositoryServiceImpl implements RemoteRepositoryService {
 
   @Override
   public void clean(String revision) {
-    final var location = Paths.get(System.getProperty("java.io.tmpdir"), "git-test", revision);
+    final var location = locationProperties.getBuildFolder().resolve(revision);
     try {
       if (!Files.deleteIfExists(location)) {
         log.warn("Non Existing revision passed for delete");

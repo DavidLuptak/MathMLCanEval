@@ -19,10 +19,10 @@ import cz.muni.fi.mir.mathmlcaneval.mappers.RevisionMapper;
 import cz.muni.fi.mir.mathmlcaneval.repository.RevisionRepository;
 import cz.muni.fi.mir.mathmlcaneval.requests.SyncRevisionRequest;
 import cz.muni.fi.mir.mathmlcaneval.responses.RevisionResponse;
-import cz.muni.fi.mir.mathmlcaneval.scheduling.RevisionSyncJobService;
 import cz.muni.fi.mir.mathmlcaneval.service.RevisionService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -31,7 +31,7 @@ public class RevisionServiceImpl implements RevisionService {
 
   private final RevisionRepository revisionRepository;
   private final RevisionMapper revisionMapper;
-  private final RevisionSyncJobService revisionSyncJobService;
+  private final ApplicationEventPublisher applicationEventPublisher;
 
   @Override
   public List<RevisionResponse> findAll() {
@@ -40,6 +40,7 @@ public class RevisionServiceImpl implements RevisionService {
 
   @Override
   public void syncRevisions(SyncRevisionRequest request) {
-    revisionSyncJobService.scheduleTask(request);
+    this.applicationEventPublisher.publishEvent(revisionMapper.map(request));
+    //jobServiceDecorator.scheduleRevisionTask(request);
   }
 }

@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cz.muni.fi.mir.mathmlcaneval.scheduling;
+package cz.muni.fi.mir.mathmlcaneval.scheduling.support;
 
 import static org.quartz.JobBuilder.newJob;
 
@@ -42,6 +42,15 @@ public class CustomJobBuilder {
 
   public CustomJobBuilder data(Map<String, Object> data) {
     this.data = data;
+    return this;
+  }
+
+  public CustomJobBuilder data(String key, Object value) {
+    if(this.data == null) {
+      this.data = new HashMap<>();
+    }
+
+    this.data.put(key, value);
     return this;
   }
 

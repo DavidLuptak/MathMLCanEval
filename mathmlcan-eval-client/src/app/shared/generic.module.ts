@@ -20,7 +20,7 @@ import {
   MatSidenavModule,
   MatSliderModule,
   MatSlideToggleModule,
-  MatSnackBarModule,
+  MatSnackBarModule, MatStepperModule,
   MatTableModule,
   MatTabsModule,
   MatToolbarModule,
@@ -75,6 +75,7 @@ import {KeepHtmlPipe} from './keep-html.pipe';
     MatAutocompleteModule,
     MatTableModule,
     MatCheckboxModule,
+    MatStepperModule,
     MatExpansionModule,
     /** Covalent Modules */
     CovalentCommonModule,
@@ -126,6 +127,7 @@ import {KeepHtmlPipe} from './keep-html.pipe';
     MatTableModule,
     MatCheckboxModule,
     MatExpansionModule,
+    MatStepperModule,
     /** Covalent Modules */
     CovalentCommonModule,
     CovalentLayoutModule,

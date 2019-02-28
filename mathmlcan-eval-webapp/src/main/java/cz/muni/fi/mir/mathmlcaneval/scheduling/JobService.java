@@ -15,6 +15,8 @@
  */
 package cz.muni.fi.mir.mathmlcaneval.scheduling;
 
+import cz.muni.fi.mir.mathmlcaneval.scheduling.support.JobDescriptor;
+import cz.muni.fi.mir.mathmlcaneval.scheduling.support.JobGroup;
 import java.util.List;
 import java.util.Optional;
 import org.quartz.JobDetail;
@@ -22,7 +24,6 @@ import org.quartz.Trigger;
 
 public interface JobService {
 
-  void createJob(JobDetail jobDetail, Trigger trigger);
 
   void createJob(JobDetail jobDetail, JobGroup jobGroup, Trigger trigger);
 
@@ -59,10 +60,10 @@ public interface JobService {
    */
   Optional<JobDescriptor> getJobById(String jobId, JobGroup jobGroup);
 
-  /**
+ /* *//**
    * Method used to determine group to which job belongs
    *
    * @return group
-   */
-  JobGroup getGroup();
+   *//*
+  JobGroup getGroup();*/
 }

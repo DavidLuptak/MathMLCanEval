@@ -15,11 +15,11 @@
  */
 package cz.muni.fi.mir.mathmlcaneval.scheduling;
 
-import static org.quartz.impl.matchers.KeyMatcher.keyEquals;
-
 import cz.muni.fi.mir.mathmlcaneval.exceptions.JobAlreadyExistsException;
 import cz.muni.fi.mir.mathmlcaneval.exceptions.JobCannotBeSavedException;
 import cz.muni.fi.mir.mathmlcaneval.exceptions.JobDeleteFailedException;
+import cz.muni.fi.mir.mathmlcaneval.scheduling.support.JobDescriptor;
+import cz.muni.fi.mir.mathmlcaneval.scheduling.support.JobGroup;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -30,23 +30,22 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.quartz.JobDetail;
 import org.quartz.JobKey;
-import org.quartz.JobListener;
 import org.quartz.Scheduler;
 import org.quartz.SchedulerException;
 import org.quartz.Trigger;
 import org.quartz.impl.matchers.GroupMatcher;
+import org.springframework.stereotype.Component;
 
 @Log4j2
+@Component
 @RequiredArgsConstructor
-public abstract class AbstractJobService implements JobService {
-  protected final Scheduler scheduler;
+public class JobServiceImpl implements JobService {
 
-  protected abstract JobListener getJobListener();
+  private final Scheduler scheduler;
 
-  @Override
-  public void createJob(JobDetail jobDetail, Trigger trigger) {
-    createJob(jobDetail, getGroup(), trigger);
-  }
+  //protected JobListener getJobListener();
+
+
 
   @Override
   public void createJob(JobDetail jobDetail, JobGroup jobGroup, Trigger trigger) {
@@ -62,13 +61,13 @@ public abstract class AbstractJobService implements JobService {
       log.debug("About to schedule job {}", () -> name);
       scheduler.scheduleJob(jobDetail, trigger);
       log.debug("Job {} scheduled", () -> name);
-      if (getJobListener() != null) {
+/*      if (getJobListener() != null) {
         scheduler.getListenerManager()
           .addJobListener(getJobListener(), keyEquals(jobDetail.getKey()));
         log.debug("Job listener added for {}", () -> name);
       } else {
         log.debug("No job listener specified for {}", () -> name);
-      }
+      }*/
 
     } catch (SchedulerException ex) {
       log.info("could not save job");
@@ -94,7 +93,7 @@ public abstract class AbstractJobService implements JobService {
   @Override
   public List<JobDescriptor> getJobs() {
     log.info("Fetching all jobs");
-    List<JobDescriptor> jobs = new ArrayList<>();
+    final var jobs = new ArrayList<JobDescriptor>();
     try {
       for (JobKey jobKey : scheduler.getJobKeys(GroupMatcher.anyJobGroup())) {
         jobs.add(convert(jobKey));
@@ -109,7 +108,7 @@ public abstract class AbstractJobService implements JobService {
 
   @Override
   public List<JobDescriptor> getJobsByGroup(JobGroup jobGroup) {
-    List<JobDescriptor> jobs = new ArrayList<>();
+    final var jobs = new ArrayList<JobDescriptor>();
     try {
       for (JobKey jobKey : scheduler.getJobKeys(GroupMatcher.jobGroupEquals(jobGroup.getGroup()))) {
         jobs.add(convert(jobKey));
@@ -139,7 +138,7 @@ public abstract class AbstractJobService implements JobService {
 
   @SuppressWarnings("unchecked")
   private JobDescriptor convert(JobKey jobKey) throws SchedulerException {
-    JobDescriptor jobDescriptor = new JobDescriptor();
+    final var jobDescriptor = new JobDescriptor();
     jobDescriptor.setJobId(jobKey.getName());
     jobDescriptor.setJobGroup(jobKey.getGroup());
     if (scheduler.getTriggersOfJob(jobKey) != null && !scheduler.getTriggersOfJob(jobKey)

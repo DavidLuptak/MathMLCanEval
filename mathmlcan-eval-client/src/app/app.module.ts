@@ -16,6 +16,8 @@ import {ReactiveFormsModule} from '@angular/forms';
 import {LoginDropdownComponent} from './shared/security/login-dropdown.component';
 import {RevisionModule} from './parts/revisions/revision.module';
 import {FormulaModule} from './parts/formula/formula.module';
+import {ApprunModule} from './parts/apprun/apprun.module';
+import {CollectionsModule} from './parts/collections/collections.module';
 
 @NgModule({
   declarations: [
@@ -33,7 +35,9 @@ import {FormulaModule} from './parts/formula/formula.module';
     RevisionModule,
     DashboardModule,
     FormulaModule,
-    WebStorageModule
+    WebStorageModule,
+    ApprunModule,
+    CollectionsModule
   ],
   providers: [[{
     provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true
