@@ -40,6 +40,9 @@ public class RevisionHandlerImpl implements RevisionHandler {
       .startNow().build();
 
     JobDetail job = CustomJobBuilder.builder(RevisionSyncJob.class)
+      .data(RevisionSyncJob.DATE_FROM, syncRevisionEvent.getFrom())
+      .data(RevisionSyncJob.DATE_TO, syncRevisionEvent.getTo())
+      .data(RevisionSyncJob.REVISION, syncRevisionEvent.getSha1())
       .group(JobGroup.SYNC)
       .build();
 

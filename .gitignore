@@ -1,10 +1,10 @@
 
-# Maven 
+# Maven
 mathmlcan-eval-client/target/
 mathmlcan-eval-client/node_modules/
 mathmlcan-eval-webapp/target/
 
-# IntelliJ project files 
+# IntelliJ project files
 *.iml
 *.iws
 *.ipr

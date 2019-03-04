@@ -21,14 +21,16 @@ import cz.muni.fi.mir.mathmlcaneval.service.DeployService;
 import cz.muni.fi.mir.mathmlcaneval.service.MavenService;
 import cz.muni.fi.mir.mathmlcaneval.service.RemoteRepositoryService;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Path;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
-import lombok.Data;
+import java.util.List;
+import java.util.stream.Collectors;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.lang3.StringUtils;
 import org.eclipse.egit.github.core.RepositoryCommit;
 import org.eclipse.egit.github.core.service.CommitService;
 import org.eclipse.egit.github.core.service.RepositoryService;
@@ -36,15 +38,27 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.task.AsyncTaskExecutor;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
 
 @Log4j2
-@Data
+@Setter
 public class RevisionSyncJob implements Job {
 
+  public static final String REVISION = "revisionId";
+  public static final String DATE_FROM = "dateFrom";
+  public static final String DATE_TO = "dateTo";
+
+  private String revisionId;
+  private LocalDateTime dateFrom;
+  private LocalDateTime dateTo;
+
+
   private String jobId;
+
+
   @Autowired
   private TransactionTemplate transactionTemplate;
   @Autowired
@@ -55,6 +69,8 @@ public class RevisionSyncJob implements Job {
   private MavenService mavenService;
   @Autowired
   private DeployService deployService;
+  @Autowired
+  private AsyncTaskExecutor taskExecutor; // todo maybe use quartz here ?
 
   @Override
   public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
@@ -68,25 +84,24 @@ public class RevisionSyncJob implements Job {
         .findFirst()
         .ifPresent(r -> {
           try {
-            for (RepositoryCommit rc : commitService.getCommits(r).subList(0, 2)) {
-              Path revision = remoteRepositoryService.cloneAndCheckout(rc.getSha());
-
-              InputStream artifact = mavenService.invokeMavenBuild(revision);
-              deployService.deploy(artifact, rc.getSha());
-
-              transactionTemplate.execute(new TransactionCallbackWithoutResult() {
-                @Override
-                protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
-                  final var db = new Revision();
-                  db.setSha1(rc.getSha());
-                  db.setCommitTime(commitTime(rc.getCommit().getCommitter().getDate()));
-                  db.setSyncTime(LocalDateTime.now());
-                  db.setName(rc.getSha());
-
-                  revisionRepository.save(db);
-                }
-              });
+            // todo exception handling
+            List<RepositoryCommit> data;
+            if (!StringUtils.isEmpty(this.revisionId)) {
+             data = commitService
+                .getCommits(r).stream()
+                .filter(rc -> rc.getSha().equals(revisionId))
+                .collect(Collectors.toList());
+            } else {
+              data = commitService
+                .getCommits(r)
+                .stream()
+                .filter(rc -> nsIsAfter(rc.getCommit().getCommitter().getDate()))
+                .filter(rc -> nsIsBefore(rc.getCommit().getCommitter().getDate()))
+                .collect(Collectors.toList());
             }
+
+            executeJob(data);
+
           } catch (Exception e) {
             log.fatal(e);
           }
@@ -95,6 +110,51 @@ public class RevisionSyncJob implements Job {
     } catch (IOException ex) {
       log.error(ex);
     }
+  }
+
+  private void executeJob(List<RepositoryCommit> commits)  {
+    for (RepositoryCommit rc : commits) {
+      taskExecutor.submit(new CheckoutDeployBuildSubTask(rc));
+    }
+  }
+
+  @RequiredArgsConstructor
+  class CheckoutDeployBuildSubTask implements Runnable {
+
+    private final RepositoryCommit repositoryCommit;
+
+    @Override
+    public void run() {
+      try {
+        final var revision = remoteRepositoryService.cloneAndCheckout(repositoryCommit.getSha());
+
+        final var artifact = mavenService.invokeMavenBuild(revision);
+        deployService.deploy(artifact, repositoryCommit.getSha());
+
+        transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+          @Override
+          protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
+            final var db = new Revision();
+            db.setSha1(repositoryCommit.getSha());
+            db.setCommitTime(commitTime(repositoryCommit.getCommit().getCommitter().getDate()));
+            db.setSyncTime(LocalDateTime.now());
+            db.setName(repositoryCommit.getSha());
+
+            revisionRepository.save(db);
+          }
+        });
+      } catch (Exception e) {
+        log.warn(e);
+      }
+    }
+  }
+
+  private boolean nsIsAfter(Date from) {
+    return dateFrom == null || commitTime(from).isAfter(dateFrom);
+  }
+
+  private boolean nsIsBefore(Date to) {
+    return dateTo == null || commitTime(to).isBefore(dateTo);
   }
 
   private LocalDateTime commitTime(Date date) {

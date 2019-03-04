@@ -15,9 +15,10 @@
  */
 package cz.muni.fi.mir.mathmlcaneval.service.impl;
 
-import cz.muni.fi.mir.mathmlcaneval.configurations.props.LocationProperties;
 import cz.muni.fi.mir.mathmlcaneval.service.MavenService;
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
@@ -30,7 +31,8 @@ import javax.xml.xpath.XPathFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.maven.shared.invoker.DefaultInvocationRequest;
-import org.apache.maven.shared.invoker.DefaultInvoker;
+import org.apache.maven.shared.invoker.InvocationResult;
+import org.apache.maven.shared.invoker.Invoker;
 import org.apache.maven.shared.invoker.MavenInvocationException;
 import org.springframework.stereotype.Component;
 import org.w3c.dom.NodeList;
@@ -44,8 +46,9 @@ public class MavenServiceImpl implements MavenService {
   private static final XPathFactory xPathfactory = XPathFactory.newInstance();
   private static final XPath xpath = xPathfactory.newXPath();
   private static final Properties properties = new Properties();
+  private static final List<String> MAVEN_GOALS = List.of("clean", "package");
 
-  private final LocationProperties locationProperties;
+  private final Invoker invoker;
 
   @PostConstruct
   public void init() {
@@ -56,29 +59,17 @@ public class MavenServiceImpl implements MavenService {
   @Override
   public InputStream invokeMavenBuild(Path revision) {
     final var pom = revision.resolve("pom.xml");
-    final var request = new DefaultInvocationRequest();
-    request.setPomFile(pom.toFile());
-    request.setGoals(List.of("clean", "package"));
-    request.setProperties(properties);
-
     try {
-      final var invoker = new DefaultInvoker();
-      invoker.setMavenHome(locationProperties.getM2Home().toFile());
-      invoker.setOutputHandler(log::trace);
-      invoker.execute(request);
-    } catch (MavenInvocationException ex) {
+      return runLockedMaven(maven -> {
+        final var request = new DefaultInvocationRequest();
+        request.setPomFile(pom.toFile());
+        request.setGoals(MAVEN_GOALS);
+        request.setProperties(properties);
+
+        return invoker.execute(request);
+      }, pom);
+    } catch (IOException ex) {
       throw new RuntimeException(ex);
-    }
-
-    try {
-      return Files
-        .newInputStream(revision
-          .resolve("target")
-          .resolve(String
-            .format("mathml-canonicalizer-%s-jar-with-dependencies.jar", version(pom))));
-
-    } catch (Exception e) {
-      throw new RuntimeException(e);
     }
   }
 
@@ -90,5 +81,44 @@ public class MavenServiceImpl implements MavenService {
     final var nl = (NodeList) expr.evaluate(doc, XPathConstants.NODESET);
 
     return nl.item(0).getFirstChild().getNodeValue();
+  }
+
+  private InputStream runLockedMaven(final MavenFunction mavenFunction, Path pom)
+    throws IOException {
+    //FileLock lock = null;
+    try (FileChannel channel = FileChannel.open(pom)) {
+      //lock = channel.lock();
+      InvocationResult result = mavenFunction.runMaven(this.invoker);
+      if (result.getExitCode() != 0) {
+        log.warn("Maven has failed");
+        throw new RuntimeException("maven has failed");
+      } else {
+        try {
+          return Files
+            .newInputStream(pom.getParent()
+              .resolve("target")
+              .resolve(String
+                .format("mathml-canonicalizer-%s-jar-with-dependencies.jar", version(pom))));
+
+        } catch (Exception e) {
+          throw new RuntimeException(e);
+        }
+      }
+    } catch (MavenInvocationException ex) {
+      System.err.println(ex);
+
+      throw new RuntimeException(ex);
+    } finally {
+      /*if (lock != null) {
+        lock.release();
+      }*/
+      log.info("done");
+    }
+  }
+
+  @FunctionalInterface
+  interface MavenFunction {
+
+    InvocationResult runMaven(Invoker invoker) throws MavenInvocationException;
   }
 }

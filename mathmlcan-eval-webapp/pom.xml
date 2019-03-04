@@ -117,6 +117,10 @@
       <groupId>de.rototor.jeuclid</groupId>
       <artifactId>jeuclid-core</artifactId>
     </dependency>
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-lang3</artifactId>
+    </dependency>
 
     <!-- jdk11 -->
     <dependency>

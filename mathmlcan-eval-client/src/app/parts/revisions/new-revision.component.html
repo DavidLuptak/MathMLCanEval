@@ -20,7 +20,7 @@
 <div mat-dialog-content>
   <h2>!or choose specific revision</h2>
   <mat-form-field class="full-width">
-    <input matInput placeholder="sha1" >
+    <input matInput placeholder="sha1" [(ngModel)]="revisionSync.sha1">
   </mat-form-field>
 </div>
 <div mat-dialog-actions>

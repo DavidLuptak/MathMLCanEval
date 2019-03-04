@@ -16,8 +16,15 @@
 package cz.muni.fi.mir.mathmlcaneval.configurations;
 
 import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
+import cz.muni.fi.mir.mathmlcaneval.configurations.props.LocationProperties;
+import cz.muni.fi.mir.mathmlcaneval.support.MavenInvokerOutputHandler;
+import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.Level;
+import org.apache.maven.shared.invoker.DefaultInvoker;
+import org.apache.maven.shared.invoker.Invoker;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.zalando.problem.ProblemModule;
 
 /**
@@ -25,7 +32,10 @@ import org.zalando.problem.ProblemModule;
  * @since 2.0.0
  */
 @Configuration
+@EnableAsync
+@RequiredArgsConstructor
 public class ApplicationConfiguration {
+  private final LocationProperties locationProperties;
 
   @Bean
   public AfterburnerModule afterburnerModule() {
@@ -39,5 +49,14 @@ public class ApplicationConfiguration {
   @Bean
   public ProblemModule problemModule() {
     return new ProblemModule().withStackTraces();
+  }
+
+  @Bean
+  public Invoker invoker() {
+    final var invoker = new DefaultInvoker();
+    invoker.setMavenHome(locationProperties.getM2Home().toFile());
+    invoker.setOutputHandler(new MavenInvokerOutputHandler(Level.TRACE));
+
+    return invoker;
   }
 }
