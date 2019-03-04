@@ -36,11 +36,11 @@ spring:
 #      auto-commit: false
     username: mathml
     password: mathml
-    url: jdbc:postgresql://localhost:5432/mathmleval
+    url: jdbc:postgresql://localhost:5432/mathmleval?stringtype=unspecified
     driver-class-name: org.postgresql.Driver
   liquibase:
     change-log: classpath:/db-changelog.xml
-    drop-first: true
+    drop-first: false
     contexts: test
   quartz:
     jdbc:

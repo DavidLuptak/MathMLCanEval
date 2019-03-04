@@ -16,12 +16,16 @@
 package cz.muni.fi.mir.mathmlcaneval.requests;
 
 import java.util.List;
+import javax.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
 public class CanonicalizationRequest {
+  @NotNull
   private Long configurationId;
+  @NotNull
   private Long collectionId;
+  @NotNull
   private Long revisionId;
-  private List<Long> formulas;
+  private List<String> postProcessors;
 }

@@ -239,8 +239,8 @@
       <column name="id" type="bigint">
         <constraints nullable="false" primaryKey="true" primaryKeyName="pk_app_run" />
       </column>
-      <column name="start" type="datetime"/>
-      <column name="end" type="datetime"/>
+      <column name="run_start" type="datetime"/>
+      <column name="run_end" type="datetime"/>
       <column name="configuration" type="bigint" />
       <column name="revision" type="bigint" />
       <column name="users" type="bigint" />

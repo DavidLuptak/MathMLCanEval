@@ -18,14 +18,12 @@ package cz.muni.fi.mir.mathmlcaneval.scheduling.jobs;
 import cz.muni.fi.mir.mathmlcaneval.domain.ApplicationRun;
 import cz.muni.fi.mir.mathmlcaneval.domain.CanonicOutput;
 import cz.muni.fi.mir.mathmlcaneval.domain.Formula;
-import cz.muni.fi.mir.mathmlcaneval.domain.InputConfiguration;
-import cz.muni.fi.mir.mathmlcaneval.domain.User;
 import cz.muni.fi.mir.mathmlcaneval.repository.ApplicationRunRepository;
 import cz.muni.fi.mir.mathmlcaneval.repository.CanonicOutputRepository;
 import cz.muni.fi.mir.mathmlcaneval.repository.FormulaRepository;
-import cz.muni.fi.mir.mathmlcaneval.repository.InputConfigurationRepository;
-import cz.muni.fi.mir.mathmlcaneval.repository.RevisionRepository;
 import cz.muni.fi.mir.mathmlcaneval.service.CanonicalizerService;
+import cz.muni.fi.mir.mathmlcaneval.service.support.CanonicalizationPostProcessorRegistry;
+import java.util.Collections;
 import java.util.List;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -42,15 +40,12 @@ import org.springframework.transaction.support.TransactionTemplate;
 public class CanonicalizationJob implements Job {
 
   // these bad boys needs to match fields
-  public static final String CONFIG = "configurationId";
-  public static final String REVISION = "revisionId";
   public static final String COLLECTION = "collectionId";
   public static final String APP_RUN = "applicationRunId";
 
-  private Long configurationId;
-  private Long revisionId;
   private Long collectionId;
   private Long applicationRunId;
+
   private String jobId;
 
 
@@ -61,34 +56,28 @@ public class CanonicalizationJob implements Job {
   @Autowired
   private ApplicationRunRepository applicationRunRepository;
   @Autowired
-  private RevisionRepository revisionRepository;
-  @Autowired
   private CanonicOutputRepository canonicOutputRepository;
   @Autowired
-  private InputConfigurationRepository inputConfigurationRepository;
-
-  @Autowired
   private CanonicalizerService canonicalizerService;
+  @Autowired
+  private CanonicalizationPostProcessorRegistry postProcessorRegistry;
 
   @Override
   public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
     // this will fetch data and release underlying datasource connection
     final var tmp = transactionTemplate.execute(transactionStatus -> {
       final var formulas = formulaRepository.getFormulasInCollection(collectionId);
-      final var config = inputConfigurationRepository.findById(configurationId)
-        .orElseThrow();
-
-      final var run = new ApplicationRun();
-      run.setInputConfiguration(config);
-      run.setRevision(revisionRepository.findById(revisionId).orElseThrow());
-      run.setStartedBy(new User(2L));
-
-      return new CanonicData(formulas, config, applicationRunRepository.save(run));
+      final var run = applicationRunRepository.findByIdFetched(applicationRunId).orElseThrow();
+      // we need to touch these fields in order to prevent lazyinit exception
+      return new CanonicData(formulas, run);
     });
 
     List<CanonicOutput> result = this.canonicalizerService
       .fireCanonicalizer(tmp.getRun().getRevision().getSha1(),
-        tmp.getInputConfiguration().getContent(), tmp.getFormulas(), tmp.getRun());
+        tmp.getRun().getInputConfiguration().getContent(), tmp.getFormulas(), tmp.getRun());
+
+    final var postProcessors = postProcessorRegistry.getProcessors(Collections.emptyList());
+    result.forEach(co -> postProcessors.forEach(pp -> pp.process(co)));
 
     transactionTemplate.execute(new TransactionCallbackWithoutResult() {
       @Override
@@ -104,7 +93,6 @@ public class CanonicalizationJob implements Job {
   class CanonicData {
 
     private final List<Formula> formulas;
-    private final InputConfiguration inputConfiguration;
     private final ApplicationRun run;
   }
 }

@@ -15,15 +15,43 @@
  */
 package cz.muni.fi.mir.mathmlcaneval.service.impl;
 
+import cz.muni.fi.mir.mathmlcaneval.domain.ApplicationRun;
+import cz.muni.fi.mir.mathmlcaneval.domain.User;
+import cz.muni.fi.mir.mathmlcaneval.events.CanonicalizationEvent;
+import cz.muni.fi.mir.mathmlcaneval.repository.ApplicationRunRepository;
+import cz.muni.fi.mir.mathmlcaneval.repository.InputConfigurationRepository;
+import cz.muni.fi.mir.mathmlcaneval.repository.RevisionRepository;
 import cz.muni.fi.mir.mathmlcaneval.requests.CanonicalizationRequest;
 import cz.muni.fi.mir.mathmlcaneval.service.ApplicationRunService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 @Component
+@RequiredArgsConstructor
 public class ApplicationRunServiceImpl implements ApplicationRunService {
+  private final ApplicationRunRepository applicationRunRepository;
+  private final RevisionRepository revisionRepository;
+  private final InputConfigurationRepository inputConfigurationRepository;
+
+  private final ApplicationEventPublisher applicationEventPublisher;
 
   @Override
+  @Transactional
   public String save(CanonicalizationRequest request) {
-    return null;
+    ApplicationRun run = new ApplicationRun();
+    run.setInputConfiguration(inputConfigurationRepository.findById(request.getConfigurationId()).orElseThrow());
+    run.setRevision(revisionRepository.findById(request.getRevisionId()).orElseThrow());
+    run.setStartedBy(new User(2L));
+
+    applicationRunRepository.save(run);
+
+    // todo verify if collection id exists
+    this.applicationEventPublisher.publishEvent(new CanonicalizationEvent(this,run.getId(), request.getCollectionId(),
+      request.getPostProcessors()));
+
+    return run.getId().toString();
+
   }
 }

@@ -43,8 +43,7 @@ public class CanonicalizationHandlerImpl implements CanonicalizationHandler {
     JobDetail job = CustomJobBuilder.builder(CanonicalizationJob.class)
       .group(JobGroup.RUN)
       .data(CanonicalizationJob.COLLECTION, canonicalizationEvent.getCollectionId())
-      .data(CanonicalizationJob.CONFIG, canonicalizationEvent.getConfigurationId())
-      .data(CanonicalizationJob.REVISION, canonicalizationEvent.getRevisionId())
+      .data(CanonicalizationJob.APP_RUN, canonicalizationEvent.getAppRunId())
       .build();
 
     jobService.createJob(job, JobGroup.RUN, trigger);

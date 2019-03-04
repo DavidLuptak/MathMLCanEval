@@ -19,6 +19,7 @@ import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 import cz.muni.fi.mir.mathmlcaneval.configurations.props.LocationProperties;
 import cz.muni.fi.mir.mathmlcaneval.support.MavenInvokerOutputHandler;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.Level;
 import org.apache.maven.shared.invoker.DefaultInvoker;
 import org.apache.maven.shared.invoker.Invoker;
@@ -31,6 +32,7 @@ import org.zalando.problem.ProblemModule;
  * @author dominik.szalai
  * @since 2.0.0
  */
+@Log4j2
 @Configuration
 @EnableAsync
 @RequiredArgsConstructor

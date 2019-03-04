@@ -16,6 +16,7 @@
 package cz.muni.fi.mir.mathmlcaneval.domain;
 
 import java.time.LocalDateTime;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -30,7 +31,9 @@ import lombok.Setter;
 @Table(name = "application_runs")
 public class ApplicationRun extends BaseEntity {
 
+  @Column(name = "run_start")
   private LocalDateTime start;
+  @Column(name = "run_end")
   private LocalDateTime end;
 
   @ManyToOne(fetch = FetchType.LAZY)
