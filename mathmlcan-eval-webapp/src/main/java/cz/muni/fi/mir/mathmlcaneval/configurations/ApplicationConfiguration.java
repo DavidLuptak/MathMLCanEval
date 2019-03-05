@@ -25,6 +25,8 @@ import org.apache.maven.shared.invoker.DefaultInvoker;
 import org.apache.maven.shared.invoker.Invoker;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.data.repository.config.BootstrapMode;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.zalando.problem.ProblemModule;
 
@@ -36,6 +38,7 @@ import org.zalando.problem.ProblemModule;
 @Configuration
 @EnableAsync
 @RequiredArgsConstructor
+@EnableJpaRepositories(bootstrapMode = BootstrapMode.LAZY, enableDefaultTransactions = false, basePackages = "cz.muni.fi.mir.mathmlcaneval.repository")
 public class ApplicationConfiguration {
   private final LocationProperties locationProperties;
 
