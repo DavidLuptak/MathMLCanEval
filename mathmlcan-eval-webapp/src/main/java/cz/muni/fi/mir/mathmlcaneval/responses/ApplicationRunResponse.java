@@ -13,22 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cz.muni.fi.mir.mathmlcaneval.support;
+package cz.muni.fi.mir.mathmlcaneval.responses;
 
-import java.io.IOException;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
-import org.apache.logging.log4j.Level;
-import org.apache.maven.shared.invoker.InvocationOutputHandler;
+import java.time.LocalDateTime;
+import lombok.Data;
 
-@Log4j2
-@RequiredArgsConstructor
-public class MavenInvokerOutputHandler implements InvocationOutputHandler {
-
-  private final Level level;
-
-  @Override
-  public void consumeLine(String line) throws IOException {
-    log.log(level, () -> line);
-  }
+@Data
+public class ApplicationRunResponse {
+  private Long id;
+  private LocalDateTime start;
+  private LocalDateTime end;
+  private Long configurationId;
+  private Long revisionId;
+  private Long startedById;
 }

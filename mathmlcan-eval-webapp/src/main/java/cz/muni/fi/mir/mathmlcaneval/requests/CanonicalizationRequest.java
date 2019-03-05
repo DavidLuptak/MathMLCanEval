@@ -20,7 +20,7 @@ import javax.validation.constraints.NotNull;
 import lombok.Data;
 
 @Data
-public class CanonicalizationRequest {
+public class CanonicalizationRequest { // todo rename
   @NotNull
   private Long configurationId;
   @NotNull

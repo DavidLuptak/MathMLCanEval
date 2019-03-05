@@ -15,13 +15,14 @@
  */
 package cz.muni.fi.mir.mathmlcaneval.service.impl;
 
-import cz.muni.fi.mir.mathmlcaneval.domain.ApplicationRun;
 import cz.muni.fi.mir.mathmlcaneval.domain.User;
-import cz.muni.fi.mir.mathmlcaneval.events.CanonicalizationEvent;
+import cz.muni.fi.mir.mathmlcaneval.mappers.ApplicationRunMapper;
 import cz.muni.fi.mir.mathmlcaneval.repository.ApplicationRunRepository;
+import cz.muni.fi.mir.mathmlcaneval.repository.FormulaCollectionRepository;
 import cz.muni.fi.mir.mathmlcaneval.repository.InputConfigurationRepository;
 import cz.muni.fi.mir.mathmlcaneval.repository.RevisionRepository;
 import cz.muni.fi.mir.mathmlcaneval.requests.CanonicalizationRequest;
+import cz.muni.fi.mir.mathmlcaneval.security.SecurityService;
 import cz.muni.fi.mir.mathmlcaneval.service.ApplicationRunService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
@@ -34,22 +35,33 @@ public class ApplicationRunServiceImpl implements ApplicationRunService {
   private final ApplicationRunRepository applicationRunRepository;
   private final RevisionRepository revisionRepository;
   private final InputConfigurationRepository inputConfigurationRepository;
+  private final ApplicationRunMapper applicationRunMapper;
+  private final SecurityService securityService;
+  private final FormulaCollectionRepository formulaCollectionRepository;
 
   private final ApplicationEventPublisher applicationEventPublisher;
 
   @Override
   @Transactional
   public String save(CanonicalizationRequest request) {
-    ApplicationRun run = new ApplicationRun();
-    run.setInputConfiguration(inputConfigurationRepository.findById(request.getConfigurationId()).orElseThrow());
-    run.setRevision(revisionRepository.findById(request.getRevisionId()).orElseThrow());
-    run.setStartedBy(new User(2L));
+    if(!inputConfigurationRepository.existsById(request.getConfigurationId())) {
+      throw new RuntimeException("missing configuration");
+    }
 
-    applicationRunRepository.save(run);
+    if(!revisionRepository.existsById(request.getRevisionId())) {
+      throw new RuntimeException("missing revision");
+    }
+
+    if(!formulaCollectionRepository.existsById(request.getCollectionId())) {
+      throw new RuntimeException("missing collection");
+    }
+
+    final var run = applicationRunRepository
+      .save(applicationRunMapper.map(request, new User(securityService.getCurrentUserId())));
+
 
     // todo verify if collection id exists
-    this.applicationEventPublisher.publishEvent(new CanonicalizationEvent(this,run.getId(), request.getCollectionId(),
-      request.getPostProcessors()));
+    this.applicationEventPublisher.publishEvent(applicationRunMapper.map(this, run, request));
 
     return run.getId().toString();
 
