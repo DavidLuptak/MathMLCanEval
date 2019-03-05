@@ -6,11 +6,15 @@ import {LocalStorageService} from 'ngx-store';
 import {LoginModel} from './login.model';
 import {Observable} from 'rxjs';
 import {OauthModel} from './oauth.model';
-import {map} from 'rxjs/operators';
+import {map, mergeMap} from 'rxjs/operators';
+import {tap} from 'rxjs/internal/operators/tap';
+import {MeResponse} from './me-response';
+import {Authority, Principal} from './principal';
 
 const API_URL = environment.apiUrl;
 const AUTH_TOKEN = btoa(`${environment.clientId}:${environment.clientSecret}`);
 const TOKEN_NAME = 'mathcaneval-token';
+const PRINCIPAL = 'mathcaneval-principal';
 const OAUTH_HEADERS = {
   observe: 'response' as 'body',
   headers: new HttpHeaders({
@@ -36,15 +40,20 @@ export class SecurityService {
 
     return this.httpClient
     .post<OauthModel>(`${API_URL}/api/oauth/token`, body, OAUTH_HEADERS)
-    .pipe(map((res: any) => this.convert(res.body)),
-      map((res: OauthModel) => {
-        this.localStorageService.set(TOKEN_NAME, res.accessToken);
-        this.eventEmitter.emit(true);
-        return true;
-      }, () => {
-        return false;
-      }));
+    .pipe<OauthModel, OauthModel, MeResponse, boolean>(
+      map((res: any) => this.convert(res.body)),
+      tap((res: OauthModel) => this.storeToken(res)),
+      mergeMap(() => this.httpClient.get<MeResponse>(`${API_URL}/api/me`)),
+      map((res: MeResponse) => {
+          this.storePrincipal(res);
+          this.notify();
+
+          return true;
+        },
+        () => false)
+    );
   }
+
 
   userLoggedIn(): Observable<boolean> {
     return this.eventEmitter;
@@ -70,9 +79,54 @@ export class SecurityService {
     return this.isLoggedIn() && this.isTokenExpired();
   }
 
-  convert(json: any): OauthModel {
+  hasPermissions(permissions: string[], operator: string): boolean {
+    if (!this.isAuthenticated()) {
+      return false;
+    } else {
+      if (permissions && permissions.length > 0) {
+        const authorities = this.getPrincipal().authorities;
+        switch (operator) {
+          case 'AND' :
+            let result = false;
+            return permissions.every(p => this.hasPermission(p, authorities));
+          case 'OR' :
+            return permissions.some(p => this.hasPermission(p, authorities));
+          default:
+            throw Error('Invalid operator.');
+        }
+      } else {
+        return true;
+      }
+    }
+  }
+
+  private storeToken(oauthModel: OauthModel): void {
+    this.localStorageService.set(TOKEN_NAME, oauthModel.accessToken);
+  }
+
+  private storePrincipal(res: MeResponse): void {
+    this.localStorageService.set(PRINCIPAL, res.principal);
+  }
+
+  private getPrincipal(): Principal {
+    return this.localStorageService.get(PRINCIPAL) as Principal;
+  }
+
+  private notify(): void {
+    this.eventEmitter.emit(true);
+  }
+
+  private convert(json: any): OauthModel {
     return {
       accessToken: json.access_token
     } as OauthModel;
+  }
+
+  private hasPermission(permission: string, authorities: Authority[]): boolean {
+    if (authorities) {
+      return authorities.filter(p => p.authority.toLowerCase() === permission.toLowerCase()).length > 0;
+    } else {
+      return false;
+    }
   }
 }

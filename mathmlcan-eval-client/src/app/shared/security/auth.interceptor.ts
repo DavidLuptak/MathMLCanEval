@@ -14,7 +14,7 @@ export class AuthInterceptor implements HttpInterceptor {
   constructor(private securityService: SecurityService) {
     this.protectedResources = new Map<string, string[]>(
       [
-        ['GET', ['test']],
+        ['GET', ['/api/me']],
         ['POST', ['/api/configurations', '/api/collections', '/api/revisions']]
       ]
     );

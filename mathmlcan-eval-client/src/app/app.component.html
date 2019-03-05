@@ -22,7 +22,7 @@
             <mat-divider></mat-divider>
             <a mat-list-item *authenticated><mat-icon matListIcon>group</mat-icon>{{translations.sidebar.users}}</a>
             <mat-divider></mat-divider>
-            <a mat-list-item *authenticated><mat-icon matListIcon>settings</mat-icon>{{translations.sidebar.settings}}</a>
+            <a mat-list-item *authenticated="['role_admin']"><mat-icon matListIcon>settings</mat-icon>{{translations.sidebar.settings}}</a>
           </mat-nav-list>
         </div>
       </mat-sidenav>

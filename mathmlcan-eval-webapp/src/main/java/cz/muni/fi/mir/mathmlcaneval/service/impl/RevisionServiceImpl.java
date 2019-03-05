@@ -20,6 +20,7 @@ import cz.muni.fi.mir.mathmlcaneval.repository.RevisionRepository;
 import cz.muni.fi.mir.mathmlcaneval.requests.SyncRevisionRequest;
 import cz.muni.fi.mir.mathmlcaneval.responses.RevisionResponse;
 import cz.muni.fi.mir.mathmlcaneval.service.RevisionService;
+import cz.muni.fi.mir.mathmlcaneval.support.ReadOnly;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
@@ -34,6 +35,7 @@ public class RevisionServiceImpl implements RevisionService {
   private final ApplicationEventPublisher applicationEventPublisher;
 
   @Override
+  @ReadOnly
   public List<RevisionResponse> findAll() {
     return revisionMapper.map(revisionRepository.findAll());
   }

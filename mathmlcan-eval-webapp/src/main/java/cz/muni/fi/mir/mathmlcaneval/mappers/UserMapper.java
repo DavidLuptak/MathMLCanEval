@@ -18,14 +18,15 @@ package cz.muni.fi.mir.mathmlcaneval.mappers;
 import cz.muni.fi.mir.mathmlcaneval.domain.User;
 import cz.muni.fi.mir.mathmlcaneval.security.MathUser;
 import cz.muni.fi.mir.mathmlcaneval.security.MathUserImpl;
-import java.util.Collections;
+import java.util.Set;
 import org.mapstruct.Mapper;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 
   default MathUser map(User user) {
-    return new MathUserImpl(user.getId(), user.getUsername(), Collections.emptySet(),
+    return new MathUserImpl(user.getId(), user.getUsername(), Set.of(new SimpleGrantedAuthority("role_admin")),
       user.getPassword());
   }
 }

@@ -23,10 +23,12 @@ import cz.muni.fi.mir.mathmlcaneval.requests.FormulaCollectionRequest;
 import cz.muni.fi.mir.mathmlcaneval.responses.FormulaCollectionResponse;
 import cz.muni.fi.mir.mathmlcaneval.security.SecurityService;
 import cz.muni.fi.mir.mathmlcaneval.service.FormulaCollectionService;
+import cz.muni.fi.mir.mathmlcaneval.support.ReadOnly;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -37,6 +39,7 @@ public class FormulaCollectionServiceImpl implements FormulaCollectionService {
   private final SecurityService securityService;
 
   @Override
+  @Transactional
   public FormulaCollectionResponse save(FormulaCollectionRequest create) {
     FormulaCollection collection = formulaCollectionMapper.map(create);
     collection.setCreator(new User(securityService.getCurrentUserId()));
@@ -47,11 +50,13 @@ public class FormulaCollectionServiceImpl implements FormulaCollectionService {
   }
 
   @Override
+  @ReadOnly
   public List<FormulaCollectionResponse> findAll() {
     return formulaCollectionMapper.map(formulaCollectionRepository.findAll());
   }
 
   @Override
+  @ReadOnly
   public Optional<FormulaCollectionResponse> findById(Long id) {
     return formulaCollectionRepository
       .findById(id)
@@ -59,6 +64,7 @@ public class FormulaCollectionServiceImpl implements FormulaCollectionService {
   }
 
   @Override
+  @ReadOnly
   public List<FormulaCollectionResponse> collectionsWithFormula(Long formulaId) {
     return formulaCollectionMapper.map(formulaCollectionRepository.getCollectionsWithFormula(formulaId));
   }
