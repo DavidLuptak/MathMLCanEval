@@ -2,7 +2,7 @@
   <mat-card flex>
     <mat-card-title>{{translations.configs.list}}</mat-card-title>
     <mat-divider></mat-divider>
-    <mat-card-content>
+    <mat-card-content class="card-table">
       <table mat-table [dataSource]="dataSource" #table style="width: 100%">
         <ng-container matColumnDef="id">
           <th mat-header-cell *matHeaderCellDef> id</th>

@@ -15,6 +15,8 @@ export class LoginDropdownComponent extends BaseComponent {
   }
 
   displayLoginModal(): void {
-    this.dialog.open(LoginModal);
+    this.dialog.open(LoginModal,{
+      width: '500px'
+    });
   }
 }

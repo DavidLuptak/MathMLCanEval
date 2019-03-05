@@ -1,4 +1,4 @@
-<h1 mat-dialog-title>Please log in</h1>
+<h1 mat-dialog-title>{{translations.login.header}}</h1>
 <div mat-dialog-content>
   <form [formGroup]="form" (submit)="login($event)">
     <div layout="row">
@@ -6,7 +6,7 @@
         <input matInput
                id="username"
                formControlName="username"
-               placeholder="usrn">
+               [placeholder]="translations.login.username">
       </mat-form-field>
     </div>
 
@@ -15,7 +15,7 @@
         <input matInput
                id="password"
                formControlName="password"
-               placeholder="pass"
+               [placeholder]="translations.login.password"
                [type]="hide ? 'password' : 'text'">
         <mat-icon matSuffix (click)="hide = !hide">{{hide ? 'visibility'
           : 'visibility_off'}}</mat-icon>
@@ -27,7 +27,8 @@
   <button type="button"
           mat-raised-button
           color="primary"
-          (click)="handleLogin()">login</button>
+          class="text-upper"
+          (click)="handleLogin()">{{translations.login.button}}</button>
 </div>
 
 

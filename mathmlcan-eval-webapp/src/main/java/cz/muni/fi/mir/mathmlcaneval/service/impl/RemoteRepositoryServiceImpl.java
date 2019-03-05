@@ -34,10 +34,9 @@ public class RemoteRepositoryServiceImpl implements RemoteRepositoryService {
 
   @Override
   public Path cloneAndCheckout(String revision) {
+    Git git = null;
+    final var location = locationProperties.getBuildFolder().resolve(revision);
     try {
-      final var location = locationProperties.getBuildFolder().resolve(revision);
-      final Git git;
-
       if (!Files.exists(location)) {
         Files.createDirectories(location);
         git = Git.cloneRepository()
@@ -58,6 +57,10 @@ public class RemoteRepositoryServiceImpl implements RemoteRepositoryService {
       return location;
     } catch (Exception e) {
       log.fatal(e);
+    } finally {
+      if(git != null) {
+        git.close();
+      }
     }
 
     return null;

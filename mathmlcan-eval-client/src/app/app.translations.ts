@@ -17,6 +17,12 @@ export class AppTranslations {
       preview: 'Configuration preview',
       create: 'Create new configuration'
     },
+    login: {
+      header: 'Please sign in',
+      username: 'Username',
+      password: 'Password',
+      button: 'Sign in'
+    },
     generic: {
       delete: 'Delete',
       remove: 'Remove',
