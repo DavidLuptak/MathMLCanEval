@@ -8,7 +8,9 @@ export class AppTranslations {
       formulas: 'Formulas',
       configs: 'Configurations',
       users: 'Users',
-      settings: 'Settings'
+      settings: 'Settings',
+      collections: 'Collections',
+      tasks: 'Running tasks'
     },
     configs : {
       list: 'List of configurations',
@@ -19,7 +21,26 @@ export class AppTranslations {
       delete: 'Delete',
       remove: 'Remove',
       cancel: 'Cancel',
-      save: 'Save'
+      save: 'Save',
+      id: 'Id',
+      name: 'Name',
+      createdBy: 'Created by',
+      createdOn: 'Created on',
+      chooseDate: 'Choose a date'
+    },
+    revision: {
+      list: 'List of revisions',
+      commitTime: 'Commited on',
+      syncTime: 'Synced on',
+      sha1: 'SHA1',
+      syncFrom: 'Revisions from',
+      syncTo: 'Revisions until',
+      syncRevision: 'Click here in order to sync with GitHub',
+      modal: {
+        title: 'Create a new revision',
+        rangeHeader: 'Pick from date range',
+        orHeader: 'Or choose specific revision'
+      }
     }
   }
 }

@@ -11,7 +11,7 @@ import {CollectionsComponent} from './parts/collections/collections.component';
 
 const routes: Routes = [{
   path: '',
-  redirectTo: 'dashboard',
+  redirectTo: 'formulas',
   pathMatch: 'full'
 }, {
   path: 'dashboard',

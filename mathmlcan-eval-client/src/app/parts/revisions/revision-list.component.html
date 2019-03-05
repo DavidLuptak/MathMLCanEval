@@ -1,22 +1,32 @@
 <div layout="row" fxLayoutGap="20px">
   <mat-card flex>
-    <mat-card-title>!list of revisions</mat-card-title>
+    <mat-card-title>{{translations.revision.list}}</mat-card-title>
     <mat-divider></mat-divider>
     <mat-card-content>
       <table mat-table [dataSource]="dataSource" #table style="width: 100%">
         <ng-container matColumnDef="id">
-          <th mat-header-cell *matHeaderCellDef> id</th>
+          <th mat-header-cell *matHeaderCellDef> {{translations.generic.id}}</th>
           <td mat-cell *matCellDef="let element"> {{element.id}} </td>
         </ng-container>
 
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef> {{translations.generic.name}}</th>
+          <td mat-cell *matCellDef="let element"> {{element.name}} </td>
+        </ng-container>
+
         <ng-container matColumnDef="sha1">
-          <th mat-header-cell *matHeaderCellDef> name</th>
+          <th mat-header-cell *matHeaderCellDef> {{translations.revision.sha1}}</th>
           <td mat-cell *matCellDef="let element"> {{element.sha1}} </td>
         </ng-container>
 
         <ng-container matColumnDef="commitTime">
-          <th mat-header-cell *matHeaderCellDef> user</th>
-          <td mat-cell *matCellDef="let element"> {{element.commitTime}} </td>
+          <th mat-header-cell *matHeaderCellDef> {{translations.revision.commitTime}}</th>
+          <td mat-cell *matCellDef="let element"> {{element.commitTime | date: 'MMMM d, y h:mm'}} </td>
+        </ng-container>
+
+        <ng-container matColumnDef="syncTime">
+          <th mat-header-cell *matHeaderCellDef> {{translations.revision.syncTime}}</th>
+          <td mat-cell *matCellDef="let element"> {{element.syncTime | date: 'MMMM d, y h:mm'}} </td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -26,6 +36,6 @@
   </mat-card>
 </div>
 
-<a mat-fab color="accent" matTooltip="sync revision" matTooltipPosition="before" class="mat-fab-bottom-right z-3 fixed fab-pad" (click)="requestManualSync()" *authenticated>
+<a mat-fab color="accent" [matTooltip]="translations.revision.syncRevision" matTooltipPosition="before" class="mat-fab-bottom-right z-3 fixed fab-pad" (click)="requestManualSync()" *authenticated>
   <mat-icon>cached</mat-icon>
 </a>

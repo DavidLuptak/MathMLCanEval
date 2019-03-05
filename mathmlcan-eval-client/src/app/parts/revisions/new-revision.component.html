@@ -1,29 +1,24 @@
-<h1 mat-dialog-title>!new revision</h1>
-<div mat-dialog-content>
-  <h2>!pick from date range</h2>
-  <div>
-    <mat-form-field class="full-width">
-      <input matInput [matDatepicker]="picker" placeholder="Choose a date">
-      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-      <mat-datepicker #picker></mat-datepicker>
-    </mat-form-field>
-  </div>
-  <div>
-    <mat-form-field class="full-width">
-      <input matInput [matDatepicker]="picker2" placeholder="Choose a date">
-      <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
-      <mat-datepicker #picker2></mat-datepicker>
-    </mat-form-field>
-  </div>
-</div>
+<mat-card-title>{{translations.revision.modal.title}}</mat-card-title>
 <mat-divider></mat-divider>
-<div mat-dialog-content>
-  <h2>!or choose specific revision</h2>
-  <mat-form-field class="full-width">
-    <input matInput placeholder="sha1" [(ngModel)]="revisionSync.sha1">
-  </mat-form-field>
-</div>
-<div mat-dialog-actions>
-  <button mat-button (click)="cancel()">{{translations.generic.cancel}}</button>
-  <button mat-button (click)="save()" cdkFocusInitial>{{translations.generic.save}}</button>
-</div>
+<h3>{{translations.revision.modal.rangeHeader}}</h3>
+
+<mat-form-field class="full-width">
+  <input matInput [matDatepicker]="picker" [placeholder]="translations.revision.syncFrom">
+  <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+  <mat-datepicker #picker></mat-datepicker>
+</mat-form-field>
+
+<mat-form-field class="full-width">
+  <input matInput [matDatepicker]="picker2" [placeholder]="translations.revision.syncTo">
+  <mat-datepicker-toggle matSuffix [for]="picker2"></mat-datepicker-toggle>
+  <mat-datepicker #picker2></mat-datepicker>
+</mat-form-field>
+<h3>{{translations.revision.modal.orHeader}}</h3>
+
+<mat-form-field class="full-width">
+  <input matInput [placeholder]="translations.revision.sha1" [(ngModel)]="revisionSync.sha1">
+</mat-form-field>
+<mat-card-actions>
+  <button mat-flat-button (click)="cancel()" class="text-upper">{{translations.generic.cancel}}</button>
+  <button mat-flat-button (click)="save()" cdkFocusInitial color="accent" class="text-upper">{{translations.generic.save}}</button>
+</mat-card-actions>

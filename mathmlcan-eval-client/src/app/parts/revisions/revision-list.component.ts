@@ -10,7 +10,7 @@ import {NewRevisionComponent} from './new-revision.component';
   templateUrl: 'revision-list.component.html'
 })
 export class RevisionListComponent extends TableComponent<RevisionResponse> implements OnInit {
-  displayedColumns: string[] = ['id', 'sha1', 'commitTime'];
+  displayedColumns: string[] = ['id', 'name', 'sha1', 'commitTime', 'syncTime'];
 
   constructor(private revisionService: RevisionService,
               private dialog: MatDialog) {
