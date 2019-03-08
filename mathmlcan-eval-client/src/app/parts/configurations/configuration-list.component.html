@@ -1,36 +1,55 @@
 <div layout="row" fxLayoutGap="20px">
-  <mat-card flex>
-    <mat-card-title>{{translations.configs.list}}</mat-card-title>
-    <mat-divider></mat-divider>
-    <mat-card-content class="card-table">
-      <table mat-table [dataSource]="dataSource" #table style="width: 100%">
-        <ng-container matColumnDef="id">
-          <th mat-header-cell *matHeaderCellDef> id</th>
-          <td mat-cell *matCellDef="let element"> {{element.id}} </td>
-        </ng-container>
+  <div flex>
+    <mat-card>
+      <mat-card-title>{{translations.configs.list}}</mat-card-title>
+      <mat-divider></mat-divider>
+      <mat-card-content class="card-table">
+        <table mat-table [dataSource]="dataSource" #table style="width: 100%">
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef> id</th>
+            <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+          </ng-container>
 
-        <ng-container matColumnDef="name">
-          <th mat-header-cell *matHeaderCellDef> name</th>
-          <td mat-cell *matCellDef="let element"
-              (click)="selectConfig(element.id)"> {{element.name}} </td>
-        </ng-container>
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef> name</th>
+            <td mat-cell *matCellDef="let element"
+                (click)="selectConfig(element.id)"> {{element.name}} </td>
+          </ng-container>
 
-        <ng-container matColumnDef="user">
-          <th mat-header-cell *matHeaderCellDef> user</th>
-          <td mat-cell *matCellDef="let element"
-              (click)="selectConfig(element.id)"> {{element.userId}} </td>
-        </ng-container>
+          <ng-container matColumnDef="user">
+            <th mat-header-cell *matHeaderCellDef> user</th>
+            <td mat-cell *matCellDef="let element"
+                (click)="selectConfig(element.id)"> {{element.userId}} </td>
+          </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-      </table>
-    </mat-card-content>
-  </mat-card>
-  <mat-card flex>
-    <mat-card-title>
-      <div layout="row" layout-align="start center">
-        <span flex>{{translations.configs.preview}}</span>
-        <span>
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card>
+      <mat-card-title>!Used in runs</mat-card-title>
+      <mat-divider></mat-divider>
+      <mat-card-content class="card-table">
+        <table mat-table [dataSource]="appRunsDs" #table style="width: 100%">
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef> id</th>
+            <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="appRunsdisplayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: appRunsdisplayedColumns;"></tr>
+        </table>
+      </mat-card-content>
+    </mat-card>
+  </div>
+  <div flex>
+    <mat-card>
+      <mat-card-title>
+        <div layout="row" layout-align="start center">
+          <span flex>{{translations.configs.preview}}</span>
+          <span>
           <button mat-icon-button
                   matTooltip="Card settings"
                   [mat-menu-trigger-for]="settings1">
@@ -40,16 +59,19 @@
             <button mat-menu-item> Remove </button>
           </mat-menu>
         </span>
-      </div>
-    </mat-card-title>
-    <mat-divider></mat-divider>
-    <mat-card-content>
-      <!--<td-highlight lang="xml" #preview *ngIf="previewSelected"></td-highlight>-->
-      <configuration-preview-component [configurationEmitter]="selectedConfiguration"></configuration-preview-component>
-    </mat-card-content>
-  </mat-card>
+        </div>
+      </mat-card-title>
+      <mat-divider></mat-divider>
+      <mat-card-content>
+        <!--<td-highlight lang="xml" #preview *ngIf="previewSelected"></td-highlight>-->
+        <configuration-preview-component
+          [configurationEmitter]="selectedConfiguration"></configuration-preview-component>
+      </mat-card-content>
+    </mat-card>
+  </div>
 </div>
 
-<a mat-fab color="accent" matTooltip="{{translations.configs.create}}" matTooltipPosition="before" class="mat-fab-bottom-right z-3 fixed fab-pad" (click)="newConfigModal()" *authenticated>
+<a mat-fab color="accent" matTooltip="{{translations.configs.create}}" matTooltipPosition="before"
+   class="mat-fab-bottom-right z-3 fixed fab-pad" (click)="newConfigModal()" *authenticated>
   <mat-icon>add</mat-icon>
 </a>

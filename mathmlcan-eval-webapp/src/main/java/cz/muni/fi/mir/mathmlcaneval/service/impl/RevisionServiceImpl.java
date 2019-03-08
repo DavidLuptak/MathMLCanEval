@@ -15,16 +15,21 @@
  */
 package cz.muni.fi.mir.mathmlcaneval.service.impl;
 
+import com.github.fge.jsonpatch.JsonPatch;
+import cz.muni.fi.mir.mathmlcaneval.domain.Revision;
 import cz.muni.fi.mir.mathmlcaneval.mappers.RevisionMapper;
 import cz.muni.fi.mir.mathmlcaneval.repository.RevisionRepository;
 import cz.muni.fi.mir.mathmlcaneval.requests.SyncRevisionRequest;
 import cz.muni.fi.mir.mathmlcaneval.responses.RevisionResponse;
+import cz.muni.fi.mir.mathmlcaneval.service.PatchingService;
 import cz.muni.fi.mir.mathmlcaneval.service.RevisionService;
 import cz.muni.fi.mir.mathmlcaneval.support.ReadOnly;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -32,6 +37,7 @@ public class RevisionServiceImpl implements RevisionService {
 
   private final RevisionRepository revisionRepository;
   private final RevisionMapper revisionMapper;
+  private final PatchingService patchingService;
   private final ApplicationEventPublisher applicationEventPublisher;
 
   @Override
@@ -44,5 +50,28 @@ public class RevisionServiceImpl implements RevisionService {
   public void syncRevisions(SyncRevisionRequest request) {
     this.applicationEventPublisher.publishEvent(revisionMapper.map(request));
     //jobServiceDecorator.scheduleRevisionTask(request);
+  }
+
+  @Override
+  @ReadOnly
+  public Optional<RevisionResponse> findById(Long id) {
+    return revisionRepository
+      .findById(id)
+      .map(revisionMapper::map);
+  }
+
+  @Override
+  @Transactional
+  public RevisionResponse update(Long id, JsonPatch patch) {
+    // todo this can be done better
+
+    Revision revision = revisionRepository
+      .findById(id)
+      .orElseThrow();
+
+    Revision result = patchingService.patch(patch, revision, Revision.class);
+
+
+    return revisionMapper.map(revisionRepository.save(result));
   }
 }

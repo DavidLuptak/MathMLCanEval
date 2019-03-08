@@ -16,7 +16,14 @@
 package cz.muni.fi.mir.mathmlcaneval.support;
 
 public interface Response {
-  Response OK = () -> "OK";
+  // do not convert to lambda as it cannot be serialized
+  Response OK = new Response() {
+    @Override
+    public String getStatus() {
+      return "OK";
+    }
+  };
+
   Response NOK = () -> "NOK";
 
   String getStatus();

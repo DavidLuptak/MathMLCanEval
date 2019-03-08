@@ -5,6 +5,7 @@ import {ConfigurationService} from './configuration.service';
 import {Router} from '@angular/router';
 import {MatDialog, MatTableDataSource} from '@angular/material';
 import {NewConfigurationComponent} from './new-configuration.component';
+import {AppRunResponse} from '../../models/app-run.response';
 
 @Component({
   selector: 'configuration-list',
@@ -12,8 +13,11 @@ import {NewConfigurationComponent} from './new-configuration.component';
 })
 export class ConfigurationListComponent extends TableComponent<ConfigurationResponse> implements OnInit {
   selectedConfiguration = new EventEmitter<ConfigurationResponse>();
-
   displayedColumns: string[] = ['id', 'name', 'user'];
+
+
+  appRunsDs = new MatTableDataSource<AppRunResponse>();
+  appRunsdisplayedColumns = ['id'];
 
   constructor(private configurationService: ConfigurationService,
               private router: Router,
@@ -33,6 +37,11 @@ export class ConfigurationListComponent extends TableComponent<ConfigurationResp
     for (const c of this.dataSource.data) {
       if (c.id === id) {
         this.selectedConfiguration.emit(c);
+
+        this.configurationService
+        .getRunsUsedByConfiguration(c.id)
+        .subscribe((res: AppRunResponse[]) => this.appRunsDs.data = res);
+
         break;
       }
     }

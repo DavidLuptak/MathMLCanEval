@@ -16,7 +16,9 @@
 package cz.muni.fi.mir.mathmlcaneval.resource;
 
 import cz.muni.fi.mir.mathmlcaneval.requests.CreateConfigurationRequest;
+import cz.muni.fi.mir.mathmlcaneval.responses.ApplicationRunResponse;
 import cz.muni.fi.mir.mathmlcaneval.responses.ConfigurationResponse;
+import cz.muni.fi.mir.mathmlcaneval.service.ApplicationRunService;
 import cz.muni.fi.mir.mathmlcaneval.service.InputConfigurationService;
 import java.net.URI;
 import java.util.List;
@@ -24,6 +26,7 @@ import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,6 +38,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class ConfigurationResource {
 
   private final InputConfigurationService inputConfigurationService;
+  private final ApplicationRunService applicationRunService;
 
 
   @GetMapping
@@ -47,5 +51,10 @@ public class ConfigurationResource {
     @Valid @RequestBody CreateConfigurationRequest request) {
     ConfigurationResponse result = inputConfigurationService.save(request);
     return ResponseEntity.created(URI.create("asd")).body(result);
+  }
+
+  @GetMapping("/{configId}/app-runs")
+  public List<ApplicationRunResponse> runsWithConfiguration(@PathVariable Long configId) {
+    return applicationRunService.getRunsByConfiguration(configId);
   }
 }

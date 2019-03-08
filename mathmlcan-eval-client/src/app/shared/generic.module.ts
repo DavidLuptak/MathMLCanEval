@@ -6,7 +6,8 @@ import {
   MatCardModule,
   MatCheckboxModule,
   MatDatepickerModule,
-  MatDialogModule, MatExpansionModule,
+  MatDialogModule,
+  MatExpansionModule,
   MatGridListModule,
   MatIconModule,
   MatInputModule,
@@ -20,7 +21,8 @@ import {
   MatSidenavModule,
   MatSliderModule,
   MatSlideToggleModule,
-  MatSnackBarModule, MatStepperModule,
+  MatSnackBarModule,
+  MatStepperModule,
   MatTableModule,
   MatTabsModule,
   MatToolbarModule,
@@ -148,7 +150,8 @@ import {KeepHtmlPipe} from './keep-html.pipe';
     MathJaxModule,
     KeepHtmlPipe
   ],
-  declarations: [AuthenticatedDirective, KeepHtmlPipe]
+  declarations: [AuthenticatedDirective,
+    KeepHtmlPipe]
 })
 export class GenericModule {
 

@@ -22,8 +22,11 @@ import cz.muni.fi.mir.mathmlcaneval.repository.FormulaCollectionRepository;
 import cz.muni.fi.mir.mathmlcaneval.repository.InputConfigurationRepository;
 import cz.muni.fi.mir.mathmlcaneval.repository.RevisionRepository;
 import cz.muni.fi.mir.mathmlcaneval.requests.CanonicalizationRequest;
+import cz.muni.fi.mir.mathmlcaneval.responses.ApplicationRunResponse;
 import cz.muni.fi.mir.mathmlcaneval.security.SecurityService;
 import cz.muni.fi.mir.mathmlcaneval.service.ApplicationRunService;
+import cz.muni.fi.mir.mathmlcaneval.support.ReadOnly;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
@@ -59,11 +62,14 @@ public class ApplicationRunServiceImpl implements ApplicationRunService {
     final var run = applicationRunRepository
       .save(applicationRunMapper.map(request, new User(securityService.getCurrentUserId())));
 
-
-    // todo verify if collection id exists
     this.applicationEventPublisher.publishEvent(applicationRunMapper.map(this, run, request));
 
     return run.getId().toString();
+  }
 
+  @Override
+  @ReadOnly
+  public List<ApplicationRunResponse> getRunsByConfiguration(Long id) {
+    return applicationRunMapper.map(applicationRunRepository.findByConfiguration(id));
   }
 }

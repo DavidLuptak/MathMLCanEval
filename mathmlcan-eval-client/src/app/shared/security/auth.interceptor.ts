@@ -9,13 +9,14 @@ const OAUTH_URL = `${environment.apiUrl}/api/oauth/token`;
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
 
-  private protectedResources: Map<string, string[]>;
+  private protectedResources: Map<string, RegExp[]>;
 
   constructor(private securityService: SecurityService) {
-    this.protectedResources = new Map<string, string[]>(
+    this.protectedResources = new Map<string, RegExp[]>(
       [
-        ['GET', ['/api/me']],
-        ['POST', ['/api/configurations', '/api/collections', '/api/revisions']]
+        ['GET', [new RegExp(/^\/api\/me$/i)]],
+        ['POST', [new RegExp(/^\/api\/configurations$/i), new RegExp(/^\/api\/collections$/i), new RegExp(/^\/api\/revisions$/i)]],
+        ['PATCH', [new RegExp(/^\/api\/revisions\/\d+$/i)]]
       ]
     );
   }
@@ -23,7 +24,7 @@ export class AuthInterceptor implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     if(req.url !== OAUTH_URL) {
       for (const resource of this.protectedResources.get(req.method)) {
-        if (resource === this.path(req.url)) { // todo this might need regex in future
+        if(resource.test(this.path(req.url))) {
           const cloned = req.clone({
             headers: req.headers.set('Authorization', `Bearer ${this.securityService.getToken()}`)
           });

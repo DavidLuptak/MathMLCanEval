@@ -21,6 +21,9 @@ export class FormulaListComponent extends BaseComponent implements OnInit {
   formulas: FormulaResponse[];
   selectedFormulas = new Set();
 
+  dateFrom: Date = new Date(new Date().getTime() - (2 * 60 * 60 * 24 * 1000));
+  dateTo: Date = new Date(new Date().getTime() - (1 * 60 * 60 * 24 * 1000));
+
   constructor(private formulaService: FormulaService,
               public media: TdMediaService,
               private dialog: MatDialog,

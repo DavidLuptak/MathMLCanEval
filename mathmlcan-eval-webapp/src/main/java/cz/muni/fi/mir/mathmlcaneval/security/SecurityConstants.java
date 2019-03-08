@@ -31,6 +31,7 @@ public class SecurityConstants {
 
   public static final String[] GET_PUBLIC_RESOURCES = {
     "/api/configurations",
+    "/api/configurations/*/app-runs",
     "/api/revisions",
     "/api/formulas",
     "/api/collections"

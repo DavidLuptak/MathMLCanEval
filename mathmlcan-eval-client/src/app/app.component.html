@@ -19,9 +19,9 @@
             <a mat-list-item [routerLink]="['/collections']" routerLinkActive="active" *authenticated><mat-icon matListIcon>bookmarks</mat-icon>{{translations.sidebar.collections}}</a>
             <a mat-list-item routerLinkActive="active" *authenticated><mat-icon matListIcon>poll</mat-icon>{{translations.sidebar.tasks}}</a>
             <a mat-list-item [routerLink]="['/configurations']" routerLinkActive="active"><mat-icon matListIcon>tune</mat-icon>{{translations.sidebar.configs}}</a>
-            <mat-divider></mat-divider>
+            <mat-divider *authenticated></mat-divider>
             <a mat-list-item *authenticated><mat-icon matListIcon>group</mat-icon>{{translations.sidebar.users}}</a>
-            <mat-divider></mat-divider>
+            <mat-divider *authenticated></mat-divider>
             <a mat-list-item *authenticated="['role_admin']"><mat-icon matListIcon>settings</mat-icon>{{translations.sidebar.settings}}</a>
           </mat-nav-list>
         </div>

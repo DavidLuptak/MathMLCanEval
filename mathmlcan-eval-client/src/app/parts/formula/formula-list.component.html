@@ -1,43 +1,65 @@
-<mat-toolbar-row>
+<!--<mat-toolbar-row>
   <span>Third Line</span>
   <span class="toolbar-spacer"></span>
   <span *ngIf="selectMode">!in bookmark select mode</span>
   <mat-icon class="toolbar-icon" (click)="switchSelectMode()">bookmark</mat-icon>
-  <button type="button" mat-raised-button *ngIf="selectMode" (click)="displayNewCollectionModal()">Create Collection</button>
-  <button type="button" mat-raised-button *ngIf="selectMode">Add to collection</button>
-</mat-toolbar-row>
-<mat-grid-list cols="5" rowHeight="2:1" gutterSize="2">
-  <mat-grid-tile *ngFor="let f of formulas">
-    <formula-preview style="width: 100%" [formula]="f"
-                     [class.fake-link]="selectMode"
-                     [selectMode]="selectMode"
-                      (selectedFormula)="formulaClicked($event, true)"
-                       (unselectedFormula)="formulaClicked($event, false)"
-    ></formula-preview>
-  </mat-grid-tile>
-</mat-grid-list>
-<td-paging-bar #pagingBarResponsive
-               [pageLinkCount]="(media.registerQuery('md') | async) ? 0 : 5"
-               [firstLast]="media.registerQuery('gt-xs') | async"
-               [pageSize]="pageSizeResponsive"
-               [total]="1345"
-               (change)="changeResponsive($event)">
-  <span hide-xs>Rows per page:</span>
-  <mat-select *ngIf="media.registerQuery('gt-xs') | async" [style.width.px]="50" [(ngModel)]="pageSizeResponsive">
-    <mat-option *ngFor="let size of [50,100,200,500,1000,2000]" [value]="size">
-      {{size}}
-    </mat-option>
-  </mat-select>
-  <p hide-xs hide-sm hide-md>Go to:</p>
-  <mat-form-field [style.width.px]="30" *ngIf="media.registerQuery('gt-sm') | async">
-    <input #goToResponsive
-           matInput
-           type="number"
-           [min]="1"
-           [max]="pagingBarResponsive.maxPage"
-           [value]="pagingBarResponsive.page"
-           (blur)="goToResponsive.value = pagingBarResponsive.page"
-           (keyup.enter)="pagingBarResponsive.navigateToPage(goToResponsive.value); goToResponsive.value = pagingBarResponsive.page"/>
-  </mat-form-field>
-  <span>{{pagingBarResponsive.range}} <span hide-xs hide-sm hide-md>of {{pagingBarResponsive.total}}</span></span>
-</td-paging-bar>
+
+</mat-toolbar-row>-->
+<td-layout-nav color="none">
+  <div td-toolbar-content flex layout="row" layout-align="start center">
+
+    <!--<span hide-xs>Dashboard 1</span>-->
+    <span flex></span>
+    <button type="button" mat-button *ngIf="selectMode" (click)="displayNewCollectionModal()">!Create Collection</button>
+    <button type="button" mat-button *ngIf="selectMode">!Add to collection</button>
+    <button mat-icon-button [matMenuTriggerFor]="menu">
+      <mat-icon>settings</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button mat-menu-item (click)="switchSelectMode()">
+        <mat-icon>bookmark</mat-icon>
+        <span>!Collection mode</span>
+      </button>
+    </mat-menu>
+  </div>
+  <div flex >
+
+    <mat-grid-list cols="5" rowHeight="2:1" gutterSize="2">
+      <mat-grid-tile *ngFor="let f of formulas">
+        <formula-preview style="width: 100%" [formula]="f"
+                         [class.fake-link]="selectMode"
+                         [selectMode]="selectMode"
+                         (selectedFormula)="formulaClicked($event, true)"
+                         (unselectedFormula)="formulaClicked($event, false)"
+        ></formula-preview>
+      </mat-grid-tile>
+    </mat-grid-list>
+    <td-paging-bar #pagingBarResponsive
+                   [pageLinkCount]="(media.registerQuery('md') | async) ? 0 : 5"
+                   [firstLast]="media.registerQuery('gt-xs') | async"
+                   [pageSize]="pageSizeResponsive"
+                   [total]="1345"
+                   (change)="changeResponsive($event)">
+      <span hide-xs>Rows per page:</span>
+      <mat-select *ngIf="media.registerQuery('gt-xs') | async" [style.width.px]="50"
+                  [(ngModel)]="pageSizeResponsive">
+        <mat-option *ngFor="let size of [50,100,200,500,1000,2000]" [value]="size">
+          {{size}}
+        </mat-option>
+      </mat-select>
+      <p hide-xs hide-sm hide-md>Go to:</p>
+      <mat-form-field [style.width.px]="30" *ngIf="media.registerQuery('gt-sm') | async">
+        <input #goToResponsive
+               matInput
+               type="number"
+               [min]="1"
+               [max]="pagingBarResponsive.maxPage"
+               [value]="pagingBarResponsive.page"
+               (blur)="goToResponsive.value = pagingBarResponsive.page"
+               (keyup.enter)="pagingBarResponsive.navigateToPage(goToResponsive.value); goToResponsive.value = pagingBarResponsive.page"/>
+      </mat-form-field>
+      <span>{{pagingBarResponsive.range}} <span hide-xs hide-sm
+                                                hide-md>of {{pagingBarResponsive.total}}</span></span>
+    </td-paging-bar>
+  </div>
+</td-layout-nav>

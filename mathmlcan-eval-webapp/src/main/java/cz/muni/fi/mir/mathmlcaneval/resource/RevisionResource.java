@@ -15,15 +15,21 @@
  */
 package cz.muni.fi.mir.mathmlcaneval.resource;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.github.fge.jsonpatch.JsonPatch;
 import cz.muni.fi.mir.mathmlcaneval.requests.SyncRevisionRequest;
 import cz.muni.fi.mir.mathmlcaneval.responses.RevisionResponse;
+import cz.muni.fi.mir.mathmlcaneval.service.PatchingService;
 import cz.muni.fi.mir.mathmlcaneval.service.RevisionService;
+import cz.muni.fi.mir.mathmlcaneval.service.support.JsonPatchParser;
 import cz.muni.fi.mir.mathmlcaneval.support.Response;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -35,6 +41,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class RevisionResource {
 
   private final RevisionService revisionService;
+  private final PatchingService patchingService;
 
 
   @GetMapping
@@ -49,5 +56,12 @@ public class RevisionResource {
     revisionService.syncRevisions(syncRevisionRequest);
 
     return ResponseEntity.accepted().body(Response.OK);
+  }
+
+  @PatchMapping("/{id}")
+  public ResponseEntity<RevisionResponse> patch(@PathVariable Long id, @RequestBody JsonNode input) {
+    JsonPatch patch = JsonPatchParser.validateInput(input, null, null);
+
+    return ResponseEntity.ok(revisionService.update(id, patch));
   }
 }

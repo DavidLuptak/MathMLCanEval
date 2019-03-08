@@ -15,13 +15,19 @@
  */
 package cz.muni.fi.mir.mathmlcaneval.service;
 
+import com.github.fge.jsonpatch.JsonPatch;
 import cz.muni.fi.mir.mathmlcaneval.requests.SyncRevisionRequest;
 import cz.muni.fi.mir.mathmlcaneval.responses.RevisionResponse;
 import java.util.List;
+import java.util.Optional;
 
 public interface RevisionService {
 
   List<RevisionResponse> findAll();
 
   void syncRevisions(SyncRevisionRequest request);
+
+  Optional<RevisionResponse> findById(Long id);
+
+  RevisionResponse update(Long id, JsonPatch patch);
 }

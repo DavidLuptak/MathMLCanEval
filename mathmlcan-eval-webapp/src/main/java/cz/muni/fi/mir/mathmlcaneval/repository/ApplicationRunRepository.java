@@ -16,6 +16,7 @@
 package cz.muni.fi.mir.mathmlcaneval.repository;
 
 import cz.muni.fi.mir.mathmlcaneval.domain.ApplicationRun;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -24,4 +25,7 @@ public interface ApplicationRunRepository extends JpaRepository<ApplicationRun, 
 
   @Query("SELECT ar FROM ApplicationRun ar JOIN FETCH ar.inputConfiguration JOIN FETCH ar.revision WHERE ar.id = :id")
   Optional<ApplicationRun> findByIdFetched(Long id);
+
+  @Query("SELECT ar FROM ApplicationRun ar WHERE ar.inputConfiguration.id = :configId")
+  List<ApplicationRun> findByConfiguration(Long configId);
 }

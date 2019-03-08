@@ -29,7 +29,8 @@
     "zone.js": "^0.8.29",
     "@auth0/angular-jwt": "^2.1.0",
     "ngx-store": "^2.1.0",
-    "ngx-mathjax": "^0.0.4"
+    "ngx-mathjax": "^0.0.4",
+    "fast-json-patch": "^2.0.7"
   },
   "devDependencies": {
     "@angular-devkit/build-angular": "~0.13.0",

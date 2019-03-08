@@ -4,6 +4,7 @@ import {Serializer} from './serializer';
 import {environment} from '../../environments/environment';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
+import {Operation} from 'fast-json-patch';
 
 const API = environment.apiUrl;
 
@@ -38,8 +39,14 @@ export abstract class AbstractService<T extends Resource, ID> {
     .pipe(map((data: any) => this.mapList(data)));
   }
 
+  public patch(id: ID, patch: Operation[]): Observable<T> {
+    return this._httpClient
+    .patch<T>(`${this.resource}/${id}`, patch, {observe: 'response'})
+    .pipe(map((data: HttpResponse<T>) => this._serializer.fromJson(data.body)));
+  }
 
-  private mapList(data: any): T[] {
+
+  protected mapList(data: any): T[] {
     return data.map(item => this._serializer.fromJson(item));
   }
 

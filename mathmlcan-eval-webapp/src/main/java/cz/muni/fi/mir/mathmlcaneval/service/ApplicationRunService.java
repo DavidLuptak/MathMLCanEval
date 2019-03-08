@@ -16,7 +16,11 @@
 package cz.muni.fi.mir.mathmlcaneval.service;
 
 import cz.muni.fi.mir.mathmlcaneval.requests.CanonicalizationRequest;
+import cz.muni.fi.mir.mathmlcaneval.responses.ApplicationRunResponse;
+import java.util.List;
 
 public interface ApplicationRunService {
   String save(CanonicalizationRequest request);
+
+  List<ApplicationRunResponse> getRunsByConfiguration(Long id);
 }
