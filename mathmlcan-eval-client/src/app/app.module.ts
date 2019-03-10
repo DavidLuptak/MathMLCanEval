@@ -18,6 +18,7 @@ import {RevisionModule} from './parts/revisions/revision.module';
 import {FormulaModule} from './parts/formula/formula.module';
 import {ApprunModule} from './parts/apprun/apprun.module';
 import {CollectionsModule} from './parts/collections/collections.module';
+import {RunningTasksModule} from './parts/tasks/running-tasks.module';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import {CollectionsModule} from './parts/collections/collections.module';
     FormulaModule,
     WebStorageModule,
     ApprunModule,
-    CollectionsModule
+    CollectionsModule,
+    RunningTasksModule
   ],
   providers: [[{
     provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true

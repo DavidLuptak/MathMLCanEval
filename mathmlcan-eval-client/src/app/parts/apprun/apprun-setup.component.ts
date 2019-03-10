@@ -103,6 +103,12 @@ export class ApprunSetupComponent extends BaseComponent implements OnInit {
     }
   }
 
+  submitRun(): void {
+    console.log(this.revisionFormGroup.get('revisionControl').value);
+    console.log(this.configurationFormGroup.get('configurationControl').value);
+    console.log(this.collectionFormGroup.get('collectionControl').value);
+  }
+
   displayFn(namedResource: NamedResource): string | undefined {
     return namedResource ? namedResource.name : undefined;
   }

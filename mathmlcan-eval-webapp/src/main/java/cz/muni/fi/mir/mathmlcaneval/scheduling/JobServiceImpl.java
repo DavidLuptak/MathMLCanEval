@@ -135,17 +135,17 @@ public class JobServiceImpl implements JobService {
     return Optional.empty();
   }
 
-
-  @SuppressWarnings("unchecked")
   private JobDescriptor convert(JobKey jobKey) throws SchedulerException {
     final var jobDescriptor = new JobDescriptor();
     jobDescriptor.setJobId(jobKey.getName());
     jobDescriptor.setJobGroup(jobKey.getGroup());
     if (scheduler.getTriggersOfJob(jobKey) != null && !scheduler.getTriggersOfJob(jobKey)
       .isEmpty()) {
+      @SuppressWarnings("unchecked")
       Trigger trigger = ((List<Trigger>) scheduler.getTriggersOfJob(jobKey)).get(0);
       jobDescriptor.setLastExecutionDate(toLocalDate(trigger.getPreviousFireTime()));
       jobDescriptor.setNextExceutionDate(toLocalDate(trigger.getNextFireTime()));
+      jobDescriptor.setState(scheduler.getTriggerState(trigger.getKey()).name());
     } else {
       // if job has no trigger it was never stored so job does not exist
       return null;

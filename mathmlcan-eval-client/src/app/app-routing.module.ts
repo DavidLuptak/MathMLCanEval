@@ -8,6 +8,7 @@ import {FormulaComponent} from './parts/formula/formula.component';
 import {ApprunListComponent} from './parts/apprun/apprun-list.component';
 import {ApprunSetupComponent} from './parts/apprun/apprun-setup.component';
 import {CollectionsComponent} from './parts/collections/collections.component';
+import {RunningTaskListComponent} from './parts/tasks/running-task-list.component';
 
 const routes: Routes = [{
   path: '',
@@ -37,7 +38,11 @@ const routes: Routes = [{
 }, {
   path: 'collections',
   component: CollectionsComponent
-}
+},
+  {
+    path: 'running-tasks',
+    component: RunningTaskListComponent
+  }
 ];
 
 @NgModule({

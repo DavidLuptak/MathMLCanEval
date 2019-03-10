@@ -15,16 +15,29 @@
  */
 package cz.muni.fi.mir.mathmlcaneval.support;
 
+import org.springframework.http.ResponseEntity;
+
 public interface Response {
-  // do not convert to lambda as it cannot be serialized
-  Response OK = new Response() {
+  ResponseEntity<Response> OK = ResponseEntity.ok(new Response() {
     @Override
     public String getStatus() {
       return "OK";
     }
-  };
+  });
 
-  Response NOK = () -> "NOK";
+  ResponseEntity<Response> NOK = ResponseEntity.ok(new Response() {
+    @Override
+    public String getStatus() {
+      return "NOK";
+    }
+  });
+
+  ResponseEntity<Response> ACCEPTED = ResponseEntity.accepted().body(new Response() {
+    @Override
+    public String getStatus() {
+      return "ACCEPTED";
+    }
+  });
 
   String getStatus();
 }

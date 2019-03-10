@@ -16,6 +16,7 @@
 package cz.muni.fi.mir.mathmlcaneval.security;
 
 public class SecurityConstants {
+
   public static final String[] SWAGGER = {"/v2/api-docs",
     "/configuration/ui",
     "/swagger-resources",
@@ -26,7 +27,7 @@ public class SecurityConstants {
     "/swagger-ui.html"};
 
   public static final String[] POST_PUBLIC_RESOURCES = {
-
+    "/api/oauth/revoke"
   };
 
   public static final String[] GET_PUBLIC_RESOURCES = {

@@ -17,7 +17,7 @@
             <a mat-list-item [routerLink]="['/revisions']" routerLinkActive="active"><mat-icon matListIcon>code</mat-icon>{{translations.sidebar.revisions}}</a>
             <a mat-list-item [routerLink]="['/formulas']" routerLinkActive="active"><mat-icon matListIcon>functions</mat-icon>{{translations.sidebar.formulas}}</a>
             <a mat-list-item [routerLink]="['/collections']" routerLinkActive="active" *authenticated><mat-icon matListIcon>bookmarks</mat-icon>{{translations.sidebar.collections}}</a>
-            <a mat-list-item routerLinkActive="active" *authenticated><mat-icon matListIcon>poll</mat-icon>{{translations.sidebar.tasks}}</a>
+            <a mat-list-item [routerLink]="['/running-tasks']" routerLinkActive="active" *authenticated><mat-icon matListIcon>poll</mat-icon>{{translations.sidebar.tasks}}</a>
             <a mat-list-item [routerLink]="['/configurations']" routerLinkActive="active"><mat-icon matListIcon>tune</mat-icon>{{translations.sidebar.configs}}</a>
             <mat-divider *authenticated></mat-divider>
             <a mat-list-item *authenticated><mat-icon matListIcon>group</mat-icon>{{translations.sidebar.users}}</a>

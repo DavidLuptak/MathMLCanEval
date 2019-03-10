@@ -19,4 +19,8 @@ export class LoginDropdownComponent extends BaseComponent {
       width: '500px'
     });
   }
+
+  logout() : void {
+    this.securityService.logout();
+  }
 }

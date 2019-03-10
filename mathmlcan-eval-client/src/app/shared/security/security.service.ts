@@ -1,6 +1,6 @@
 import {environment} from '../../../environments/environment';
 import {HttpClient, HttpHeaders, HttpParams} from '@angular/common/http';
-import {EventEmitter, Injectable} from '@angular/core';
+import {EventEmitter, HostListener, Injectable} from '@angular/core';
 import {JwtHelperService} from '@auth0/angular-jwt';
 import {LocalStorageService} from 'ngx-store';
 import {LoginModel} from './login.model';
@@ -54,13 +54,33 @@ export class SecurityService {
     );
   }
 
+  @HostListener('window:unload', ['$event'])
+  handleUnload(event): void {
+    this.logout();
+  }
+
 
   userLoggedIn(): Observable<boolean> {
     return this.eventEmitter;
   }
 
   logout(): void {
-    this.localStorageService.remove(TOKEN_NAME);
+    const body = new HttpParams()
+    .set('token', this.getToken());
+
+    const logoutHeaders = {
+      observe: 'response' as 'body',
+      headers: new HttpHeaders({
+        'Content-Type': 'application/x-www-form-urlencoded'
+      })
+    };
+
+    this.httpClient
+    .post(`${API_URL}/api/oauth/revoke`, body, logoutHeaders)
+    .subscribe(() => {
+      this.localStorageService.remove(TOKEN_NAME);
+      this.localStorageService.remove(PRINCIPAL);
+    });
   }
 
   isLoggedIn(): boolean {
@@ -72,11 +92,12 @@ export class SecurityService {
   }
 
   isTokenExpired(): boolean {
-    return !this.jwtHelper.isTokenExpired(this.getToken());
+    // todo return !this.jwtHelper.isTokenExpired(this.getToken());
+    return false;
   }
 
   isAuthenticated(): boolean {
-    return this.isLoggedIn() && this.isTokenExpired();
+    return this.isLoggedIn() && !this.isTokenExpired();
   }
 
   hasPermissions(permissions: string[], operator: string): boolean {
@@ -102,6 +123,8 @@ export class SecurityService {
 
   private storeToken(oauthModel: OauthModel): void {
     this.localStorageService.set(TOKEN_NAME, oauthModel.accessToken);
+
+    console.log(this.jwtHelper.getTokenExpirationDate(oauthModel.accessToken));
   }
 
   private storePrincipal(res: MeResponse): void {
@@ -113,6 +136,7 @@ export class SecurityService {
   }
 
   private notify(): void {
+    console.log('notifying listeners abou login');
     this.eventEmitter.emit(true);
   }
 

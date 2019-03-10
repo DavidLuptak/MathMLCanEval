@@ -55,7 +55,7 @@ public class RevisionResource {
 
     revisionService.syncRevisions(syncRevisionRequest);
 
-    return ResponseEntity.accepted().body(Response.OK);
+    return Response.ACCEPTED;
   }
 
   @PatchMapping("/{id}")

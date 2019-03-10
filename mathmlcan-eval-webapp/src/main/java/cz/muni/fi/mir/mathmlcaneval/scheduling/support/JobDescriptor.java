@@ -24,6 +24,7 @@ public class JobDescriptor {
 
   private String jobId;
   private String jobGroup;
+  private String state;
   private LocalDateTime lastExecutionDate;
   private LocalDateTime createdDate;
   private LocalDateTime nextExceutionDate;
