@@ -16,11 +16,14 @@
 package cz.muni.fi.mir.mathmlcaneval.resource;
 
 import cz.muni.fi.mir.mathmlcaneval.requests.CanonicalizationRequest;
+import cz.muni.fi.mir.mathmlcaneval.responses.ApplicationRunResponse;
 import cz.muni.fi.mir.mathmlcaneval.service.ApplicationRunService;
 import cz.muni.fi.mir.mathmlcaneval.support.Response;
+import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -38,5 +41,10 @@ public class ApplicationRunResource {
     applicationRunService.save(request);
 
     return ResponseEntity.accepted().build();
+  }
+
+  @GetMapping
+  public List<ApplicationRunResponse> listRuns() {
+    return applicationRunService.findAll();
   }
 }

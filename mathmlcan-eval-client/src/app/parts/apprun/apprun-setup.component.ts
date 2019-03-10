@@ -11,6 +11,8 @@ import {NamedResource} from '../../shared/named-resource';
 import {ConfigurationService} from '../configurations/configuration.service';
 import {FormulaCollectionResponse} from '../../models/formula-collection.response';
 import {CollectionsService} from '../collections/collections.service';
+import {AppRunRequest} from '../../models/app-run.request';
+import {ApprunService} from './apprun.service';
 
 @Component({
   selector: 'apprun-setup',
@@ -37,7 +39,8 @@ export class ApprunSetupComponent extends BaseComponent implements OnInit {
   constructor(private _formBuilder: FormBuilder,
               private revisionService: RevisionService,
               private configurationService: ConfigurationService,
-              private collectionsService: CollectionsService) {
+              private collectionsService: CollectionsService,
+              private applicationRunService: ApprunService) {
     super();
 
     this.revisionFormGroup = this._formBuilder.group({
@@ -104,9 +107,15 @@ export class ApprunSetupComponent extends BaseComponent implements OnInit {
   }
 
   submitRun(): void {
-    console.log(this.revisionFormGroup.get('revisionControl').value);
-    console.log(this.configurationFormGroup.get('configurationControl').value);
-    console.log(this.collectionFormGroup.get('collectionControl').value);
+
+    const request = new AppRunRequest();
+    request.revisionId = this.selectedRevision.id;
+    request.configurationId = this.selectedConfiguration.id;
+    request.collectionId = this.selectedCollection.id;
+
+    this.applicationRunService
+    .save(request)
+    .subscribe(() => console.log('ok'));
   }
 
   displayFn(namedResource: NamedResource): string | undefined {

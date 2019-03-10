@@ -23,6 +23,7 @@ import cz.muni.fi.mir.mathmlcaneval.repository.CanonicOutputRepository;
 import cz.muni.fi.mir.mathmlcaneval.repository.FormulaRepository;
 import cz.muni.fi.mir.mathmlcaneval.service.CanonicalizerService;
 import cz.muni.fi.mir.mathmlcaneval.service.support.CanonicalizationPostProcessorRegistry;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 import lombok.Getter;
@@ -69,6 +70,8 @@ public class CanonicalizationJob implements Job {
       final var formulas = formulaRepository.getFormulasInCollection(collectionId);
       final var run = applicationRunRepository.findByIdFetched(applicationRunId).orElseThrow();
       // we need to touch these fields in order to prevent lazyinit exception
+
+      run.setStart(LocalDateTime.now());
       return new CanonicData(formulas, run);
     });
 
@@ -82,6 +85,8 @@ public class CanonicalizationJob implements Job {
     transactionTemplate.execute(new TransactionCallbackWithoutResult() {
       @Override
       protected void doInTransactionWithoutResult(TransactionStatus transactionStatus) {
+        tmp.getRun().setEnd(LocalDateTime.now());
+        applicationRunRepository.save(tmp.getRun());
         canonicOutputRepository.saveAll(result);
       }
     });

@@ -23,4 +23,5 @@ public interface ApplicationRunService {
   String save(CanonicalizationRequest request);
 
   List<ApplicationRunResponse> getRunsByConfiguration(Long id);
+  List<ApplicationRunResponse> findAll();
 }

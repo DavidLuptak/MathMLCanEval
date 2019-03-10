@@ -72,4 +72,10 @@ public class ApplicationRunServiceImpl implements ApplicationRunService {
   public List<ApplicationRunResponse> getRunsByConfiguration(Long id) {
     return applicationRunMapper.map(applicationRunRepository.findByConfiguration(id));
   }
+
+  @ReadOnly
+  @Override
+  public List<ApplicationRunResponse> findAll() {
+    return applicationRunMapper.map(applicationRunRepository.findAll());
+  }
 }
