@@ -2,7 +2,7 @@
 
   <ng-container matColumnDef="id">
     <th mat-header-cell *matHeaderCellDef>{{translations.generic.id}}</th>
-    <td mat-cell *matCellDef="let element">{{element.id}}   </td>
+    <td mat-cell *matCellDef="let element" (click)="openAppRun(element.id)">{{element.id}}   </td>
   </ng-container>
 
   <ng-container matColumnDef="start">

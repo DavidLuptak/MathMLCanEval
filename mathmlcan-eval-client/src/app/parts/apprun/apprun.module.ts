@@ -6,10 +6,12 @@ import {RouterModule} from '@angular/router';
 import {ReactiveFormsModule} from '@angular/forms';
 import {ConfigurationModule} from '../configurations/configuration.module';
 import {ApprunService} from './apprun.service';
+import {ApprunComponent} from './apprun.component';
+import {CovalentHighlightModule} from '@covalent/highlight';
 
 @NgModule({
-  declarations: [ApprunListComponent, ApprunSetupComponent],
-  imports: [GenericModule, RouterModule, ReactiveFormsModule, ConfigurationModule],
+  declarations: [ApprunListComponent, ApprunSetupComponent, ApprunComponent],
+  imports: [GenericModule, RouterModule, ReactiveFormsModule, ConfigurationModule, CovalentHighlightModule],
   providers: [ApprunService]
 })
 export class ApprunModule {

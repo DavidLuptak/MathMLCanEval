@@ -15,6 +15,7 @@
  */
 package cz.muni.fi.mir.mathmlcaneval.service.impl;
 
+import cz.muni.fi.mir.mathmlcaneval.domain.CanonicOutput;
 import cz.muni.fi.mir.mathmlcaneval.domain.User;
 import cz.muni.fi.mir.mathmlcaneval.mappers.ApplicationRunMapper;
 import cz.muni.fi.mir.mathmlcaneval.repository.ApplicationRunRepository;
@@ -22,11 +23,16 @@ import cz.muni.fi.mir.mathmlcaneval.repository.FormulaCollectionRepository;
 import cz.muni.fi.mir.mathmlcaneval.repository.InputConfigurationRepository;
 import cz.muni.fi.mir.mathmlcaneval.repository.RevisionRepository;
 import cz.muni.fi.mir.mathmlcaneval.requests.CanonicalizationRequest;
+import cz.muni.fi.mir.mathmlcaneval.responses.ApplicationRunDetailedResponse;
+import cz.muni.fi.mir.mathmlcaneval.responses.ApplicationRunDetailedResponse.CanonicalizationContainer;
 import cz.muni.fi.mir.mathmlcaneval.responses.ApplicationRunResponse;
 import cz.muni.fi.mir.mathmlcaneval.security.SecurityService;
 import cz.muni.fi.mir.mathmlcaneval.service.ApplicationRunService;
 import cz.muni.fi.mir.mathmlcaneval.support.ReadOnly;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
@@ -70,12 +76,40 @@ public class ApplicationRunServiceImpl implements ApplicationRunService {
   @Override
   @ReadOnly
   public List<ApplicationRunResponse> getRunsByConfiguration(Long id) {
-    return applicationRunMapper.map(applicationRunRepository.findByConfiguration(id));
+    return applicationRunMapper.mapList(applicationRunRepository.findByConfiguration(id));
   }
 
   @ReadOnly
   @Override
   public List<ApplicationRunResponse> findAll() {
-    return applicationRunMapper.map(applicationRunRepository.findAll());
+    return applicationRunMapper.mapList(applicationRunRepository.findAll());
+  }
+
+  @ReadOnly
+  @Override
+  public Optional<ApplicationRunDetailedResponse> fetchDetailed(Long id) {
+    return applicationRunRepository
+      .findById(id)
+      .map(run -> {
+        ApplicationRunDetailedResponse result = applicationRunMapper.mapDetail(run);
+
+        Set<CanonicalizationContainer> dataSet = new HashSet<>();
+
+        for(CanonicOutput co : run.getCanonicOutputs()) {
+          // todo move to mapper
+          CanonicalizationContainer container = new CanonicalizationContainer();
+          container.setCanonicId(co.getId());
+          container.setCanonicalizationError(co.getError());
+          container.setCanonicXml(co.getXml());
+          container.setFormulaId(co.getFormula().getId());
+          container.setFormulaXml(co.getFormula().getXml());
+
+          dataSet.add(container);
+        }
+
+        result.setCanonicalizations(dataSet);
+
+        return result;
+      });
   }
 }

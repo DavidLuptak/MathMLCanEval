@@ -1,4 +1,5 @@
 import {AppTranslations} from '../app.translations';
+import {ActivatedRoute} from '@angular/router';
 
 export abstract class BaseComponent {
 /*  protected constructor() {
@@ -7,5 +8,9 @@ export abstract class BaseComponent {
 
   public get translations(): any {
     return AppTranslations.instant;
+  }
+
+  protected idFromRoute(route: ActivatedRoute): number {
+    return +route.snapshot.paramMap.get('id');
   }
 }

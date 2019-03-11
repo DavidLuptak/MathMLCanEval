@@ -10,7 +10,7 @@ import {MatTableDataSource} from '@angular/material';
 })
 export class RunningTaskListComponent extends TableComponent<RunningTaskResponse> implements OnInit {
 
-  displayedColumns = ['jobId', 'jobGroup', 'nextExecutionDate', 'state'];
+  displayedColumns = ['jobId', 'jobGroup', 'lastExecutionDate', 'controls'];
 
   constructor(private runningTaskService: RunningTasksService) {
     super();

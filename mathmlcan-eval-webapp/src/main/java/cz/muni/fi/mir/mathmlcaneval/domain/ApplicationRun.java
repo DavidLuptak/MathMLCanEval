@@ -16,11 +16,13 @@
 package cz.muni.fi.mir.mathmlcaneval.domain;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
@@ -45,4 +47,7 @@ public class ApplicationRun extends BaseEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "users")
   private User startedBy;
+
+  @OneToMany(mappedBy = "applicationRun")
+  private Set<CanonicOutput> canonicOutputs;
 }

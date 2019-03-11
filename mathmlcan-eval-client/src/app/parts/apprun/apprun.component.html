@@ -1,0 +1,61 @@
+<ng-container *ngIf="appRun && appRun.canonicalizations">
+  <ng-container *ngFor="let co of appRun.canonicalizations; let i = index; let last = last">
+    <div layout="row" fxLayoutGap="5px">
+      <div class flex="33">
+        <mat-card class="example-card">
+          <mat-card-header>
+            <mat-card-title>Formula #id</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <td-highlight lang="xml">
+              {{co.formulaXml}}
+            </td-highlight>
+          </mat-card-content>
+          <mat-divider></mat-divider>
+          <mat-card-content>
+            <div [innerHTML]="co.formulaXml | keepHtml" mathjax></div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      <div class flex="33">
+        <mat-card class="example-card">
+          <mat-card-header>
+            <mat-card-title>Formula #id</mat-card-title>
+          </mat-card-header>
+          <mat-card-content>
+            <td-highlight lang="xml">
+              {{co.canonicXml}}
+            </td-highlight>
+          </mat-card-content>
+          <mat-divider></mat-divider>
+          <mat-card-content>
+            <div [innerHTML]="co.canonicXml | keepHtml" mathjax></div>
+          </mat-card-content>
+        </mat-card>
+      </div>
+      <div class flex="33">
+        <mat-card class="example-card">
+          <mat-card-header>
+            <mat-card-title>Shiba Inu</mat-card-title>
+            <mat-card-subtitle>Dog Breed</mat-card-subtitle>
+          </mat-card-header>
+          <mat-card-content>
+            <p>
+              The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog
+              from Japan.
+              A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was
+              originally
+              bred for hunting.
+            </p>
+          </mat-card-content>
+          <mat-card-actions>
+            <mat-form-field class="push-left push-right" flex layout="row" floatPlaceholder="never">
+              <textarea flex matInput placeholder="message"></textarea>
+            </mat-form-field>
+          </mat-card-actions>
+        </mat-card>
+      </div>
+    </div>
+    <mat-divider *ngIf="index != last"></mat-divider>
+  </ng-container>
+</ng-container>

@@ -29,15 +29,13 @@ export class FormulaComponent extends BaseComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const id = +this.route.snapshot.paramMap.get('id');
-    this.formulaService.get(id)
+    this.formulaService.get(this.idFromRoute(this.route))
     .subscribe(res => this.formula = res);
 
     this.expandedElement = this.dataSource.slice(0,1)[0];
   }
 
   fetchOutputsFromRun(element: PeriodicElement): void {
-    console.log(element);
     this.expandedElement = this.expandedElement === element ? null : element
   }
 }

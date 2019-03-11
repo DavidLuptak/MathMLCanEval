@@ -15,7 +15,7 @@ export class AuthInterceptor implements HttpInterceptor {
   constructor(private securityService: SecurityService) {
     this.protectedResources = new Map<string, RegExp[]>(
       [
-        ['GET', [new RegExp(/^\/api\/me$/i), new RegExp(/^\/api\/running-tasks$/i), new RegExp(/^\/api\/app-runs$/i)]],
+        ['GET', [new RegExp(/^\/api\/me$/i), new RegExp(/^\/api\/running-tasks$/i), new RegExp(/^\/api\/app-runs$/i), new RegExp(/^\/api\/app-runs\/\d+\/details$/i)]],
         ['POST', [new RegExp(/^\/api\/configurations$/i), new RegExp(/^\/api\/collections$/i), new RegExp(/^\/api\/revisions$/i), new RegExp(/^\/api\/app-runs$/i)]],
         ['PATCH', [new RegExp(/^\/api\/revisions\/\d+$/i)]]
       ]
@@ -23,6 +23,7 @@ export class AuthInterceptor implements HttpInterceptor {
   }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    // todo https://stackoverflow.com/a/45932412/1203690
     if(req.url !== TOKEN_URL && req.url !== REVOKE_URL) {
       for (const resource of this.protectedResources.get(req.method)) {
         if(resource.test(this.path(req.url))) {

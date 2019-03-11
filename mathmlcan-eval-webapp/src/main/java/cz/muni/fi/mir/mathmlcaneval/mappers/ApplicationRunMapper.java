@@ -19,10 +19,17 @@ import cz.muni.fi.mir.mathmlcaneval.domain.ApplicationRun;
 import cz.muni.fi.mir.mathmlcaneval.domain.User;
 import cz.muni.fi.mir.mathmlcaneval.events.CanonicalizationEvent;
 import cz.muni.fi.mir.mathmlcaneval.requests.CanonicalizationRequest;
+import cz.muni.fi.mir.mathmlcaneval.responses.ApplicationRunDetailedResponse;
 import cz.muni.fi.mir.mathmlcaneval.responses.ApplicationRunResponse;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.util.List;
+import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.Qualifier;
 
 @Mapper(componentModel = "spring")
 public interface ApplicationRunMapper {
@@ -30,16 +37,26 @@ public interface ApplicationRunMapper {
   @Mapping(source = "inputConfiguration.id", target = "configurationId")
   @Mapping(source = "revision.id", target = "revisionId")
   @Mapping(source = "startedBy.id", target = "startedById")
+  @RunCollectionMapper
   ApplicationRunResponse map(ApplicationRun run);
 
-  List<ApplicationRunResponse> map(List<ApplicationRun> runs);
+  @IterableMapping(qualifiedBy = RunCollectionMapper.class)
+  List<ApplicationRunResponse> mapList(List<ApplicationRun> runs);
 
   @Mapping(source = "configurationId", target = "inputConfiguration.id")
   @Mapping(source = "revisionId", target = "revision.id")
-  ApplicationRun map(CanonicalizationRequest request);
+  ApplicationRun mapRequest(CanonicalizationRequest request);
+
+
+  @Mapping(source = "inputConfiguration.id", target = "configurationId")
+  @Mapping(source = "inputConfiguration.content", target = "configurationXml")
+  @Mapping(source = "revision.id", target = "revisionId")
+  @Mapping(source = "revision.sha1", target = "revisionHash")
+  @Mapping(source = "startedBy.id", target = "startedById")
+  ApplicationRunDetailedResponse mapDetail(ApplicationRun run);
 
   default ApplicationRun map(CanonicalizationRequest request, User startedBy) {
-    final var run = map(request);
+    final var run = mapRequest(request);
     run.setStartedBy(startedBy);
 
     return run;
@@ -52,5 +69,13 @@ public interface ApplicationRunMapper {
       request.getCollectionId(),
       request.getPostProcessors()
     );
+  }
+
+
+  @Qualifier
+  @Target(ElementType.METHOD)
+  @Retention(RetentionPolicy.CLASS)
+  @interface RunCollectionMapper {
+
   }
 }
