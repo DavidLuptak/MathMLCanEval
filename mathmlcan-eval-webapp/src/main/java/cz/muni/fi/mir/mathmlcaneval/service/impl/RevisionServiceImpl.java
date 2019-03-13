@@ -24,10 +24,11 @@ import cz.muni.fi.mir.mathmlcaneval.responses.RevisionResponse;
 import cz.muni.fi.mir.mathmlcaneval.service.PatchingService;
 import cz.muni.fi.mir.mathmlcaneval.service.RevisionService;
 import cz.muni.fi.mir.mathmlcaneval.support.ReadOnly;
-import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,10 +41,12 @@ public class RevisionServiceImpl implements RevisionService {
   private final PatchingService patchingService;
   private final ApplicationEventPublisher applicationEventPublisher;
 
-  @Override
   @ReadOnly
-  public List<RevisionResponse> findAll() {
-    return revisionMapper.map(revisionRepository.findAll());
+  @Override
+  public Page<RevisionResponse> findAll(Pageable pageable) {
+    return revisionRepository
+      .findAll(pageable)
+      .map(revisionMapper::map);
   }
 
   @Override

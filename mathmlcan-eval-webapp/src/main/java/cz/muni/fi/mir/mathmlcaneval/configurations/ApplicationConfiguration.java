@@ -18,6 +18,9 @@ package cz.muni.fi.mir.mathmlcaneval.configurations;
 import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 import cz.muni.fi.mir.mathmlcaneval.configurations.props.LocationProperties;
 import cz.muni.fi.mir.mathmlcaneval.support.MavenInvokerOutputHandler;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.Level;
@@ -40,6 +43,7 @@ import org.zalando.problem.ProblemModule;
 @RequiredArgsConstructor
 @EnableJpaRepositories(bootstrapMode = BootstrapMode.LAZY, enableDefaultTransactions = false, basePackages = "cz.muni.fi.mir.mathmlcaneval.repository")
 public class ApplicationConfiguration {
+
   private final LocationProperties locationProperties;
 
   @Bean
@@ -63,5 +67,11 @@ public class ApplicationConfiguration {
     invoker.setOutputHandler(new MavenInvokerOutputHandler(Level.TRACE));
 
     return invoker;
+  }
+
+  @Bean
+  public DocumentBuilder documentBuilder() throws ParserConfigurationException {
+    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    return factory.newDocumentBuilder();
   }
 }

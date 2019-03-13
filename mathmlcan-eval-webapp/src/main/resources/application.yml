@@ -25,7 +25,7 @@ spring:
       ddl-auto: validate
     open-in-view: false
     properties:
-      hibernate.dialect: org.hibernate.dialect.PostgreSQL95Dialect
+      hibernate.dialect: cz.muni.fi.mir.mathmlcaneval.support.ExtendedPostgreSQLDialect
 #      hibernate.connection.provider_disables_autocommit: true
   mvc:
     favicon:
@@ -40,7 +40,7 @@ spring:
     driver-class-name: org.postgresql.Driver
   liquibase:
     change-log: classpath:/db-changelog.xml
-    drop-first: false
+    drop-first: true
     contexts: test
   quartz:
     jdbc:

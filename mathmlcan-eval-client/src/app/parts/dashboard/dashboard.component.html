@@ -1,17 +1,33 @@
-<div tdMediaToggle="gt-xs" [mediaClasses]="['push-md']">
-  <mat-card>
-    <mat-nav-list flex>
-      <ng-template let-item let-i="index" let-last="last" ngFor [ngForOf]="[0,1,2,3,4,5,6,7,8,9]">
-        <a mat-list-item (click)="openDialog()">
-          <img matListAvatar src="https://api.adorable.io/avatars/285/{{i}}@adorable.io.png" />
-          <h4 matLine class="cursor-pointer"> Firstname Lastname </h4>
-          <span flex="100" class="mat-caption tc-grey-600">first.last@email.com</span>
-          <button mat-icon-button matTooltip="Star contact"><mat-icon>star_outline</mat-icon></button>
-          <button mat-icon-button matTooltip="Edit contact"><mat-icon>edit</mat-icon></button>
-          <button mat-icon-button matTooltip="More actions"><mat-icon>more_vert</mat-icon></button>
-        </a>
-        <mat-divider *ngIf="!last" mat-inset></mat-divider>
-      </ng-template>
-    </mat-nav-list>
-  </mat-card>
-</div>
+<mat-grid-list cols="4" rowHeight="100px">
+  <mat-grid-tile
+    [colspan]="3"
+    [rowspan]="1"
+  >
+moje runy vs oanotovane vystupy
+  </mat-grid-tile>
+  <mat-grid-tile
+    [colspan]="1"
+    [rowspan]="2"
+  >
+  moje kolekcie
+  </mat-grid-tile>
+  <mat-grid-tile
+    [colspan]="1"
+    [rowspan]="1"
+  >
+    <mat-list>
+      <h3 mat-subheader>Folders</h3>
+      <mat-list-item *ngFor="let folder of folders">
+        <mat-icon mat-list-icon>folder</mat-icon>
+        <h4 mat-line>{{folder.name}}</h4>
+        <p mat-line> {{folder.updated | date}} </p>
+      </mat-list-item>
+    </mat-list>
+  </mat-grid-tile>
+  <mat-grid-tile
+    [colspan]="2"
+    [rowspan]="1"
+  >
+    todo
+  </mat-grid-tile>
+</mat-grid-list>

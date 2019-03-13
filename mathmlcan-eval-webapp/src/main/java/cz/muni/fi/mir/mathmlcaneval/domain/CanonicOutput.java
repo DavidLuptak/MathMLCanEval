@@ -15,6 +15,7 @@
  */
 package cz.muni.fi.mir.mathmlcaneval.domain;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -43,4 +44,8 @@ public class CanonicOutput extends BaseEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "application_run")
   private ApplicationRun applicationRun;
+
+  @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
+  @JoinColumn(name = "similarity_form")
+  private SimilarityForm similarityForm;
 }

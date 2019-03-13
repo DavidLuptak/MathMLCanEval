@@ -27,6 +27,8 @@ import cz.muni.fi.mir.mathmlcaneval.support.ReadOnly;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,10 +51,12 @@ public class FormulaCollectionServiceImpl implements FormulaCollectionService {
     return formulaCollectionMapper.map(collection);
   }
 
-  @Override
   @ReadOnly
-  public List<FormulaCollectionResponse> findAll() {
-    return formulaCollectionMapper.map(formulaCollectionRepository.findAll());
+  @Override
+  public Page<FormulaCollectionResponse> findAll(Pageable pageable) {
+    return formulaCollectionRepository
+      .findAll(pageable)
+      .map(formulaCollectionMapper::map);
   }
 
   @Override

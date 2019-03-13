@@ -18,10 +18,12 @@ package cz.muni.fi.mir.mathmlcaneval.scheduling.jobs;
 import cz.muni.fi.mir.mathmlcaneval.domain.ApplicationRun;
 import cz.muni.fi.mir.mathmlcaneval.domain.CanonicOutput;
 import cz.muni.fi.mir.mathmlcaneval.domain.Formula;
+import cz.muni.fi.mir.mathmlcaneval.domain.SimilarityForm;
 import cz.muni.fi.mir.mathmlcaneval.repository.ApplicationRunRepository;
 import cz.muni.fi.mir.mathmlcaneval.repository.CanonicOutputRepository;
 import cz.muni.fi.mir.mathmlcaneval.repository.FormulaRepository;
 import cz.muni.fi.mir.mathmlcaneval.service.CanonicalizerService;
+import cz.muni.fi.mir.mathmlcaneval.service.SimilarityService;
 import cz.muni.fi.mir.mathmlcaneval.service.support.CanonicalizationPostProcessorRegistry;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -62,6 +64,8 @@ public class CanonicalizationJob implements Job {
   private CanonicalizerService canonicalizerService;
   @Autowired
   private CanonicalizationPostProcessorRegistry postProcessorRegistry;
+  @Autowired
+  private SimilarityService similarityService;
 
   @Override
   public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
@@ -80,7 +84,14 @@ public class CanonicalizationJob implements Job {
         tmp.getRun().getInputConfiguration().getContent(), tmp.getFormulas(), tmp.getRun());
 
     final var postProcessors = postProcessorRegistry.getProcessors(Collections.emptyList());
-    result.forEach(co -> postProcessors.forEach(pp -> pp.process(co)));
+    result.forEach(co -> {
+      postProcessors.forEach(pp -> pp.process(co));
+
+      SimilarityForm sf = similarityService.generateSimilarity(co);
+      co.setSimilarityForm(sf);
+    });
+
+
 
     transactionTemplate.execute(new TransactionCallbackWithoutResult() {
       @Override

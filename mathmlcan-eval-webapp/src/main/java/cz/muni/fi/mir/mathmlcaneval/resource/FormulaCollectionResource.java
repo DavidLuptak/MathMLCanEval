@@ -24,6 +24,8 @@ import java.net.URI;
 import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -42,8 +44,8 @@ public class FormulaCollectionResource {
   private final FormulaService formulaService;
 
   @GetMapping
-  public List<FormulaCollectionResponse> listAll() {
-    return formulaCollectionService.findAll();
+  public Page<FormulaCollectionResponse> listAll(Pageable pageable) {
+    return formulaCollectionService.findAll(pageable);
   }
 
   @PostMapping

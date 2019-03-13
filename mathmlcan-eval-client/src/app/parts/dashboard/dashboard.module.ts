@@ -4,7 +4,8 @@ import {GenericModule} from '../../shared/generic.module';
 
 @NgModule({
   declarations: [DashboardComponent],
-  imports: [GenericModule]
+  imports: [GenericModule
+  ]
 })
 export class DashboardModule {
 

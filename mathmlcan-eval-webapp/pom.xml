@@ -129,6 +129,14 @@
       <groupId>org.javers</groupId>
       <artifactId>javers-core</artifactId>
     </dependency>
+    <dependency>
+      <groupId>net.mikera</groupId>
+      <artifactId>vectorz</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.vladmihalcea</groupId>
+      <artifactId>hibernate-types-52</artifactId>
+    </dependency>
 
     <!-- jdk11 -->
     <dependency>

@@ -23,9 +23,10 @@ import cz.muni.fi.mir.mathmlcaneval.service.PatchingService;
 import cz.muni.fi.mir.mathmlcaneval.service.RevisionService;
 import cz.muni.fi.mir.mathmlcaneval.service.support.JsonPatchParser;
 import cz.muni.fi.mir.mathmlcaneval.support.Response;
-import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -45,8 +46,8 @@ public class RevisionResource {
 
 
   @GetMapping
-  public List<RevisionResponse> findAll() {
-    return revisionService.findAll();
+  public Page<RevisionResponse> findAll(Pageable pageable) {
+    return revisionService.findAll(pageable);
   }
 
   @PostMapping

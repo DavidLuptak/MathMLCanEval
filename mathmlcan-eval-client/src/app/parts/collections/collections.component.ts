@@ -4,6 +4,7 @@ import {Component, OnInit} from '@angular/core';
 import {CollectionsService} from './collections.service';
 import {Router} from '@angular/router';
 import {MatTableDataSource} from '@angular/material';
+import {Page} from '../../models/page';
 
 @Component({
   selector: 'collections-component',
@@ -22,6 +23,6 @@ export class CollectionsComponent extends TableComponent<FormulaCollectionRespon
   ngOnInit(): void {
     this.collectionsService
     .query()
-    .subscribe((rows: FormulaCollectionResponse[]) => this.pushRows(rows));
+    .subscribe((page: Page<FormulaCollectionResponse>) => this.pushRows(page.content));
   }
 }

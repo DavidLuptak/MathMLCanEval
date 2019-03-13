@@ -20,6 +20,8 @@ import cz.muni.fi.mir.mathmlcaneval.responses.ApplicationRunDetailedResponse;
 import cz.muni.fi.mir.mathmlcaneval.responses.ApplicationRunResponse;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface ApplicationRunService {
 
@@ -27,7 +29,7 @@ public interface ApplicationRunService {
 
   List<ApplicationRunResponse> getRunsByConfiguration(Long id);
 
-  List<ApplicationRunResponse> findAll();
+  Page<ApplicationRunResponse> findAll(Pageable pageable);
 
   Optional<ApplicationRunDetailedResponse> fetchDetailed(Long id);
 }

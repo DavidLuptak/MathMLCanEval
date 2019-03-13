@@ -3,6 +3,7 @@ import {RunningTaskResponse} from '../../models/running-task.response';
 import {Component, OnInit} from '@angular/core';
 import {RunningTasksService} from './running-tasks.service';
 import {MatTableDataSource} from '@angular/material';
+import {Page} from '../../models/page';
 
 @Component({
   selector: 'running-task-list',
@@ -21,7 +22,7 @@ export class RunningTaskListComponent extends TableComponent<RunningTaskResponse
   ngOnInit(): void {
     this.runningTaskService
     .query()
-    .subscribe((tasks: RunningTaskResponse[]) => this.pushRows(tasks));
+    .subscribe((page: Page<RunningTaskResponse>) => this.pushRows(page.content));
   }
 
 

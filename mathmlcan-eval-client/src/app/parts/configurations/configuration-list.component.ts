@@ -6,6 +6,7 @@ import {Router} from '@angular/router';
 import {MatDialog, MatTableDataSource} from '@angular/material';
 import {NewConfigurationComponent} from './new-configuration.component';
 import {AppRunResponse} from '../../models/app-run.response';
+import {Page} from '../../models/page';
 
 @Component({
   selector: 'configuration-list',
@@ -30,7 +31,7 @@ export class ConfigurationListComponent extends TableComponent<ConfigurationResp
   ngOnInit(): void {
     this.configurationService
     .query()
-    .subscribe((rows: ConfigurationResponse[]) => this.pushRows(rows));
+    .subscribe((page: Page<ConfigurationResponse>) => this.pushRows(page.content));
   }
 
   selectConfig(id: number): void {

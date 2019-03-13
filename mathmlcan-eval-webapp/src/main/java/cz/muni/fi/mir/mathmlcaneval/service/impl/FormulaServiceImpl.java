@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -37,12 +38,6 @@ public class FormulaServiceImpl implements FormulaService {
 
   @ReadOnly
   @Override
-  public List<FormulaResponse> findAll() {
-    return formulaMapper.map(formulaRepository.findAll());
-  }
-
-  @ReadOnly
-  @Override
   public Optional<FormulaResponse> findById(Long id) {
     return formulaRepository.findById(id)
       .map(formulaMapper::map);
@@ -50,8 +45,10 @@ public class FormulaServiceImpl implements FormulaService {
 
   @ReadOnly
   @Override
-  public List<FormulaResponse> findAll(Pageable pageable) {
-    return formulaMapper.map(formulaRepository.findAll(pageable).getContent());
+  public Page<FormulaResponse> findAll(Pageable pageable) {
+    return formulaRepository
+      .findAll(pageable)
+      .map(formulaMapper::map);
   }
 
   @ReadOnly

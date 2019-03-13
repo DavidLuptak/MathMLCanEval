@@ -5,7 +5,8 @@
         <mat-icon>menu</mat-icon>
       </button>
       <span>{{translations.title}}</span>
-      <span flex></span>
+      <span flex *ngIf="!searchBox.searchVisible"></span>
+      <td-search-box hide-xs flex #searchBox [ngClass]="{'push-left push-right mat-whiteframe-z1 bgc-white tc-black': searchBox.searchVisible }"  placeholder="search"></td-search-box>
       <login-dropdown-component></login-dropdown-component>
     </div>
     <mat-sidenav-container fullscreen>

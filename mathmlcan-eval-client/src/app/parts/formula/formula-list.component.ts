@@ -8,6 +8,8 @@ import {CollectionsService} from '../collections/collections.service';
 import {MatDialog} from '@angular/material';
 import {NewCollectionComponent} from '../collections/new-collection.component';
 import {FormulaCollectionNew} from '../../models/formula-collection.new';
+import {Form} from '@angular/forms';
+import {Page} from '../../models/page';
 
 @Component({
   selector: 'formula-list',
@@ -34,7 +36,7 @@ export class FormulaListComponent extends BaseComponent implements OnInit {
   ngOnInit(): void {
     this.formulaService
     .query(new QueryParamsBuilder().withPage(2).build())
-    .subscribe((res: FormulaResponse[]) => this.formulas = res);
+    .subscribe((page: Page<FormulaResponse>) => this.formulas = page.content);
   }
 
 
@@ -45,7 +47,7 @@ export class FormulaListComponent extends BaseComponent implements OnInit {
 
     this.formulaService
     .query(qpb.build())
-    .subscribe((res: FormulaResponse[]) => this.formulas = res);
+    .subscribe((page: Page<FormulaResponse>) => this.formulas = page.content);
 
     this.eventResponsive = event;
   }

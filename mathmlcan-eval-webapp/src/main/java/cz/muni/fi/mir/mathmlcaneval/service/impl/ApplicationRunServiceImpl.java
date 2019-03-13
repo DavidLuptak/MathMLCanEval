@@ -35,6 +35,8 @@ import java.util.Optional;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -81,9 +83,10 @@ public class ApplicationRunServiceImpl implements ApplicationRunService {
 
   @ReadOnly
   @Override
-  public List<ApplicationRunResponse> findAll() {
-    return applicationRunMapper.mapList(applicationRunRepository.findAll());
-  }
+  public Page<ApplicationRunResponse> findAll(Pageable pageable) {
+    return applicationRunRepository.findAll(pageable)
+      .map(run -> applicationRunMapper.map(run));
+   }
 
   @ReadOnly
   @Override

@@ -5,6 +5,7 @@ import {environment} from '../../environments/environment';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 import {Operation} from 'fast-json-patch';
+import {Page} from '../models/page';
 
 const API = environment.apiUrl;
 
@@ -33,10 +34,16 @@ export abstract class AbstractService<T extends Resource, ID> {
     .pipe(map((data: HttpResponse<T>) => this._serializer.fromJson(data.body)));
   }
 
-  public query(params?: HttpParams): Observable<T[]> {
+  public query(params?: HttpParams): Observable<Page<T>> {
     return this._httpClient
-    .get<T>(`${this.resource}`, {params: params})
-    .pipe(map((data: any) => this.mapList(data)));
+    .get<Page<T>>(`${this.resource}`, {observe: 'response', params: params})
+    .pipe(map((data: HttpResponse<Page<any>>) => {
+      console.log(data.body);
+      const copy = Object.assign({}, data.body);
+      copy.content = this.mapList(data.body.content);
+
+      return copy;
+    }));
   }
 
   public patch(id: ID, patch: Operation[]): Observable<T> {

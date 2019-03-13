@@ -4,6 +4,7 @@ import {AppRunResponse} from '../../models/app-run.response';
 import {ApprunService} from './apprun.service';
 import {MatTableDataSource} from '@angular/material';
 import {Router} from '@angular/router';
+import {Page} from '../../models/page';
 
 @Component({
   selector: 'apprun-list',
@@ -23,7 +24,7 @@ export class ApprunListComponent extends TableComponent<AppRunResponse> implemen
   ngOnInit(): void {
     this.appRunService
     .query()
-    .subscribe((runs: AppRunResponse[]) => this.pushRows(runs));
+    .subscribe((page: Page<AppRunResponse>) => this.pushRows(page.content));
   }
 
   openAppRun(id: number): void {

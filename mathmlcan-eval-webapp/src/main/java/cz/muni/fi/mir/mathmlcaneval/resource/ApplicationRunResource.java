@@ -20,9 +20,10 @@ import cz.muni.fi.mir.mathmlcaneval.responses.ApplicationRunDetailedResponse;
 import cz.muni.fi.mir.mathmlcaneval.responses.ApplicationRunResponse;
 import cz.muni.fi.mir.mathmlcaneval.service.ApplicationRunService;
 import cz.muni.fi.mir.mathmlcaneval.support.Response;
-import java.util.List;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -46,8 +47,8 @@ public class ApplicationRunResource {
   }
 
   @GetMapping
-  public List<ApplicationRunResponse> listRuns() {
-    return applicationRunService.findAll();
+  public Page<ApplicationRunResponse> listRuns(Pageable pageable) {
+    return applicationRunService.findAll(pageable);
   }
 
   @GetMapping("/{id}/details")

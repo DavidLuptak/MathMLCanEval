@@ -7,6 +7,7 @@ import {NewRevisionComponent} from './new-revision.component';
 import {generate, observe, Observer} from 'fast-json-patch';
 import {forkJoin} from 'rxjs';
 import {SecurityService} from '../../shared/security/security.service';
+import {Page} from '../../models/page';
 
 @Component({
   selector: 'revision-list',
@@ -32,7 +33,7 @@ export class RevisionListComponent extends TableComponent<RevisionResponse> impl
   ngOnInit(): void {
     this.revisionService
     .query()
-    .subscribe((rows: RevisionResponse[]) => this.pushRows(rows));
+    .subscribe((page: Page<RevisionResponse>) => this.pushRows(page.content));
   }
 
   requestManualSync(): void {
@@ -66,6 +67,7 @@ export class RevisionListComponent extends TableComponent<RevisionResponse> impl
     if (requests.length) {
       forkJoin(requests).subscribe(results => {
         console.log(results);
+        this.currentKey = null;
       });
     }
   }

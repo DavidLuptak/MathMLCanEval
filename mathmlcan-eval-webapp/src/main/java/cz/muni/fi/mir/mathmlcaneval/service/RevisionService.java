@@ -18,12 +18,13 @@ package cz.muni.fi.mir.mathmlcaneval.service;
 import com.github.fge.jsonpatch.JsonPatch;
 import cz.muni.fi.mir.mathmlcaneval.requests.SyncRevisionRequest;
 import cz.muni.fi.mir.mathmlcaneval.responses.RevisionResponse;
-import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public interface RevisionService {
 
-  List<RevisionResponse> findAll();
+  Page<RevisionResponse> findAll(Pageable pageable);
 
   void syncRevisions(SyncRevisionRequest request);
 

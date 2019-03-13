@@ -23,9 +23,10 @@ import cz.muni.fi.mir.mathmlcaneval.responses.ConfigurationResponse;
 import cz.muni.fi.mir.mathmlcaneval.security.SecurityService;
 import cz.muni.fi.mir.mathmlcaneval.service.InputConfigurationService;
 import cz.muni.fi.mir.mathmlcaneval.support.ReadOnly;
-import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -35,10 +36,11 @@ public class InputConfigurationServiceImpl implements InputConfigurationService 
   private final InputConfigurationRepository inputConfigurationRepository;
   private final SecurityService securityService;
 
-  @ReadOnly
   @Override
-  public List<ConfigurationResponse> findAll() {
-    return configurationMapper.map(inputConfigurationRepository.findAll());
+  public Page<ConfigurationResponse> findAll(Pageable pageable) {
+    return inputConfigurationRepository
+      .findAll(pageable)
+      .map(configurationMapper::map);
   }
 
   @ReadOnly

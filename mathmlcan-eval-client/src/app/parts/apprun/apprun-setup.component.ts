@@ -4,7 +4,7 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {RevisionResponse} from '../../models/revision.response';
 import {RevisionService} from '../revisions/revision.service';
 import {Observable} from 'rxjs';
-import {debounceTime, distinctUntilChanged, startWith, switchMap} from 'rxjs/operators';
+import {debounceTime, distinctUntilChanged, map, startWith, switchMap} from 'rxjs/operators';
 import {MatAutocompleteSelectedEvent} from '@angular/material';
 import {ConfigurationResponse} from '../../models/configuration.response';
 import {NamedResource} from '../../shared/named-resource';
@@ -13,6 +13,7 @@ import {FormulaCollectionResponse} from '../../models/formula-collection.respons
 import {CollectionsService} from '../collections/collections.service';
 import {AppRunRequest} from '../../models/app-run.request';
 import {ApprunService} from './apprun.service';
+import {Page} from '../../models/page';
 
 @Component({
   selector: 'apprun-setup',
@@ -79,15 +80,15 @@ export class ApprunSetupComponent extends BaseComponent implements OnInit {
   }
 
   private _filterRevision(value: string): Observable<RevisionResponse[]> {
-    return this.revisionService.query();
+    return this.revisionService.query().pipe(map((page: Page<RevisionResponse>) => page.content));
   }
 
   private _filterConfiguration(value: string): Observable<ConfigurationResponse[]> {
-    return this.configurationService.query();
+    return this.configurationService.query().pipe(map((page: Page<ConfigurationResponse>) => page.content))
   }
 
   private _filterCollections(value: string): Observable<FormulaCollectionResponse[]> {
-    return this.collectionsService.query();
+    return this.collectionsService.query().pipe(map((page: Page<FormulaCollectionResponse>) => page.content))
   }
 
   selected(event: MatAutocompleteSelectedEvent, type: string): void {
