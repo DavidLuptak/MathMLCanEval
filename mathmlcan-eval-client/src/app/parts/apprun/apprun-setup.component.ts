@@ -14,6 +14,7 @@ import {CollectionsService} from '../collections/collections.service';
 import {AppRunRequest} from '../../models/app-run.request';
 import {ApprunService} from './apprun.service';
 import {Page} from '../../models/page';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'apprun-setup',
@@ -41,7 +42,8 @@ export class ApprunSetupComponent extends BaseComponent implements OnInit {
               private revisionService: RevisionService,
               private configurationService: ConfigurationService,
               private collectionsService: CollectionsService,
-              private applicationRunService: ApprunService) {
+              private applicationRunService: ApprunService,
+              private router: Router) {
     super();
 
     this.revisionFormGroup = this._formBuilder.group({
@@ -116,7 +118,7 @@ export class ApprunSetupComponent extends BaseComponent implements OnInit {
 
     this.applicationRunService
     .save(request)
-    .subscribe(() => console.log('ok'));
+    .subscribe(() => this.router.navigate(['/app-runs']));
   }
 
   displayFn(namedResource: NamedResource): string | undefined {

@@ -19,10 +19,12 @@ import cz.muni.fi.mir.mathmlcaneval.domain.Formula;
 import cz.muni.fi.mir.mathmlcaneval.responses.FormulaResponse;
 import java.util.List;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface FormulaMapper {
 
+  @Mapping(source = "pretty", target = "xml")
   FormulaResponse map(Formula formula);
 
   List<FormulaResponse> map(List<Formula> formulas);

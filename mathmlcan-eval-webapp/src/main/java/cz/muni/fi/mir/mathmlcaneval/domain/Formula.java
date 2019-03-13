@@ -15,6 +15,7 @@
  */
 package cz.muni.fi.mir.mathmlcaneval.domain;
 
+import cz.muni.fi.mir.mathmlcaneval.support.XmlContent;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -29,9 +30,11 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "formulas")
-public class Formula extends BaseEntity {
+public class Formula extends BaseEntity implements XmlContent {
   @Column(columnDefinition = "xml")
-  private String xml;
+  private String raw;
+  @Column(columnDefinition = "xml")
+  private String pretty;
   private String note;
   private String hashValue;
   private LocalDateTime insertTime;
@@ -39,4 +42,9 @@ public class Formula extends BaseEntity {
 
   @OneToMany(mappedBy = "formula")
   private Set<CanonicOutput> canonicOutputs = new HashSet<>();
+
+  @Override
+  public String getXmlContent() {
+    return this.raw;
+  }
 }

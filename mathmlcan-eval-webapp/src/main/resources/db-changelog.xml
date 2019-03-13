@@ -282,10 +282,6 @@
     </createTable>
   </changeSet>
 
-  <changeSet id="2018.02.24.01" author="dominik.szalai" context="test">
-    <sqlFile path="test-data/formulas.sql"/>
-  </changeSet>
-
   <changeSet id="2018.02.25.01" author="dominik.szalai">
     <createTable tableName="formula_collections_formulas">
       <column name="formula_collection" type="bigint">
@@ -323,23 +319,6 @@
     </insert>
   </changeSet>
 
-  <!--<changeSet id="2019.02.26" author="dominik.szalai" context="test">
-    <insert tableName="revisions">
-      <column name="id" value="1"/>
-      <column name="sha1" value="3d66b66bb73b0c6193df6871c51d2b1a3dabad9c"/>
-      <column name="commit_time" value="2018-11-14 16:50:00"/>
-      <column name="sync_time" value="2018-11-14 17:50:00"/>
-      <column name="name" value="3d66b66bb73b0c6193df6871c51d2b1a3dabad9c"/>
-    </insert>
-    <insert tableName="revisions">
-      <column name="id" value="2"/>
-      <column name="sha1" value="0168682e9d4332ac1142b4dff7beac247e38d5d4"/>
-      <column name="commit_time" value="2018-10-23 11:34:00"/>
-      <column name="sync_time" value="2018-10-23 11:35:00"/>
-      <column name="name" value="0168682e9d4332ac1142b4dff7beac247e38d5d4"/>
-    </insert>
-  </changeSet>-->
-
   <changeSet id="2019.02.27.01" author="dominik.szalai" context="test">
     <sqlFile path="test-data/configurations.sql"/>
   </changeSet>
@@ -350,7 +329,7 @@
     </addColumn>
   </changeSet>
 
-  <changeSet id="2019.03.12" author="dominik.szalai">
+  <changeSet id="2019.03.12.01" author="dominik.szalai">
     <sql splitStatements="false">
       <![CDATA[
         CREATE OR REPLACE FUNCTION vector_similarity(v1 numeric[], v2 numeric[]) RETURNS decimal AS $$
@@ -378,6 +357,42 @@
     <addColumn tableName="canonic_outputs">
       <column name="similarity_form" type="bigint" />
     </addColumn>
+  </changeSet>
+
+  <changeSet id="2019.03.13.01" author="dominik.szalai">
+    <createTable tableName="mathml_elements">
+      <column name="id" type="bigint">
+        <constraints nullable="false" primaryKey="true" primaryKeyName="pk__elements" />
+      </column>
+      <column name="element" type="varchar(52)">
+        <constraints nullable="false"/>
+      </column>
+      <column name="vector_position" type="integer">
+        <constraints nullable="false" />
+      </column>
+    </createTable>
+
+
+    <loadData tableName="mathml_elements" file="default-data/mathml_elements.csv">
+      <column name="id" type="numeric"/>
+      <column name="element" type="string"/>
+      <column name="vector_position" type="numeric" />
+    </loadData>
+
+    <renameColumn tableName="formulas" oldColumnName="xml" newColumnName="raw" />
+    <addColumn tableName="formulas">
+      <column name="pretty" type="xml" />
+    </addColumn>
+
+    <renameColumn tableName="canonic_outputs" oldColumnName="xml" newColumnName="raw" />
+    <addColumn tableName="canonic_outputs">
+      <column name="pretty" type="xml" />
+    </addColumn>
+  </changeSet>
+
+
+  <changeSet id="2018.03.13.02" author="dominik.szalai" context="test">
+    <sqlFile path="test-data/formulas.sql"/>
   </changeSet>
 
 </databaseChangeLog>

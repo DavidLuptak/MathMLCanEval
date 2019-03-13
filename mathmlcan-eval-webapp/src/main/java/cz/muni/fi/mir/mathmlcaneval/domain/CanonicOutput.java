@@ -15,6 +15,7 @@
  */
 package cz.muni.fi.mir.mathmlcaneval.domain;
 
+import cz.muni.fi.mir.mathmlcaneval.support.XmlContent;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -29,10 +30,12 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "canonic_outputs")
-public class CanonicOutput extends BaseEntity {
+public class CanonicOutput extends BaseEntity implements XmlContent {
 
   @Column(columnDefinition = "xml")
-  private String xml;
+  private String raw;
+  @Column(columnDefinition = "xml")
+  private String pretty;
   private String hash;
   private String error;
   private byte[] thumbnail;
@@ -48,4 +51,10 @@ public class CanonicOutput extends BaseEntity {
   @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
   @JoinColumn(name = "similarity_form")
   private SimilarityForm similarityForm;
+
+
+  @Override
+  public String getXmlContent() {
+    return this.raw;
+  }
 }

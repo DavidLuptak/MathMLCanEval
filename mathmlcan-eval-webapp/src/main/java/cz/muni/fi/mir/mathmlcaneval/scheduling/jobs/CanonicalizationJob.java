@@ -24,6 +24,7 @@ import cz.muni.fi.mir.mathmlcaneval.repository.CanonicOutputRepository;
 import cz.muni.fi.mir.mathmlcaneval.repository.FormulaRepository;
 import cz.muni.fi.mir.mathmlcaneval.service.CanonicalizerService;
 import cz.muni.fi.mir.mathmlcaneval.service.SimilarityService;
+import cz.muni.fi.mir.mathmlcaneval.service.XmlDocumentService;
 import cz.muni.fi.mir.mathmlcaneval.service.support.CanonicalizationPostProcessorRegistry;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -38,6 +39,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
+import org.w3c.dom.Document;
 
 @Setter
 public class CanonicalizationJob implements Job {
@@ -66,6 +68,8 @@ public class CanonicalizationJob implements Job {
   private CanonicalizationPostProcessorRegistry postProcessorRegistry;
   @Autowired
   private SimilarityService similarityService;
+  @Autowired
+  private XmlDocumentService xmlDocumentService;
 
   @Override
   public void execute(JobExecutionContext jobExecutionContext) throws JobExecutionException {
@@ -87,8 +91,11 @@ public class CanonicalizationJob implements Job {
     result.forEach(co -> {
       postProcessors.forEach(pp -> pp.process(co));
 
-      SimilarityForm sf = similarityService.generateSimilarity(co);
+      Document docXml = this.xmlDocumentService.buildDocument(co);
+
+      SimilarityForm sf = similarityService.generateSimilarity(docXml);
       co.setSimilarityForm(sf);
+      co.setPretty(this.xmlDocumentService.prettyPrintToString(docXml));
     });
 
 

@@ -4,6 +4,7 @@ import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
 import {FormulaCollectionNew} from '../../models/formula-collection.new';
 import {ModalButtons} from '../../shared/modal.buttons';
 import {CollectionsService} from './collections.service';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'new-collection',

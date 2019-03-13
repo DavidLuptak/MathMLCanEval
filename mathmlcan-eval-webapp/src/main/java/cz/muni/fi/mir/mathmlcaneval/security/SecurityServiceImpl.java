@@ -16,7 +16,7 @@
 package cz.muni.fi.mir.mathmlcaneval.security;
 
 import java.util.Optional;
-import org.springframework.security.access.AccessDeniedException;
+import java.util.function.Supplier;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
@@ -29,11 +29,28 @@ public class SecurityServiceImpl implements SecurityService {
       .ofNullable(SecurityContextHolder.getContext().getAuthentication())
       .filter(a -> a.getPrincipal() instanceof MathUser)
       .map(a -> (MathUser) a.getPrincipal())
-      .orElseThrow(() -> new AccessDeniedException("denied should be logged in"));
+      .orElse(null);
+      //.orElseThrow(() -> new AccessDeniedException("denied should be logged in"));
   }
 
   @Override
   public Long getCurrentUserId() {
-    return getCurrentUser().getId();
+    final var user = getCurrentUser();
+
+    return user != null ? user.getId() : null;
+  }
+
+  @Override
+  public <X extends Throwable> Long getCurrentUserId(Supplier<? extends X> supplier) throws X {
+    final var userId = getCurrentUserId();
+    if(userId == null) {
+      if(supplier == null) {
+        return null;
+      } else {
+        throw supplier.get();
+      }
+    } else {
+      return userId;
+    }
   }
 }

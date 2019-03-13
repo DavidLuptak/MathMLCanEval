@@ -103,9 +103,9 @@ public class ApplicationRunServiceImpl implements ApplicationRunService {
           CanonicalizationContainer container = new CanonicalizationContainer();
           container.setCanonicId(co.getId());
           container.setCanonicalizationError(co.getError());
-          container.setCanonicXml(co.getXml());
+          container.setCanonicXml(co.getPretty());
           container.setFormulaId(co.getFormula().getId());
-          container.setFormulaXml(co.getFormula().getXml());
+          container.setFormulaXml(co.getFormula().getPretty());
 
           dataSet.add(container);
         }

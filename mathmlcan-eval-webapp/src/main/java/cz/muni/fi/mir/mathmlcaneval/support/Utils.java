@@ -15,6 +15,8 @@
  */
 package cz.muni.fi.mir.mathmlcaneval.support;
 
+import org.springframework.security.access.AccessDeniedException;
+
 public class Utils {
   private Utils() {
     // prevent new
@@ -22,5 +24,8 @@ public class Utils {
 
   public static boolean deployedOnLinux() {
     return !System.getProperty("os.name").toLowerCase().contains("win");
+  }
+  public static AccessDeniedException denied() {
+    return new AccessDeniedException("denied should be logged in");
   }
 }

@@ -10,6 +10,7 @@ import {NewCollectionComponent} from '../collections/new-collection.component';
 import {FormulaCollectionNew} from '../../models/formula-collection.new';
 import {Form} from '@angular/forms';
 import {Page} from '../../models/page';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'formula-list',
@@ -29,6 +30,7 @@ export class FormulaListComponent extends BaseComponent implements OnInit {
   constructor(private formulaService: FormulaService,
               public media: TdMediaService,
               private dialog: MatDialog,
+              private router: Router,
               private collectionsService: CollectionsService) {
     super();
   }
@@ -72,6 +74,6 @@ export class FormulaListComponent extends BaseComponent implements OnInit {
       data: {selectedFormulas: this.selectedFormulas}
     });
 
-    ref.afterClosed().subscribe((col: FormulaCollectionNew) => console.log(col));
+    ref.afterClosed().subscribe((col: FormulaCollectionNew) => this.router.navigate(['/collections']));
   }
 }

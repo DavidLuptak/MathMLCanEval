@@ -17,11 +17,18 @@ package cz.muni.fi.mir.mathmlcaneval.configurations;
 
 import com.fasterxml.jackson.module.afterburner.AfterburnerModule;
 import cz.muni.fi.mir.mathmlcaneval.configurations.props.LocationProperties;
+import cz.muni.fi.mir.mathmlcaneval.service.XmlDocumentService;
+import cz.muni.fi.mir.mathmlcaneval.service.impl.XmlDocumentServiceImpl;
 import cz.muni.fi.mir.mathmlcaneval.support.MavenInvokerOutputHandler;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.xpath.XPathExpression;
+import javax.xml.xpath.XPathFactory;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.Level;
 import org.apache.maven.shared.invoker.DefaultInvoker;
@@ -70,8 +77,28 @@ public class ApplicationConfiguration {
   }
 
   @Bean
-  public DocumentBuilder documentBuilder() throws ParserConfigurationException {
+  @SneakyThrows
+  public DocumentBuilder documentBuilder() {
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
     return factory.newDocumentBuilder();
+  }
+
+  @Bean
+  @SneakyThrows
+  public Transformer transformer() {
+    Transformer transformer = TransformerFactory.newInstance().newTransformer();
+    transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+    transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+
+    return transformer;
+  }
+
+  @Bean
+  @SneakyThrows
+  public XmlDocumentService xmlDocumentService(DocumentBuilder db, Transformer tf) {
+    XPathExpression xpath = XPathFactory.newInstance()
+      .newXPath().compile("//text()[normalize-space(.) = '']");
+
+    return new XmlDocumentServiceImpl(db, tf, xpath);
   }
 }
