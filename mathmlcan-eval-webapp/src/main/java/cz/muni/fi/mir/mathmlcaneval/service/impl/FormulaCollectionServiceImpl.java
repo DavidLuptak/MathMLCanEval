@@ -19,6 +19,7 @@ import cz.muni.fi.mir.mathmlcaneval.domain.FormulaCollection;
 import cz.muni.fi.mir.mathmlcaneval.domain.User;
 import cz.muni.fi.mir.mathmlcaneval.mappers.FormulaCollectionMapper;
 import cz.muni.fi.mir.mathmlcaneval.repository.FormulaCollectionRepository;
+import cz.muni.fi.mir.mathmlcaneval.repository.specs.CollectionSpecifications;
 import cz.muni.fi.mir.mathmlcaneval.requests.FormulaCollectionRequest;
 import cz.muni.fi.mir.mathmlcaneval.responses.FormulaCollectionResponse;
 import cz.muni.fi.mir.mathmlcaneval.security.SecurityService;
@@ -55,7 +56,7 @@ public class FormulaCollectionServiceImpl implements FormulaCollectionService {
   @Override
   public Page<FormulaCollectionResponse> findAll(Pageable pageable) {
     return formulaCollectionRepository
-      .findAll(pageable)
+      .findAll(CollectionSpecifications.publicOrMine(securityService.getCurrentUserId()), pageable)
       .map(formulaCollectionMapper::map);
   }
 

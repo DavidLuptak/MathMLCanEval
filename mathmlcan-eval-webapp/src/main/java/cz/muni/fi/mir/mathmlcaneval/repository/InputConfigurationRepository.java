@@ -17,7 +17,9 @@ package cz.muni.fi.mir.mathmlcaneval.repository;
 
 import cz.muni.fi.mir.mathmlcaneval.domain.InputConfiguration;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
-public interface InputConfigurationRepository extends JpaRepository<InputConfiguration, Long> {
+public interface InputConfigurationRepository extends JpaRepository<InputConfiguration, Long>,
+  JpaSpecificationExecutor<InputConfiguration> {
 
 }

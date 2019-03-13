@@ -15,6 +15,8 @@
  */
 package cz.muni.fi.mir.mathmlcaneval.service.impl;
 
+import static cz.muni.fi.mir.mathmlcaneval.repository.specs.ConfigurationSpecification.publicOrMine;
+
 import cz.muni.fi.mir.mathmlcaneval.domain.User;
 import cz.muni.fi.mir.mathmlcaneval.mappers.ConfigurationMapper;
 import cz.muni.fi.mir.mathmlcaneval.repository.InputConfigurationRepository;
@@ -32,6 +34,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class InputConfigurationServiceImpl implements InputConfigurationService {
+
   private final ConfigurationMapper configurationMapper;
   private final InputConfigurationRepository inputConfigurationRepository;
   private final SecurityService securityService;
@@ -39,7 +42,7 @@ public class InputConfigurationServiceImpl implements InputConfigurationService 
   @Override
   public Page<ConfigurationResponse> findAll(Pageable pageable) {
     return inputConfigurationRepository
-      .findAll(pageable)
+      .findAll(publicOrMine(securityService.getCurrentUserId()), pageable)
       .map(configurationMapper::map);
   }
 
