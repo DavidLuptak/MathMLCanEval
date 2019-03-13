@@ -48,6 +48,7 @@ import {HttpClientModule} from '@angular/common/http';
 import {MathJaxModule} from 'ngx-mathjax';
 import {AuthenticatedDirective} from './security/authenticated.directive';
 import {KeepHtmlPipe} from './keep-html.pipe';
+import {FlexLayoutModule} from '@angular/flex-layout';
 
 @NgModule({
   imports: [
@@ -94,6 +95,7 @@ import {KeepHtmlPipe} from './keep-html.pipe';
     CovalentDataTableModule,
     CovalentMessageModule,
     HttpClientModule,
+    FlexLayoutModule,
     /** */
     MathJaxModule.config({
       version: '2.7.5',
@@ -145,6 +147,7 @@ import {KeepHtmlPipe} from './keep-html.pipe';
     CovalentDataTableModule,
     CovalentMessageModule,
     HttpClientModule,
+    FlexLayoutModule,
     /** */
     AuthenticatedDirective,
     MathJaxModule,
