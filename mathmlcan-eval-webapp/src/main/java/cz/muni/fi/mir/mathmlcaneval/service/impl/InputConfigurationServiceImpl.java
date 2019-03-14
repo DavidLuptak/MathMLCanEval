@@ -30,6 +30,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -40,6 +41,7 @@ public class InputConfigurationServiceImpl implements InputConfigurationService 
   private final SecurityService securityService;
 
   @Override
+  @ReadOnly
   public Page<ConfigurationResponse> findAll(Pageable pageable) {
     return inputConfigurationRepository
       .findAll(publicOrMine(securityService.getCurrentUserId()), pageable)
@@ -54,6 +56,7 @@ public class InputConfigurationServiceImpl implements InputConfigurationService 
       .map(configurationMapper::map);
   }
 
+  @Transactional
   @Override
   public ConfigurationResponse save(CreateConfigurationRequest create) {
     final var preSave = configurationMapper.map(create);

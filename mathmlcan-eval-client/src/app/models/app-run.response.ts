@@ -7,4 +7,5 @@ export class AppRunResponse extends Resource {
   configurationId: number;
   revisionId: number;
   startedById: number;
+  startedByName: number;
 }

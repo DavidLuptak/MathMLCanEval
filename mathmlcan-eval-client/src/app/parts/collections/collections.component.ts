@@ -11,7 +11,7 @@ import {Page} from '../../models/page';
   templateUrl: 'collections.component.html'
 })
 export class CollectionsComponent extends TableComponent<FormulaCollectionResponse> implements OnInit {
-  displayedColumns: string[] = ['id', 'name', 'visibleToPublic', 'creator'];
+  displayedColumns: string[] = ['id', 'name', 'visibleToPublic', 'creatorName'];
 
   constructor(private collectionsService: CollectionsService,
               private router: Router) {

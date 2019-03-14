@@ -24,4 +24,5 @@ public class FormulaCollectionResponse {
   private String note;
   private Boolean visibleToPublic;
   private Long creatorId;
+  private String creatorName;
 }

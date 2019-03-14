@@ -27,6 +27,7 @@ import org.mapstruct.Mapping;
 public interface FormulaCollectionMapper {
 
   @Mapping(source = "creator.id", target = "creatorId")
+  @Mapping(source = "creator.name", target = "creatorName")
   FormulaCollectionResponse map(FormulaCollection formulaCollection);
 
   FormulaCollection map(FormulaCollectionRequest request);

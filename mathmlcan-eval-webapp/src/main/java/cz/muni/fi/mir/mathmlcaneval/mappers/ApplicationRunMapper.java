@@ -37,6 +37,7 @@ public interface ApplicationRunMapper {
   @Mapping(source = "inputConfiguration.id", target = "configurationId")
   @Mapping(source = "revision.id", target = "revisionId")
   @Mapping(source = "startedBy.id", target = "startedById")
+  @Mapping(source = "startedBy.name", target = "startedByName")
   @RunCollectionMapper
   ApplicationRunResponse map(ApplicationRun run);
 
@@ -53,6 +54,7 @@ public interface ApplicationRunMapper {
   @Mapping(source = "revision.id", target = "revisionId")
   @Mapping(source = "revision.sha1", target = "revisionHash")
   @Mapping(source = "startedBy.id", target = "startedById")
+  @Mapping(source = "startedBy.name", target = "startedByName")
   ApplicationRunDetailedResponse mapDetail(ApplicationRun run);
 
   default ApplicationRun map(CanonicalizationRequest request, User startedBy) {

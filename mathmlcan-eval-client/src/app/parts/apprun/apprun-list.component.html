@@ -16,8 +16,8 @@
   </ng-container>
 
   <ng-container matColumnDef="startedById">
-    <th mat-header-cell *matHeaderCellDef> startedById</th>
-    <td mat-cell *matCellDef="let element"> {{element.startedById}} </td>
+    <th mat-header-cell *matHeaderCellDef> startedBy</th>
+    <td mat-cell *matCellDef="let element"> {{element.startedByName}} ({{element.startedById}}) </td>
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

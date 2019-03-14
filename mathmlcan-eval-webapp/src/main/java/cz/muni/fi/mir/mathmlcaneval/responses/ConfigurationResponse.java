@@ -26,4 +26,5 @@ public class ConfigurationResponse {
   private String name;
   private Boolean visibleToPublic;
   private Long userId;
+  private String userName;
 }

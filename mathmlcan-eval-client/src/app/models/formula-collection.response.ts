@@ -7,4 +7,5 @@ export class FormulaCollectionResponse extends Resource implements NamedResource
   note: string;
   visibleToPublic: boolean;
   creatorId: number;
+  creatorName: string;
 }

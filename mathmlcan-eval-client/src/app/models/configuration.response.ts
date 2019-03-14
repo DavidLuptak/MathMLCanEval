@@ -7,4 +7,5 @@ export class ConfigurationResponse extends Resource {
   name: string;
   visibleToPublic: boolean;
   userId: number;
+  userName: string;
 }

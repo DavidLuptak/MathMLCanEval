@@ -26,6 +26,7 @@ import org.mapstruct.Mapping;
 public interface ConfigurationMapper {
 
   @Mapping(source = "user.id", target = "userId")
+  @Mapping(source = "user.name", target = "userName")
   ConfigurationResponse map(InputConfiguration configuration);
 
   List<ConfigurationResponse> map(List<InputConfiguration> configuration);

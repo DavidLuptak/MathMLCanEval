@@ -19,7 +19,7 @@
           <ng-container matColumnDef="user">
             <th mat-header-cell *matHeaderCellDef> user</th>
             <td mat-cell *matCellDef="let element"
-                (click)="selectConfig(element.id)"> {{element.userId}} </td>
+                (click)="selectConfig(element.id)"> {{element.userName}} ({{element.userId}}) </td>
           </ng-container>
 
           <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
@@ -36,6 +36,14 @@
           <ng-container matColumnDef="id">
             <th mat-header-cell *matHeaderCellDef> id</th>
             <td mat-cell *matCellDef="let element"><a  [routerLink]="['/app-runs',element.id]">{{element.id}}</a> </td>
+          </ng-container>
+          <ng-container matColumnDef="finished">
+            <th mat-header-cell *matHeaderCellDef> finished</th>
+            <td mat-cell *matCellDef="let element">{{element.end}}</td>
+          </ng-container>
+          <ng-container matColumnDef="user">
+            <th mat-header-cell *matHeaderCellDef> started_by</th>
+            <td mat-cell *matCellDef="let element">{{element.startedByName}} ({{element.startedById}})</td>
           </ng-container>
 
           <tr mat-header-row *matHeaderRowDef="appRunsdisplayedColumns"></tr>

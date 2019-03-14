@@ -48,6 +48,13 @@
   </mat-card>
 </div>
 
-<a mat-fab color="accent" [matTooltip]="translations.revision.syncRevision" matTooltipPosition="before" class="mat-fab-bottom-right z-3 fixed fab-pad" (click)="requestManualSync()" *authenticated>
+<a mat-fab color="accent"
+   [matMenuTriggerFor]="appMenu"
+   [matTooltip]="translations.revision.syncRevision" matTooltipPosition="before" class="mat-fab-bottom-right z-3 fixed fab-pad" *authenticated>
   <mat-icon>cached</mat-icon>
 </a>
+
+<mat-menu #appMenu="matMenu">
+  <button mat-menu-item>!specific</button>
+  <button mat-menu-item (click)="requestManualSync()">Latest</button>
+</mat-menu>
