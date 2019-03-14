@@ -15,17 +15,23 @@
  */
 package cz.muni.fi.mir.mathmlcaneval.service;
 
-import cz.muni.fi.mir.mathmlcaneval.requests.CanonicalizationRequest;
-import cz.muni.fi.mir.mathmlcaneval.responses.ApplicationRunDetailedResponse;
-import cz.muni.fi.mir.mathmlcaneval.responses.ApplicationRunResponse;
-import java.util.List;
-import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
-public interface ApplicationRunService extends QueryService<ApplicationRunResponse> {
+/**
+ * Service implementing this interface is able to query the data of type {@code T} using various
+ * paging, sorting and filtering restrictions
+ *
+ * @author dominik.szalai
+ * @since 2.0.0
+ */
+public interface QueryService<T> {
 
-  String save(CanonicalizationRequest request);
-
-  List<ApplicationRunResponse> getRunsByConfiguration(Long id);
-
-  Optional<ApplicationRunDetailedResponse> fetchDetailed(Long id);
+  /**
+   * Query database with page request
+   *
+   * @param pageable request containing page data
+   * @return page representing request
+   */
+  Page<T> query(Pageable pageable);
 }

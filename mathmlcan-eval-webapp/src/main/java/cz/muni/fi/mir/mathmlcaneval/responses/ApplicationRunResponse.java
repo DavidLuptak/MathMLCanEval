@@ -27,4 +27,5 @@ public class ApplicationRunResponse {
   private Long revisionId;
   private Long startedById;
   private String startedByName;
+  private Boolean visibleToPublic;
 }

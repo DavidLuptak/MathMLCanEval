@@ -39,6 +39,8 @@ public class ApplicationRun extends BaseEntity {
   private LocalDateTime start;
   @Column(name = "run_end")
   private LocalDateTime end;
+  @Column(name = "visible_to_public")
+  private Boolean visibleToPublic;
 
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "configuration")

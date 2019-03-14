@@ -47,8 +47,8 @@ public class ApplicationRunResource {
   }
 
   @GetMapping
-  public Page<ApplicationRunResponse> listRuns(Pageable pageable) {
-    return applicationRunService.findAll(pageable);
+  public Page<ApplicationRunResponse> query(Pageable pageable) {
+    return applicationRunService.query(pageable);
   }
 
   @GetMapping("/{id}/details")

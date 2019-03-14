@@ -30,27 +30,18 @@ public class SecurityServiceImpl implements SecurityService {
       .filter(a -> a.getPrincipal() instanceof MathUser)
       .map(a -> (MathUser) a.getPrincipal())
       .orElse(null);
-      //.orElseThrow(() -> new AccessDeniedException("denied should be logged in"));
   }
 
   @Override
-  public Long getCurrentUserId() {
+  public <X extends Throwable> Long getCurrentUserId(Supplier<? extends X>... supplier) throws X {
     final var user = getCurrentUser();
 
-    return user != null ? user.getId() : null;
-  }
-
-  @Override
-  public <X extends Throwable> Long getCurrentUserId(Supplier<? extends X> supplier) throws X {
-    final var userId = getCurrentUserId();
-    if(userId == null) {
-      if(supplier == null) {
-        return null;
-      } else {
-        throw supplier.get();
-      }
+    if(user == null && supplier.length == 0) {
+      return null;
+    } else if(user == null) { // no need to check length again :)
+      throw supplier[0].get();
     } else {
-      return userId;
+      return user.getId();
     }
   }
 }

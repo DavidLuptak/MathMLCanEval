@@ -13,19 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package cz.muni.fi.mir.mathmlcaneval.service;
+package cz.muni.fi.mir.mathmlcaneval.repository.specs;
 
-import cz.muni.fi.mir.mathmlcaneval.requests.CanonicalizationRequest;
-import cz.muni.fi.mir.mathmlcaneval.responses.ApplicationRunDetailedResponse;
-import cz.muni.fi.mir.mathmlcaneval.responses.ApplicationRunResponse;
-import java.util.List;
-import java.util.Optional;
+import cz.muni.fi.mir.mathmlcaneval.domain.ApplicationRun;
+import cz.muni.fi.mir.mathmlcaneval.domain.ApplicationRun_;
+import cz.muni.fi.mir.mathmlcaneval.domain.User_;
+import org.springframework.data.jpa.domain.Specification;
 
-public interface ApplicationRunService extends QueryService<ApplicationRunResponse> {
+public class ApplicationRunSpecification {
 
-  String save(CanonicalizationRequest request);
-
-  List<ApplicationRunResponse> getRunsByConfiguration(Long id);
-
-  Optional<ApplicationRunDetailedResponse> fetchDetailed(Long id);
+  public static Specification<ApplicationRun> publicOrMine(final Long userId) {
+    return (Specification<ApplicationRun>) (root, query, cb) -> cb.or(
+      cb.equal(root.join(ApplicationRun_.startedBy).get(User_.id), userId),
+      cb.equal(root.get(ApplicationRun_.visibleToPublic), true)
+    );
+  }
 }

@@ -22,6 +22,7 @@ import cz.muni.fi.mir.mathmlcaneval.repository.ApplicationRunRepository;
 import cz.muni.fi.mir.mathmlcaneval.repository.FormulaCollectionRepository;
 import cz.muni.fi.mir.mathmlcaneval.repository.InputConfigurationRepository;
 import cz.muni.fi.mir.mathmlcaneval.repository.RevisionRepository;
+import cz.muni.fi.mir.mathmlcaneval.repository.specs.ApplicationRunSpecification;
 import cz.muni.fi.mir.mathmlcaneval.requests.CanonicalizationRequest;
 import cz.muni.fi.mir.mathmlcaneval.responses.ApplicationRunDetailedResponse;
 import cz.muni.fi.mir.mathmlcaneval.responses.ApplicationRunDetailedResponse.CanonicalizationContainer;
@@ -43,6 +44,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Component
 @RequiredArgsConstructor
 public class ApplicationRunServiceImpl implements ApplicationRunService {
+
   private final ApplicationRunRepository applicationRunRepository;
   private final RevisionRepository revisionRepository;
   private final InputConfigurationRepository inputConfigurationRepository;
@@ -55,15 +57,15 @@ public class ApplicationRunServiceImpl implements ApplicationRunService {
   @Override
   @Transactional
   public String save(CanonicalizationRequest request) {
-    if(!inputConfigurationRepository.existsById(request.getConfigurationId())) {
+    if (!inputConfigurationRepository.existsById(request.getConfigurationId())) {
       throw new RuntimeException("missing configuration");
     }
 
-    if(!revisionRepository.existsById(request.getRevisionId())) {
+    if (!revisionRepository.existsById(request.getRevisionId())) {
       throw new RuntimeException("missing revision");
     }
 
-    if(!formulaCollectionRepository.existsById(request.getCollectionId())) {
+    if (!formulaCollectionRepository.existsById(request.getCollectionId())) {
       throw new RuntimeException("missing collection");
     }
 
@@ -83,10 +85,12 @@ public class ApplicationRunServiceImpl implements ApplicationRunService {
 
   @ReadOnly
   @Override
-  public Page<ApplicationRunResponse> findAll(Pageable pageable) {
-    return applicationRunRepository.findAll(pageable)
-      .map(run -> applicationRunMapper.map(run));
-   }
+  public Page<ApplicationRunResponse> query(Pageable pageable) {
+    return applicationRunRepository
+      .findAll(ApplicationRunSpecification.publicOrMine(securityService.getCurrentUserId()),
+        pageable)
+      .map(applicationRunMapper::map);
+  }
 
   @ReadOnly
   @Override
@@ -98,7 +102,7 @@ public class ApplicationRunServiceImpl implements ApplicationRunService {
 
         Set<CanonicalizationContainer> dataSet = new HashSet<>();
 
-        for(CanonicOutput co : run.getCanonicOutputs()) {
+        for (CanonicOutput co : run.getCanonicOutputs()) {
           // todo move to mapper
           CanonicalizationContainer container = new CanonicalizationContainer();
           container.setCanonicId(co.getId());

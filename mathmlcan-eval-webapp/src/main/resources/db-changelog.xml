@@ -400,6 +400,12 @@
       <column name="name" type="varchar(128)" />
     </addColumn>
   </changeSet>
-  
+
+
+  <changeSet id="2019.03.14.02" author="dominik.szalai">
+    <addColumn tableName="application_runs">
+      <column name="visible_to_public" type="boolean" />
+    </addColumn>
+  </changeSet>
 
 </databaseChangeLog>

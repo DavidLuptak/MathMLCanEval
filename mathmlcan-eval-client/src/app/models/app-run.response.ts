@@ -8,4 +8,5 @@ export class AppRunResponse extends Resource {
   revisionId: number;
   startedById: number;
   startedByName: number;
+  visibleToPublic: boolean;
 }

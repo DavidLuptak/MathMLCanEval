@@ -21,7 +21,5 @@ public interface SecurityService {
 
   MathUser getCurrentUser();
 
-  Long getCurrentUserId();
-
-  <X extends Throwable> Long getCurrentUserId(Supplier<? extends X> supplier) throws X;
+  <X extends Throwable> Long getCurrentUserId(Supplier<? extends X>... supplier) throws X;
 }
