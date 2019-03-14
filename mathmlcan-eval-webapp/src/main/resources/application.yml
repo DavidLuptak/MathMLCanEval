@@ -60,3 +60,4 @@ application:
     build-folder: ${java.io.tmpdir}/math/builds
     repository-folder: ${java.io.tmpdir}/math/repository
     m2Home: ${java.io.tmpdir}/maven
+  cors: http://localhost:4200

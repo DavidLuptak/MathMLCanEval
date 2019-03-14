@@ -85,7 +85,6 @@ public class JobServiceImpl implements JobService {
       log.error("Could not delete job {} for group {} of reason {}", () -> jobId, () -> jobGroup,
         ex::getLocalizedMessage);
 
-      // todo fire event
       throw new JobDeleteFailedException();
     }
   }

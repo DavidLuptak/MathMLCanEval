@@ -31,7 +31,6 @@ public class CanonicalizationHandlerImpl implements CanonicalizationHandler {
 
   @Override
   public void handleCanonicalization(CanonicalizationEvent canonicalizationEvent) {
-    // todo verify input if collection is our, if config is ours etc..
     final var trigger = defaultTrigger(JobGroup.RUN);
 
     final var job = CustomJobBuilder.builder(CanonicalizationJob.class)
@@ -41,7 +40,5 @@ public class CanonicalizationHandlerImpl implements CanonicalizationHandler {
       .build();
 
     jobService.createJob(job, JobGroup.RUN, trigger);
-
-    //return job.getKey().getName();
   }
 }

@@ -15,9 +15,9 @@
  */
 package cz.muni.fi.mir.mathmlcaneval.service.impl;
 
-import cz.muni.fi.mir.mathmlcaneval.domain.CanonicOutput;
 import cz.muni.fi.mir.mathmlcaneval.domain.User;
 import cz.muni.fi.mir.mathmlcaneval.mappers.ApplicationRunMapper;
+import cz.muni.fi.mir.mathmlcaneval.mappers.CanonicOutputMapper;
 import cz.muni.fi.mir.mathmlcaneval.repository.ApplicationRunRepository;
 import cz.muni.fi.mir.mathmlcaneval.repository.FormulaCollectionRepository;
 import cz.muni.fi.mir.mathmlcaneval.repository.InputConfigurationRepository;
@@ -25,12 +25,10 @@ import cz.muni.fi.mir.mathmlcaneval.repository.RevisionRepository;
 import cz.muni.fi.mir.mathmlcaneval.repository.specs.ApplicationRunSpecification;
 import cz.muni.fi.mir.mathmlcaneval.requests.CanonicalizationRequest;
 import cz.muni.fi.mir.mathmlcaneval.responses.ApplicationRunDetailedResponse;
-import cz.muni.fi.mir.mathmlcaneval.responses.ApplicationRunDetailedResponse.CanonicalizationContainer;
 import cz.muni.fi.mir.mathmlcaneval.responses.ApplicationRunResponse;
 import cz.muni.fi.mir.mathmlcaneval.security.SecurityService;
 import cz.muni.fi.mir.mathmlcaneval.service.ApplicationRunService;
 import cz.muni.fi.mir.mathmlcaneval.support.ReadOnly;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -50,6 +48,7 @@ public class ApplicationRunServiceImpl implements ApplicationRunService {
   private final ApplicationRunMapper applicationRunMapper;
   private final SecurityService securityService;
   private final FormulaCollectionRepository formulaCollectionRepository;
+  private final CanonicOutputMapper canonicOutputMapper;
 
   private final ApplicationEventPublisher applicationEventPublisher;
 
@@ -99,21 +98,7 @@ public class ApplicationRunServiceImpl implements ApplicationRunService {
       .map(run -> {
         final var result = applicationRunMapper.mapDetail(run);
 
-        final var dataSet = new HashSet<CanonicalizationContainer>();
-
-        for (CanonicOutput co : run.getCanonicOutputs()) {
-          // todo move to mapper
-          final var container = new CanonicalizationContainer();
-          container.setCanonicId(co.getId());
-          container.setCanonicalizationError(co.getError());
-          container.setCanonicXml(co.getPretty());
-          container.setFormulaId(co.getFormula().getId());
-          container.setFormulaXml(co.getFormula().getPretty());
-
-          dataSet.add(container);
-        }
-
-        result.setCanonicalizations(dataSet);
+        result.setCanonicalizations(canonicOutputMapper.map(run.getCanonicOutputs()));
 
         return result;
       });
