@@ -44,7 +44,7 @@ public class InputConfigurationServiceImpl implements InputConfigurationService 
   @ReadOnly
   public Page<ConfigurationResponse> findAll(Pageable pageable) {
     return inputConfigurationRepository
-      .findAll(publicOrMine(securityService.getCurrentUserId()), pageable)
+      .findAll(publicOrMine(securityService.getCurrentUserId(false)), pageable)
       .map(configurationMapper::map);
   }
 
@@ -60,7 +60,7 @@ public class InputConfigurationServiceImpl implements InputConfigurationService 
   @Override
   public ConfigurationResponse save(CreateConfigurationRequest create) {
     final var preSave = configurationMapper.map(create);
-    preSave.setUser(new User(securityService.getCurrentUserId()));
+    preSave.setOwnedBy(new User(securityService.getCurrentUserId(false)));
 
     final var saved = inputConfigurationRepository.save(preSave);
 

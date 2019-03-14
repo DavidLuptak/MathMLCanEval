@@ -6,8 +6,8 @@ export class AppRunResponse extends Resource {
   end: Date;
   configurationId: number;
   revisionId: number;
-  startedById: number;
-  startedByName: number;
+  ownedById: number;
+  ownedByName: number;
   visibleToPublic: boolean;
   numberOfOutputs: number;
 }

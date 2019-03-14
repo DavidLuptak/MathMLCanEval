@@ -14,11 +14,11 @@ import {Page} from '../../models/page';
 })
 export class ConfigurationListComponent extends TableComponent<ConfigurationResponse> implements OnInit {
   selectedConfiguration = new EventEmitter<ConfigurationResponse>();
-  displayedColumns: string[] = ['id', 'name', 'user'];
+  displayedColumns: string[] = ['id', 'name', 'owner'];
 
 
   appRunsDs = new MatTableDataSource<AppRunResponse>();
-  appRunsdisplayedColumns = ['id', 'finished', 'user', 'numberOfOutputs'];
+  appRunsdisplayedColumns = ['id', 'finished', 'owner', 'numberOfOutputs'];
 
   constructor(private configurationService: ConfigurationService,
               private router: Router,

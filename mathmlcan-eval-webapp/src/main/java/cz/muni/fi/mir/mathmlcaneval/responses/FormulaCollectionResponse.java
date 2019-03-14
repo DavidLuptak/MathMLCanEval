@@ -23,6 +23,6 @@ public class FormulaCollectionResponse {
   private String name;
   private String note;
   private Boolean visibleToPublic;
-  private Long creatorId;
-  private String creatorName;
+  private Long ownedById;
+  private String ownedByName;
 }

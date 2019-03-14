@@ -68,7 +68,7 @@ public class ApplicationRunServiceImpl implements ApplicationRunService {
     }
 
     final var run = applicationRunRepository
-      .save(applicationRunMapper.map(request, new User(securityService.getCurrentUserId())));
+      .save(applicationRunMapper.map(request, new User(securityService.getCurrentUserId(false))));
 
     this.applicationEventPublisher.publishEvent(applicationRunMapper.map(this, run, request));
 
@@ -85,7 +85,7 @@ public class ApplicationRunServiceImpl implements ApplicationRunService {
   @Override
   public Page<ApplicationRunResponse> query(Pageable pageable) {
     return applicationRunRepository
-      .findAll(ApplicationRunSpecification.publicOrMine(securityService.getCurrentUserId()),
+      .findAll(ApplicationRunSpecification.publicOrMine(securityService.getCurrentUserId(false)),
         pageable)
       .map(applicationRunMapper::map);
   }

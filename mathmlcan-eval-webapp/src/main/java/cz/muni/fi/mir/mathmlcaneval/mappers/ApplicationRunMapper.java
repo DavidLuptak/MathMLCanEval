@@ -36,8 +36,8 @@ public interface ApplicationRunMapper {
 
   @Mapping(source = "inputConfiguration.id", target = "configurationId")
   @Mapping(source = "revision.id", target = "revisionId")
-  @Mapping(source = "startedBy.id", target = "startedById")
-  @Mapping(source = "startedBy.name", target = "startedByName")
+  @Mapping(source = "ownedBy.id", target = "ownedById")
+  @Mapping(source = "ownedBy.name", target = "ownedByName")
   @RunCollectionMapper
   ApplicationRunResponse map(ApplicationRun run);
 
@@ -53,13 +53,13 @@ public interface ApplicationRunMapper {
   @Mapping(source = "inputConfiguration.content", target = "configurationXml")
   @Mapping(source = "revision.id", target = "revisionId")
   @Mapping(source = "revision.sha1", target = "revisionHash")
-  @Mapping(source = "startedBy.id", target = "startedById")
-  @Mapping(source = "startedBy.name", target = "startedByName")
+  @Mapping(source = "ownedBy.id", target = "ownedById")
+  @Mapping(source = "ownedBy.name", target = "ownedByName")
   ApplicationRunDetailedResponse mapDetail(ApplicationRun run);
 
-  default ApplicationRun map(CanonicalizationRequest request, User startedBy) {
+  default ApplicationRun map(CanonicalizationRequest request, User ownedBy) {
     final var run = mapRequest(request);
-    run.setStartedBy(startedBy);
+    run.setOwnedBy(ownedBy);
 
     return run;
   }

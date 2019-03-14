@@ -25,8 +25,8 @@ public class ApplicationRunResponse {
   private LocalDateTime end;
   private Long configurationId;
   private Long revisionId;
-  private Long startedById;
-  private String startedByName;
+  private Long ownedById;
+  private String ownedByName;
   private Boolean visibleToPublic;
   private int numberOfOutputs;
 }

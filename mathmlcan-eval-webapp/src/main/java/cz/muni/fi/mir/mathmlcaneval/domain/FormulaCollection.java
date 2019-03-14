@@ -43,8 +43,8 @@ public class FormulaCollection extends BaseEntity {
   private Boolean visibleToPublic;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "creator")
-  private User creator;
+  @JoinColumn(name = "owned_by")
+  private User ownedBy;
   @OneToMany
   @JoinTable(name = "formula_collections_formulas",
     joinColumns = @JoinColumn(name = "formula_collection", referencedColumnName = "id"),

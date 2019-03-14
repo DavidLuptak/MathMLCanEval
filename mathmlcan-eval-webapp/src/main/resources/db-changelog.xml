@@ -408,4 +408,10 @@
     </addColumn>
   </changeSet>
 
+  <changeSet id="2019.03.14.03" author="dominik.szalai">
+    <renameColumn tableName="application_runs" oldColumnName="users" newColumnName="owned_by" />
+    <renameColumn tableName="formula_collections" oldColumnName="creator" newColumnName="owned_by" />
+    <renameColumn tableName="configurations" oldColumnName="user_id" newColumnName="owned_by" />
+  </changeSet>
+
 </databaseChangeLog>

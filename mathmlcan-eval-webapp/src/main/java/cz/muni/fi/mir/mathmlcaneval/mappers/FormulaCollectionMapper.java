@@ -26,8 +26,8 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface FormulaCollectionMapper {
 
-  @Mapping(source = "creator.id", target = "creatorId")
-  @Mapping(source = "creator.name", target = "creatorName")
+  @Mapping(source = "ownedBy.id", target = "ownedById")
+  @Mapping(source = "ownedBy.name", target = "ownedByName")
   FormulaCollectionResponse map(FormulaCollection formulaCollection);
 
   FormulaCollection map(FormulaCollectionRequest request);

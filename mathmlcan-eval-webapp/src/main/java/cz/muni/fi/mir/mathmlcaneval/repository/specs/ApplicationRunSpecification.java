@@ -24,7 +24,7 @@ public class ApplicationRunSpecification {
 
   public static Specification<ApplicationRun> publicOrMine(final Long userId) {
     return (Specification<ApplicationRun>) (root, query, cb) -> cb.or(
-      cb.equal(root.join(ApplicationRun_.startedBy).get(User_.id), userId),
+      cb.equal(root.join(ApplicationRun_.ownedBy).get(User_.id), userId),
       cb.equal(root.get(ApplicationRun_.visibleToPublic), true)
     );
   }

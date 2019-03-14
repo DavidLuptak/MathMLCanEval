@@ -49,7 +49,9 @@ export class AuthInterceptor implements HttpInterceptor {
     return next.handle(req).pipe(
       catchError((error: HttpErrorResponse) => {
         if(error.status === 401) {
-          this.snackService.open('Token expired. You have been logged out.');
+          this.snackService.open('Token expired. You have been logged out.', 'Close', {
+            duration: 3000
+          });
           this.securityService.clearLocalStorage();
         } else if(error.status === 403) {
           this.securityService.deniedModal();

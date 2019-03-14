@@ -44,7 +44,7 @@ public class FormulaCollectionServiceImpl implements FormulaCollectionService {
   @Transactional
   public FormulaCollectionResponse save(FormulaCollectionRequest create) {
     final var collection = formulaCollectionMapper.map(create);
-    collection.setCreator(new User(securityService.getCurrentUserId()));
+    collection.setOwnedBy(new User(securityService.getCurrentUserId(false)));
 
     formulaCollectionRepository.save(collection);
 
@@ -55,7 +55,7 @@ public class FormulaCollectionServiceImpl implements FormulaCollectionService {
   @Override
   public Page<FormulaCollectionResponse> findAll(Pageable pageable) {
     return formulaCollectionRepository
-      .findAll(CollectionSpecifications.publicOrMine(securityService.getCurrentUserId()), pageable)
+      .findAll(CollectionSpecifications.publicOrMine(securityService.getCurrentUserId(false)), pageable)
       .map(formulaCollectionMapper::map);
   }
 

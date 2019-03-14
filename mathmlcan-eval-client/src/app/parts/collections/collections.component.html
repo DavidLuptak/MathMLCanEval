@@ -14,9 +14,9 @@
     <td mat-cell *matCellDef="let element"> {{element.visibleToPublic}} </td>
   </ng-container>
 
-  <ng-container matColumnDef="creatorName">
+  <ng-container matColumnDef="owner">
     <th mat-header-cell *matHeaderCellDef> creator</th>
-    <td mat-cell *matCellDef="let element"> {{element.creatorName}} ({{element.creatorId}}) </td>
+    <td mat-cell *matCellDef="let element"> {{element.ownedByName}} ({{element.ownedById}}) </td>
   </ng-container>
 
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

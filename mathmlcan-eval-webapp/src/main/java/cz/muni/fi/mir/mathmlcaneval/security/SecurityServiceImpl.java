@@ -15,8 +15,9 @@
  */
 package cz.muni.fi.mir.mathmlcaneval.security;
 
+import static cz.muni.fi.mir.mathmlcaneval.support.Utils.denied;
+
 import java.util.Optional;
-import java.util.function.Supplier;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
@@ -33,13 +34,13 @@ public class SecurityServiceImpl implements SecurityService {
   }
 
   @Override
-  public <X extends Throwable> Long getCurrentUserId(Supplier<? extends X>... supplier) throws X {
+  public Long getCurrentUserId(boolean throwDenied) {
     final var user = getCurrentUser();
 
-    if(user == null && supplier.length == 0) {
+    if(user == null && throwDenied) {
+      throw denied();
+    } else if(user == null) { // no need to include throwDenied in condition
       return null;
-    } else if(user == null) { // no need to check length again :)
-      throw supplier[0].get();
     } else {
       return user.getId();
     }

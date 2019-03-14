@@ -25,6 +25,6 @@ public class ConfigurationResponse {
   private String note;
   private String name;
   private Boolean visibleToPublic;
-  private Long userId;
-  private String userName;
+  private Long ownedById;
+  private String ownedByName;
 }

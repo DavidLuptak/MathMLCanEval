@@ -15,11 +15,9 @@
  */
 package cz.muni.fi.mir.mathmlcaneval.security;
 
-import java.util.function.Supplier;
-
 public interface SecurityService {
 
   MathUser getCurrentUser();
 
-  <X extends Throwable> Long getCurrentUserId(Supplier<? extends X>... supplier) throws X;
+  Long getCurrentUserId(boolean throwDenied);
 }

@@ -50,8 +50,8 @@ public class ApplicationRun extends BaseEntity {
   @JoinColumn(name = "revision")
   private Revision revision;
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "users")
-  private User startedBy;
+  @JoinColumn(name = "owned_by")
+  private User ownedBy;
   @OneToMany(mappedBy = "applicationRun")
   private Set<CanonicOutput> canonicOutputs;
 

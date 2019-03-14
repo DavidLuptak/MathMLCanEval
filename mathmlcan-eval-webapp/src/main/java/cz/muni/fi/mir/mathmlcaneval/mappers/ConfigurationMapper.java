@@ -25,8 +25,8 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface ConfigurationMapper {
 
-  @Mapping(source = "user.id", target = "userId")
-  @Mapping(source = "user.name", target = "userName")
+  @Mapping(source = "ownedBy.id", target = "ownedById")
+  @Mapping(source = "ownedBy.name", target = "ownedByName")
   ConfigurationResponse map(InputConfiguration configuration);
 
   List<ConfigurationResponse> map(List<InputConfiguration> configuration);

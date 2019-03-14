@@ -12,7 +12,7 @@ import {HttpClient} from '@angular/common/http';
   templateUrl: 'collections.component.html'
 })
 export class CollectionsComponent extends TableComponent<FormulaCollectionResponse> implements OnInit {
-  displayedColumns: string[] = ['id', 'name', 'visibleToPublic', 'creatorName'];
+  displayedColumns: string[] = ['id', 'name', 'visibleToPublic', 'owner'];
 
   constructor(private collectionsService: CollectionsService,
               private router: Router) {

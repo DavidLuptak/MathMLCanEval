@@ -6,6 +6,6 @@ export class FormulaCollectionResponse extends Resource implements NamedResource
   name: string;
   note: string;
   visibleToPublic: boolean;
-  creatorId: number;
-  creatorName: string;
+  ownedById: number;
+  ownedByName: string;
 }

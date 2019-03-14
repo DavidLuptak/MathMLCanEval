@@ -6,6 +6,6 @@ export class ConfigurationResponse extends Resource {
   note: string;
   name: string;
   visibleToPublic: boolean;
-  userId: number;
-  userName: string;
+  ownedById: number;
+  ownedByName: string;
 }
