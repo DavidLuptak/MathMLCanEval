@@ -3,8 +3,9 @@
     <mat-card-header>
       <mat-card-title>id</mat-card-title>
     </mat-card-header>
+    <!-- [innerHTML]="formula.xml | keepHtml" mathjax -->
     <mat-card-content (click)="openOrSelect()"
-      *ngIf="formula" [innerHTML]="formula.xml | keepHtml" mathjax
+      *ngIf="formula" [appMath]="convert(formula)"
       [class.selected-formula]="selectMode && isSelected"
     ></mat-card-content>
     <mat-card-actions>

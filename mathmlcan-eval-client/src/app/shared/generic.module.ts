@@ -45,10 +45,10 @@ import {
   CovalentStepsModule
 } from '@covalent/core';
 import {HttpClientModule} from '@angular/common/http';
-import {MathJaxModule} from 'ngx-mathjax';
 import {AuthenticatedDirective} from './security/authenticated.directive';
 import {KeepHtmlPipe} from './keep-html.pipe';
 import {FlexLayoutModule} from '@angular/flex-layout';
+import {MathModule} from './math/math.module';
 
 @NgModule({
   imports: [
@@ -97,11 +97,7 @@ import {FlexLayoutModule} from '@angular/flex-layout';
     HttpClientModule,
     FlexLayoutModule,
     /** */
-    MathJaxModule.config({
-      version: '2.7.5',
-      config: 'MML_SVG',
-      hostname: 'cdnjs.cloudflare.com'
-    })
+   MathModule.forRoot()
   ],
   exports: [
     /** Material Modules */
@@ -150,7 +146,7 @@ import {FlexLayoutModule} from '@angular/flex-layout';
     FlexLayoutModule,
     /** */
     AuthenticatedDirective,
-    MathJaxModule,
+    MathModule,
     KeepHtmlPipe
   ],
   declarations: [AuthenticatedDirective,

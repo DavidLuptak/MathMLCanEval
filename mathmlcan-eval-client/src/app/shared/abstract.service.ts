@@ -38,7 +38,6 @@ export abstract class AbstractService<T extends Resource, ID> {
     return this._httpClient
     .get<Page<T>>(`${this.resource}`, {observe: 'response', params: params})
     .pipe(map((data: HttpResponse<Page<any>>) => {
-      console.log(data.body);
       const copy = Object.assign({}, data.body);
       copy.content = this.mapList(data.body.content);
 

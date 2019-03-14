@@ -11,9 +11,7 @@
           </td-highlight>
         </mat-card-content>
         <mat-divider></mat-divider>
-        <mat-card-content>
-          <div [innerHTML]="co.formulaXml | keepHtml" mathjax></div>
-        </mat-card-content>
+        <mat-card-content [appMath]="convertCanonicOutput(co, 'formula')"></mat-card-content>
       </mat-card>
       <mat-card class="example-card" fxFlex="33">
         <mat-card-header layout="row">
@@ -36,9 +34,7 @@
           </td-highlight>
         </mat-card-content>
         <mat-divider></mat-divider>
-        <mat-card-content>
-          <div [innerHTML]="co.canonicXml | keepHtml" mathjax></div>
-        </mat-card-content>
+        <mat-card-content [appMath]="convertCanonicOutput(co, 'co')"></mat-card-content>
       </mat-card>
       <mat-card class="example-card" fxFlex="33">
         <mat-card-header layout="row">

@@ -2,6 +2,7 @@ import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {BaseComponent} from '../../shared/base.component';
 import {FormulaResponse} from '../../models/formula.response';
 import {Router} from '@angular/router';
+import {MathContent} from '../../shared/math/math-content';
 
 @Component({
   selector: 'formula-preview',
@@ -33,6 +34,12 @@ export class FormulaPreviewComponent extends BaseComponent {
       }
 
       this.isSelected = !this.isSelected;
+    }
+  }
+
+  convert(formula: FormulaResponse): MathContent {
+    return {
+      mathml: formula.xml
     }
   }
 }
