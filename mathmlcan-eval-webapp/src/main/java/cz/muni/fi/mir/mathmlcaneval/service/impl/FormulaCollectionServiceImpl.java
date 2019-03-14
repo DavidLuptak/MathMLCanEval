@@ -15,7 +15,6 @@
  */
 package cz.muni.fi.mir.mathmlcaneval.service.impl;
 
-import cz.muni.fi.mir.mathmlcaneval.domain.FormulaCollection;
 import cz.muni.fi.mir.mathmlcaneval.domain.User;
 import cz.muni.fi.mir.mathmlcaneval.mappers.FormulaCollectionMapper;
 import cz.muni.fi.mir.mathmlcaneval.repository.FormulaCollectionRepository;
@@ -44,7 +43,7 @@ public class FormulaCollectionServiceImpl implements FormulaCollectionService {
   @Override
   @Transactional
   public FormulaCollectionResponse save(FormulaCollectionRequest create) {
-    FormulaCollection collection = formulaCollectionMapper.map(create);
+    final var collection = formulaCollectionMapper.map(create);
     collection.setCreator(new User(securityService.getCurrentUserId()));
 
     formulaCollectionRepository.save(collection);

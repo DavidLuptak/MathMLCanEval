@@ -18,7 +18,6 @@ package cz.muni.fi.mir.mathmlcaneval.scheduling.jobs;
 import cz.muni.fi.mir.mathmlcaneval.domain.ApplicationRun;
 import cz.muni.fi.mir.mathmlcaneval.domain.CanonicOutput;
 import cz.muni.fi.mir.mathmlcaneval.domain.Formula;
-import cz.muni.fi.mir.mathmlcaneval.domain.SimilarityForm;
 import cz.muni.fi.mir.mathmlcaneval.repository.ApplicationRunRepository;
 import cz.muni.fi.mir.mathmlcaneval.repository.CanonicOutputRepository;
 import cz.muni.fi.mir.mathmlcaneval.repository.FormulaRepository;
@@ -39,7 +38,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
-import org.w3c.dom.Document;
 
 @Setter
 public class CanonicalizationJob implements Job {
@@ -91,9 +89,9 @@ public class CanonicalizationJob implements Job {
     result.forEach(co -> {
       postProcessors.forEach(pp -> pp.process(co));
 
-      Document docXml = this.xmlDocumentService.buildDocument(co);
+      final var docXml = this.xmlDocumentService.buildDocument(co);
 
-      SimilarityForm sf = similarityService.generateSimilarity(docXml);
+      final var sf = similarityService.generateSimilarity(docXml);
       co.setSimilarityForm(sf);
       co.setPretty(this.xmlDocumentService.prettyPrintToString(docXml));
     });

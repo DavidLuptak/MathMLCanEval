@@ -22,8 +22,6 @@ import cz.muni.fi.mir.mathmlcaneval.scheduling.jobs.CanonicalizationJob;
 import cz.muni.fi.mir.mathmlcaneval.scheduling.support.CustomJobBuilder;
 import cz.muni.fi.mir.mathmlcaneval.scheduling.support.JobGroup;
 import lombok.RequiredArgsConstructor;
-import org.quartz.JobDetail;
-import org.quartz.Trigger;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -34,9 +32,9 @@ public class CanonicalizationHandlerImpl implements CanonicalizationHandler {
   @Override
   public void handleCanonicalization(CanonicalizationEvent canonicalizationEvent) {
     // todo verify input if collection is our, if config is ours etc..
-    Trigger trigger = defaultTrigger(JobGroup.RUN);
+    final var trigger = defaultTrigger(JobGroup.RUN);
 
-    JobDetail job = CustomJobBuilder.builder(CanonicalizationJob.class)
+    final var job = CustomJobBuilder.builder(CanonicalizationJob.class)
       .group(JobGroup.RUN)
       .data(CanonicalizationJob.COLLECTION, canonicalizationEvent.getCollectionId())
       .data(CanonicalizationJob.APP_RUN, canonicalizationEvent.getAppRunId())

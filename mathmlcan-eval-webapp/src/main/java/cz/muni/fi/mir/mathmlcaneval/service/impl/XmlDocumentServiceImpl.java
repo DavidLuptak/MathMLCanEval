@@ -19,7 +19,6 @@ import cz.muni.fi.mir.mathmlcaneval.service.XmlDocumentService;
 import cz.muni.fi.mir.mathmlcaneval.support.XmlContent;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.StringWriter;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.transform.Result;
@@ -34,7 +33,6 @@ import javax.xml.xpath.XPathExpressionException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.w3c.dom.Document;
-import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -54,7 +52,7 @@ public class XmlDocumentServiceImpl implements XmlDocumentService {
 
   @Override
   public Document buildDocument(XmlContent xmlContent) {
-    try (InputStream is = new ByteArrayInputStream(xmlContent.getXmlContent().getBytes())) {
+    try (final var is = new ByteArrayInputStream(xmlContent.getXmlContent().getBytes())) {
       return documentBuilder.parse(is);
     } catch (IOException | SAXException ex) {
       throw new RuntimeException(ex);
@@ -64,7 +62,7 @@ public class XmlDocumentServiceImpl implements XmlDocumentService {
 
   @Override
   public Document prettyPrint(Document original) {
-    DOMResult result = new DOMResult();
+    final var result = new DOMResult();
     prettyPrint(original, result);
 
     return (Document) result.getNode();
@@ -72,8 +70,8 @@ public class XmlDocumentServiceImpl implements XmlDocumentService {
 
   @Override
   public String prettyPrintToString(Document original) {
-    StringWriter writer = new StringWriter();
-    StreamResult result = new StreamResult(writer);
+    final var writer = new StringWriter();
+    final var result = new StreamResult(writer);
     prettyPrint(original, result);
 
     return writer.toString();
@@ -89,12 +87,12 @@ public class XmlDocumentServiceImpl implements XmlDocumentService {
     // transformer in jdk 8+? behaves little bit weird as it inserts empty lines.
     // we need to copy original document and remove empty lines (nodes)
 
-    Document copy = documentBuilder.newDocument();
-    Node copiedNode = copy.importNode(document.getDocumentElement(), true);
+    final var copy = documentBuilder.newDocument();
+    final var copiedNode = copy.importNode(document.getDocumentElement(), true);
     copy.appendChild(copiedNode);
 
     try {
-      NodeList blankTextNodes = (NodeList) normalizeDocument.evaluate(copy, XPathConstants.NODESET);
+      final var blankTextNodes = (NodeList) normalizeDocument.evaluate(copy, XPathConstants.NODESET);
 
       for (int i = 0; i < blankTextNodes.getLength(); i++) {
         blankTextNodes.item(i).getParentNode().removeChild(blankTextNodes.item(i));

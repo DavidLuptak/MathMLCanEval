@@ -23,7 +23,6 @@ import java.util.stream.Collectors;
 import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.apache.commons.lang3.StringUtils;
-import org.eclipse.egit.github.core.Repository;
 import org.eclipse.egit.github.core.RepositoryCommit;
 import org.eclipse.egit.github.core.service.CommitService;
 
@@ -43,18 +42,16 @@ public class RevisionSyncJob extends AbstractRevisionSyncJob {
   List<RepositoryCommit> filteredCommitsToImport() throws IOException {
     CommitService commitService = new CommitService();
 
-    Repository repository = getRepository();
-
     List<RepositoryCommit> data;
     if (!StringUtils.isEmpty(this.revisionId)) {
       data = commitService
-        .getCommits(repository)
+        .getCommits(getRepository())
         .stream()
         .filter(rc -> rc.getSha().equals(revisionId))
         .collect(Collectors.toList());
     } else {
       data = commitService
-        .getCommits(repository)
+        .getCommits(getRepository())
         .stream()
         .filter(rc -> nsIsAfter(rc.getCommit().getCommitter().getDate()))
         .filter(rc -> nsIsBefore(rc.getCommit().getCommitter().getDate()))

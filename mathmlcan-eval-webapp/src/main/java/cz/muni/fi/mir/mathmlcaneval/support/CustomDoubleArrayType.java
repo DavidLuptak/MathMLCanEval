@@ -17,7 +17,6 @@ package cz.muni.fi.mir.mathmlcaneval.support;
 
 import java.io.Serializable;
 import java.sql.Array;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -66,15 +65,15 @@ public class CustomDoubleArrayType  implements UserType {
   @Override
   public void nullSafeSet(PreparedStatement st, Object value, int index,
     SharedSessionContractImplementor session) throws HibernateException, SQLException {
-    Connection c = st.getConnection();
-    double[] orig = (double[]) value;
+    final var c = st.getConnection();
+    final var orig = (double[]) value;
 
-    Object[] copy = new Object[orig.length];
+    final var copy = new Object[orig.length];
 
     for(int i =0 ; i < orig.length; i++) {
       copy[i] = Double.valueOf(orig[i]);
     }
-    Array array = c.createArrayOf("numeric", copy);
+    final var array = c.createArrayOf("numeric", copy);
 
     st.setArray(index, array);
   }

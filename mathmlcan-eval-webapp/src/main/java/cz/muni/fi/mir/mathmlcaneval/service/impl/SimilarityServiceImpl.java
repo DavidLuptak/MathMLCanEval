@@ -29,7 +29,6 @@ import mikera.vectorz.Vectorz;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
 
 @Service
 @RequiredArgsConstructor
@@ -39,10 +38,8 @@ public class SimilarityServiceImpl implements SimilarityService {
 
   @Override
   public SimilarityForm generateSimilarity(Document document) {
-
-    SimilarityForm result = new SimilarityForm();
-
-    Forms forms = new Forms();
+    final var result = new SimilarityForm();
+    final var forms = new Forms();
 
     countTravel(document.getDocumentElement(), forms);
 
@@ -54,7 +51,7 @@ public class SimilarityServiceImpl implements SimilarityService {
 
 
   private AVector toVector(Map<String, Integer> map) {
-    double[] result = new double[(int) mathmlElementRepository.count()];
+    final var result = new double[(int) mathmlElementRepository.count()];
 
     map.forEach((k, v) -> result[mathmlElementRepository.getPositionForElement(k).orElseThrow()] = v);
 
@@ -67,10 +64,10 @@ public class SimilarityServiceImpl implements SimilarityService {
       return;
     }
 
-    NodeList nodeList = node.getChildNodes();
+    final var nodeList = node.getChildNodes();
 
     for (int i = 0; i < nodeList.getLength(); i++) {
-      Node currentNode = nodeList.item(i);
+      final var currentNode = nodeList.item(i);
       if (currentNode.getNodeType() == Node.ELEMENT_NODE) {
         forms.pushElement(currentNode.getNodeName());
       } else if (currentNode.getNodeType() == Node.TEXT_NODE) {
@@ -93,7 +90,7 @@ public class SimilarityServiceImpl implements SimilarityService {
     }
 
     void pushText(String text) {
-      String trimmed = text.trim();
+      final var trimmed = text.trim();
       if (!trimmed.isEmpty()) {
         this.strings.add(text);
       }

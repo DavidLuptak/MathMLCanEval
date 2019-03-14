@@ -24,8 +24,6 @@ import cz.muni.fi.mir.mathmlcaneval.scheduling.jobs.RevisionSyncJob;
 import cz.muni.fi.mir.mathmlcaneval.scheduling.support.CustomJobBuilder;
 import cz.muni.fi.mir.mathmlcaneval.scheduling.support.JobGroup;
 import lombok.RequiredArgsConstructor;
-import org.quartz.JobDetail;
-import org.quartz.Trigger;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -36,9 +34,9 @@ public class RevisionHandlerImpl implements RevisionHandler {
 
   @Override
   public void handleRevisionSync(SyncRevisionEvent syncRevisionEvent) {
-    Trigger trigger = defaultTrigger(JobGroup.SYNC);
+    final var trigger = defaultTrigger(JobGroup.SYNC);
 
-    JobDetail job = CustomJobBuilder.builder(RevisionSyncJob.class)
+    final var job = CustomJobBuilder.builder(RevisionSyncJob.class)
       .data(RevisionSyncJob.DATE_FROM, syncRevisionEvent.getFrom())
       .data(RevisionSyncJob.DATE_TO, syncRevisionEvent.getTo())
       .data(RevisionSyncJob.REVISION, syncRevisionEvent.getSha1())
@@ -52,9 +50,9 @@ public class RevisionHandlerImpl implements RevisionHandler {
 
   @Override
   public void handleLatestRevisionSync(SyncLatestRevisionEvent event) {
-    Trigger trigger = defaultTrigger(JobGroup.SYNC);
+    final var trigger = defaultTrigger(JobGroup.SYNC);
 
-    JobDetail job = CustomJobBuilder
+    final var job = CustomJobBuilder
       .builder(LatestRevisionSyncJob.class)
       .group(JobGroup.SYNC)
       .build();

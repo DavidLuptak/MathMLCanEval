@@ -33,7 +33,6 @@ import cz.muni.fi.mir.mathmlcaneval.support.ReadOnly;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.data.domain.Page;
@@ -98,13 +97,13 @@ public class ApplicationRunServiceImpl implements ApplicationRunService {
     return applicationRunRepository
       .findById(id)
       .map(run -> {
-        ApplicationRunDetailedResponse result = applicationRunMapper.mapDetail(run);
+        final var result = applicationRunMapper.mapDetail(run);
 
-        Set<CanonicalizationContainer> dataSet = new HashSet<>();
+        final var dataSet = new HashSet<CanonicalizationContainer>();
 
         for (CanonicOutput co : run.getCanonicOutputs()) {
           // todo move to mapper
-          CanonicalizationContainer container = new CanonicalizationContainer();
+          final var container = new CanonicalizationContainer();
           container.setCanonicId(co.getId());
           container.setCanonicalizationError(co.getError());
           container.setCanonicXml(co.getPretty());

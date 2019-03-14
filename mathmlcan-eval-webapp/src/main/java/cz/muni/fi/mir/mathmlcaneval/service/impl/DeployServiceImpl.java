@@ -45,8 +45,8 @@ public class DeployServiceImpl implements DeployService {
     try(InputStream is  = jarFile;
       OutputStream out = new FileOutputStream(jarLocation.toFile())) {
 
-      int read = 0;
-      byte[] bytes = new byte[1024];
+      var read = 0;
+      final var bytes = new byte[1024];
 
       while ((read = is.read(bytes)) != -1) {
         out.write(bytes, 0, read);

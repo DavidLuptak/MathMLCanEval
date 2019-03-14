@@ -88,7 +88,7 @@ public class MavenServiceImpl implements MavenService {
     //FileLock lock = null;
     try (FileChannel channel = FileChannel.open(pom)) {
       //lock = channel.lock();
-      InvocationResult result = mavenFunction.runMaven(this.invoker);
+      final var result = mavenFunction.runMaven(this.invoker);
       if (result.getExitCode() != 0) {
         log.warn("Maven has failed");
         throw new RuntimeException("maven has failed");

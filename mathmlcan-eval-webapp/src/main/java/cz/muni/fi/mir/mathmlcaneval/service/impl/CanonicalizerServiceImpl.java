@@ -82,7 +82,7 @@ public class CanonicalizerServiceImpl implements CanonicalizerService {
     final var start = System.currentTimeMillis();
 
     try (InputStream in = new ByteArrayInputStream(f.getRaw().getBytes());
-      OutputStream out = new ByteArrayOutputStream()) {
+      final var out = new ByteArrayOutputStream()) {
       canonicalize.invoke(canonicalizer, in, out);
       result.setRaw(out.toString());
     } catch (IOException | IllegalAccessException | InvocationTargetException ex) {

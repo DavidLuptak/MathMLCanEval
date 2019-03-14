@@ -72,11 +72,11 @@ public class RevisionServiceImpl implements RevisionService {
   public RevisionResponse update(Long id, JsonPatch patch) {
     // todo this can be done better
 
-    Revision revision = revisionRepository
+    final var revision = revisionRepository
       .findById(id)
       .orElseThrow();
 
-    Revision result = patchingService.patch(patch, revision, Revision.class);
+    final var result = patchingService.patch(patch, revision, Revision.class);
 
 
     return revisionMapper.map(revisionRepository.save(result));
