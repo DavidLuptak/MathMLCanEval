@@ -15,6 +15,7 @@
  */
 package cz.muni.fi.mir.mathmlcaneval.domain;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -30,10 +31,15 @@ import lombok.Setter;
 public class InputConfiguration extends BaseEntity {
 
   private static final long serialVersionUID = 5009279098577250282L;
+  @Column(name = "content")
   private String content;
+  @Column(name = "note")
   private String note;
+  @Column(name = "name")
   private String name;
+  @Column(name = "visible_to_public")
   private Boolean visibleToPublic;
+
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "user_id")
   private User user;

@@ -394,5 +394,11 @@
   <changeSet id="2018.03.13.02" author="dominik.szalai" context="test">
     <sqlFile path="test-data/formulas.sql"/>
   </changeSet>
+  
+  <changeSet id="2018.03.14.01" author="dominik.szalai">
+    <addColumn tableName="users">
+      <column name="name" type="varchar(128)" />
+    </addColumn>
+  </changeSet>
 
 </databaseChangeLog>

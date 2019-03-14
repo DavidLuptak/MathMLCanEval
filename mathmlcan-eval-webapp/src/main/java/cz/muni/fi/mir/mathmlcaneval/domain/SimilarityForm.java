@@ -16,6 +16,7 @@
 package cz.muni.fi.mir.mathmlcaneval.domain;
 
 import cz.muni.fi.mir.mathmlcaneval.support.CustomDoubleArrayType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import lombok.Getter;
@@ -29,6 +30,9 @@ import org.hibernate.annotations.TypeDef;
 @Table(name = "canonic_outputs_similarity_forms")
 public class SimilarityForm extends BaseEntity {
 
+  private static final long serialVersionUID = -2548045225317036120L;
+  @Column(name = "vector_form")
   private double[] vectorForm;
+  @Column(name = "text_form")
   private String textForm;
 }

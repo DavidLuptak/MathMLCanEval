@@ -25,10 +25,12 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "mathml_elements")
-public class MathmlElement extends BaseEntity{
+public class MathmlElement extends BaseEntity {
 
-  @Column
-  private  String element;
-  @Column
+  private static final long serialVersionUID = 1326610474380992836L;
+
+  @Column(name = "element")
+  private String element;
+  @Column(name = "vector_position")
   private int vectorPosition;
 }

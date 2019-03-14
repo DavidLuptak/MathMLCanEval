@@ -15,13 +15,20 @@
  */
 package cz.muni.fi.mir.mathmlcaneval.domain;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 @Entity
 @Table(name = "labels")
 public class Label extends BaseEntity {
 
   private static final long serialVersionUID = -6245801987000598554L;
+
+  @Column(name = "label_value")
   private String labelValue;
 }

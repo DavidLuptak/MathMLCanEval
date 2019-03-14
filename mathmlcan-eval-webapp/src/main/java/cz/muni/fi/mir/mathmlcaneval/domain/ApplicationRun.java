@@ -33,6 +33,8 @@ import lombok.Setter;
 @Table(name = "application_runs")
 public class ApplicationRun extends BaseEntity {
 
+  private static final long serialVersionUID = 4749719209581052866L;
+
   @Column(name = "run_start")
   private LocalDateTime start;
   @Column(name = "run_end")
@@ -47,7 +49,6 @@ public class ApplicationRun extends BaseEntity {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "users")
   private User startedBy;
-
   @OneToMany(mappedBy = "applicationRun")
   private Set<CanonicOutput> canonicOutputs;
 }

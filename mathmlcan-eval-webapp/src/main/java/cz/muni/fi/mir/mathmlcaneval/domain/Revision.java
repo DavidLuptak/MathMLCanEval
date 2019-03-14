@@ -16,6 +16,7 @@
 package cz.muni.fi.mir.mathmlcaneval.domain;
 
 import java.time.LocalDateTime;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import lombok.Getter;
@@ -28,9 +29,14 @@ import lombok.Setter;
 public class Revision extends BaseEntity {
 
   private static final long serialVersionUID = -7738917977580794290L;
+  @Column(name = "name")
   private String name;
+  @Column(name = "note")
   private String note;
+  @Column(name = "sha1")
   private String sha1; //40 chars
+  @Column(name = "commit_time")
   private LocalDateTime commitTime;
+  @Column(name = "sync_time")
   private LocalDateTime syncTime;
 }

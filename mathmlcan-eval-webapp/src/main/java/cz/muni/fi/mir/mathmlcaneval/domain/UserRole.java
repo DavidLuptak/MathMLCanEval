@@ -15,6 +15,7 @@
  */
 package cz.muni.fi.mir.mathmlcaneval.domain;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import lombok.Getter;
@@ -25,5 +26,9 @@ import lombok.Setter;
 @Entity
 @Table(name = "roles")
 public class UserRole extends BaseEntity {
+
+  private static final long serialVersionUID = -8527347782594150009L;
+
+  @Column(name = "role_name")
   private String roleName;
 }

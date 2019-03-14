@@ -17,6 +17,7 @@ package cz.muni.fi.mir.mathmlcaneval.domain;
 
 import java.util.HashSet;
 import java.util.Set;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -35,9 +36,14 @@ public class User extends BaseEntity {
 
   private static final long serialVersionUID = -2938764962736840966L;
 
+  @Column(name = "username")
   private String username;
+  @Column(name = "password")
   private String password;
+  @Column(name = "enabled")
   private Boolean enabled;
+  @Column(name = "name")
+  private String name;
 
   @OneToMany
   @JoinTable(name = "users_roles",

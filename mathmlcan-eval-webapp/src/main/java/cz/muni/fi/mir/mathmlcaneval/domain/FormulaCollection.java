@@ -16,6 +16,7 @@
 package cz.muni.fi.mir.mathmlcaneval.domain;
 
 import java.util.Set;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -32,13 +33,18 @@ import lombok.Setter;
 @Table(name = "formula_collections")
 public class FormulaCollection extends BaseEntity {
 
+  private static final long serialVersionUID = 581198003680257750L;
+
+  @Column(name = "name")
   private String name;
+  @Column(name = "note")
   private String note;
+  @Column(name = "visible_to_public")
   private Boolean visibleToPublic;
+
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "creator")
   private User creator;
-
   @OneToMany
   @JoinTable(name = "formula_collections_formulas",
     joinColumns = @JoinColumn(name = "formula_collection", referencedColumnName = "id"),

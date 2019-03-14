@@ -32,13 +32,17 @@ import lombok.Setter;
 @Table(name = "canonic_outputs")
 public class CanonicOutput extends BaseEntity implements XmlContent {
 
-  @Column(columnDefinition = "xml")
+  @Column(name = "raw", columnDefinition = "xml")
   private String raw;
-  @Column(columnDefinition = "xml")
+  @Column(name="pretty", columnDefinition = "xml")
   private String pretty;
+  @Column(name = "hash")
   private String hash;
+  @Column(name = "error")
   private String error;
+  @Column(name = "thumbnail")
   private byte[] thumbnail;
+  @Column(name = "ocr_changed")
   private boolean ocrChanged;
 
   @ManyToOne(fetch = FetchType.LAZY)
@@ -47,7 +51,6 @@ public class CanonicOutput extends BaseEntity implements XmlContent {
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "application_run")
   private ApplicationRun applicationRun;
-
   @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.PERSIST)
   @JoinColumn(name = "similarity_form")
   private SimilarityForm similarityForm;

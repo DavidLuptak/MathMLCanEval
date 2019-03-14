@@ -31,13 +31,20 @@ import lombok.Setter;
 @Entity
 @Table(name = "formulas")
 public class Formula extends BaseEntity implements XmlContent {
-  @Column(columnDefinition = "xml")
+
+  private static final long serialVersionUID = 8404278828094687863L;
+
+  @Column(name="raw",columnDefinition = "xml")
   private String raw;
-  @Column(columnDefinition = "xml")
+  @Column(name = "pretty", columnDefinition = "xml")
   private String pretty;
+  @Column(name = "note")
   private String note;
+  @Column(name = "hash_value")
   private String hashValue;
+  @Column(name = "insert_time")
   private LocalDateTime insertTime;
+  @Column(name = "thumbnail")
   private byte[] thumbnail;
 
   @OneToMany(mappedBy = "formula")
