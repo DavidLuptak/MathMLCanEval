@@ -19,7 +19,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.github.fge.jsonpatch.JsonPatch;
 import cz.muni.fi.mir.mathmlcaneval.requests.SyncRevisionRequest;
 import cz.muni.fi.mir.mathmlcaneval.responses.RevisionResponse;
-import cz.muni.fi.mir.mathmlcaneval.service.PatchingService;
 import cz.muni.fi.mir.mathmlcaneval.service.RevisionService;
 import cz.muni.fi.mir.mathmlcaneval.service.support.JsonPatchParser;
 import cz.muni.fi.mir.mathmlcaneval.support.Response;
@@ -42,7 +41,6 @@ import org.springframework.web.bind.annotation.RestController;
 public class RevisionResource {
 
   private final RevisionService revisionService;
-  private final PatchingService patchingService;
 
 
   @GetMapping
@@ -55,6 +53,13 @@ public class RevisionResource {
     @Valid @RequestBody SyncRevisionRequest syncRevisionRequest) {
 
     revisionService.syncRevisions(syncRevisionRequest);
+
+    return Response.ACCEPTED;
+  }
+
+  @PostMapping("/latest")
+  public ResponseEntity<Response> submitSyncLatest(){
+    revisionService.syncRevisions(null);
 
     return Response.ACCEPTED;
   }

@@ -17,6 +17,7 @@ package cz.muni.fi.mir.mathmlcaneval.service.impl;
 
 import com.github.fge.jsonpatch.JsonPatch;
 import cz.muni.fi.mir.mathmlcaneval.domain.Revision;
+import cz.muni.fi.mir.mathmlcaneval.events.SyncLatestRevisionEvent;
 import cz.muni.fi.mir.mathmlcaneval.mappers.RevisionMapper;
 import cz.muni.fi.mir.mathmlcaneval.repository.RevisionRepository;
 import cz.muni.fi.mir.mathmlcaneval.requests.SyncRevisionRequest;
@@ -51,8 +52,11 @@ public class RevisionServiceImpl implements RevisionService {
 
   @Override
   public void syncRevisions(SyncRevisionRequest request) {
-    this.applicationEventPublisher.publishEvent(revisionMapper.map(request));
-    //jobServiceDecorator.scheduleRevisionTask(request);
+    if(request == null) {
+      this.applicationEventPublisher.publishEvent(new SyncLatestRevisionEvent(this));
+    } else {
+      this.applicationEventPublisher.publishEvent(revisionMapper.map(this, request));
+    }
   }
 
   @Override

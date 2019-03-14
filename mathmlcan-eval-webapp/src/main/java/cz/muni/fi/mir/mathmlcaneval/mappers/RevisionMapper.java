@@ -29,7 +29,7 @@ public interface RevisionMapper {
 
   List<RevisionResponse> map(List<Revision> revision);
 
-  default SyncRevisionEvent map(SyncRevisionRequest request) {
-    return new SyncRevisionEvent(this, request.getFrom(), request.getTo(), request.getSha1());
+  default SyncRevisionEvent map(Object source, SyncRevisionRequest request) {
+    return new SyncRevisionEvent(source, request.getFrom(), request.getTo(), request.getSha1());
   }
 }

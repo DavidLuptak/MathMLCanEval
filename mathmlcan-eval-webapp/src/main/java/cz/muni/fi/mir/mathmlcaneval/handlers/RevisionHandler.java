@@ -15,13 +15,18 @@
  */
 package cz.muni.fi.mir.mathmlcaneval.handlers;
 
+import cz.muni.fi.mir.mathmlcaneval.events.SyncLatestRevisionEvent;
 import cz.muni.fi.mir.mathmlcaneval.events.SyncRevisionEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 
-public interface RevisionHandler {
+public interface RevisionHandler extends JobHandler {
 
   @EventListener
   @Async
   void handleRevisionSync(SyncRevisionEvent syncRevisionEvent);
+
+  @EventListener
+  @Async
+  void handleLatestRevisionSync(SyncLatestRevisionEvent event);
 }

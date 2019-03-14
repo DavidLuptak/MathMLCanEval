@@ -40,6 +40,11 @@ export class RevisionListComponent extends TableComponent<RevisionResponse> impl
     this.dialog.open(NewRevisionComponent);
   }
 
+  requestLatestSync(): void {
+    this.revisionService
+    .syncLatest()
+    .subscribe(() => console.log('ok'));
+  }
   switchToEdit(id: number): void {
     if (this.securityService.isAuthenticated()) {
       if (!this.revisionChanges.get(id)) {
