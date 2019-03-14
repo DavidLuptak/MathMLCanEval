@@ -5,6 +5,7 @@ import {CollectionsService} from './collections.service';
 import {Router} from '@angular/router';
 import {MatTableDataSource} from '@angular/material';
 import {Page} from '../../models/page';
+import {HttpClient} from '@angular/common/http';
 
 @Component({
   selector: 'collections-component',

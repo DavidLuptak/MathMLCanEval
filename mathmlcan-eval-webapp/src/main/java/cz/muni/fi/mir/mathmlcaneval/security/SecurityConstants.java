@@ -35,7 +35,8 @@ public class SecurityConstants {
     "/api/configurations/*/app-runs",
     "/api/revisions",
     "/api/formulas",
-    "/api/collections"
+    "/api/collections",
+    "/api/test"
   };
 
   public static final String[] PUT_PUBLIC_RESOURCES = {

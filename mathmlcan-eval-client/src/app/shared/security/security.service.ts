@@ -10,6 +10,7 @@ import {map, mergeMap} from 'rxjs/operators';
 import {tap} from 'rxjs/internal/operators/tap';
 import {MeResponse} from './me-response';
 import {Authority, Principal} from './principal';
+import {TdDialogService} from '@covalent/core';
 
 const API_URL = environment.apiUrl;
 const AUTH_TOKEN = btoa(`${environment.clientId}:${environment.clientSecret}`);
@@ -29,7 +30,8 @@ export class SecurityService {
   eventEmitter = new EventEmitter<boolean>();
 
   constructor(private httpClient: HttpClient,
-              private localStorageService: LocalStorageService) {
+              private localStorageService: LocalStorageService,
+              private dialogService: TdDialogService) {
   }
 
   login(loginModel: LoginModel): Observable<boolean> {
@@ -52,6 +54,13 @@ export class SecurityService {
         },
         () => false)
     );
+  }
+
+  public deniedModal() : void{
+    this.dialogService.openAlert({
+      title: 'Access denied',
+      message: "You don't have permission to acces this resource"
+    })
   }
 
   @HostListener('window:unload', ['$event'])
@@ -78,8 +87,7 @@ export class SecurityService {
     this.httpClient
     .post(`${API_URL}/api/oauth/revoke`, body, logoutHeaders)
     .subscribe(() => {
-      this.localStorageService.remove(TOKEN_NAME);
-      this.localStorageService.remove(PRINCIPAL);
+      this.clearLocalStorage();
     });
   }
 
@@ -94,6 +102,11 @@ export class SecurityService {
   isTokenExpired(): boolean {
     // todo return !this.jwtHelper.isTokenExpired(this.getToken());
     return false;
+  }
+
+  public clearLocalStorage(): void {
+    this.localStorageService.remove(TOKEN_NAME);
+    this.localStorageService.remove(PRINCIPAL);
   }
 
   isAuthenticated(): boolean {
