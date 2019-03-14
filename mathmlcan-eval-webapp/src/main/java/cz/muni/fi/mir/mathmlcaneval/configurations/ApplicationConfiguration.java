@@ -20,6 +20,7 @@ import cz.muni.fi.mir.mathmlcaneval.configurations.props.LocationProperties;
 import cz.muni.fi.mir.mathmlcaneval.service.XmlDocumentService;
 import cz.muni.fi.mir.mathmlcaneval.service.impl.XmlDocumentServiceImpl;
 import cz.muni.fi.mir.mathmlcaneval.support.MavenInvokerOutputHandler;
+import java.net.URISyntaxException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -33,12 +34,17 @@ import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.Level;
 import org.apache.maven.shared.invoker.DefaultInvoker;
 import org.apache.maven.shared.invoker.Invoker;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.cache.jcache.JCacheCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.repository.config.BootstrapMode;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.zalando.problem.ProblemModule;
+import javax.cache.Caching;
 
 /**
  * @author dominik.szalai
@@ -48,6 +54,7 @@ import org.zalando.problem.ProblemModule;
 @Configuration
 @EnableAsync
 @RequiredArgsConstructor
+@EnableCaching
 @EnableJpaRepositories(bootstrapMode = BootstrapMode.LAZY, enableDefaultTransactions = false, basePackages = "cz.muni.fi.mir.mathmlcaneval.repository")
 public class ApplicationConfiguration {
 
@@ -100,5 +107,14 @@ public class ApplicationConfiguration {
       .newXPath().compile("//text()[normalize-space(.) = '']");
 
     return new XmlDocumentServiceImpl(db, tf, xpath);
+  }
+
+  @Bean
+  @Profile("!ci")
+  public CacheManager cacheManager() throws URISyntaxException {
+    return new JCacheCacheManager(Caching.getCachingProvider().getCacheManager(
+      getClass().getResource("/ehcache.xml").toURI(),
+      getClass().getClassLoader()
+    ));
   }
 }

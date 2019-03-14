@@ -83,6 +83,7 @@
     <org.lombok.version>1.18.4</org.lombok.version>
     <javax.jaxb.version>2.3.0</javax.jaxb.version>
     <jackson.version>2.9.8</jackson.version>
+    <org.ehcache.version>3.6.2</org.ehcache.version>
   </properties>
 
   <dependencyManagement>
@@ -166,6 +167,16 @@
         <groupId>org.javers</groupId>
         <artifactId>javers-core</artifactId>
         <version>5.2.4</version>
+      </dependency>
+      <dependency>
+        <groupId>org.ehcache</groupId>
+        <artifactId>ehcache</artifactId>
+        <version>${org.ehcache.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>javax.cache</groupId>
+        <artifactId>cache-api</artifactId>
+        <version>1.1.0</version>
       </dependency>
 
       <!-- jdk11 deps -->
