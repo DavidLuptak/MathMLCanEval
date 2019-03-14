@@ -12,7 +12,7 @@ import {Page} from '../../models/page';
 })
 export class ApprunListComponent extends TableComponent<AppRunResponse> implements OnInit {
 
-  displayedColumns = ['id', 'start', 'end', 'startedById'];
+  displayedColumns = ['id', 'start', 'end', 'startedById','numberOfOutputs'];
 
   constructor(private appRunService: ApprunService,
               private router: Router) {

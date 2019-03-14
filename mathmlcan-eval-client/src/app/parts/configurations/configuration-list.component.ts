@@ -18,7 +18,7 @@ export class ConfigurationListComponent extends TableComponent<ConfigurationResp
 
 
   appRunsDs = new MatTableDataSource<AppRunResponse>();
-  appRunsdisplayedColumns = ['id', 'finished', 'user'];
+  appRunsdisplayedColumns = ['id', 'finished', 'user', 'numberOfOutputs'];
 
   constructor(private configurationService: ConfigurationService,
               private router: Router,

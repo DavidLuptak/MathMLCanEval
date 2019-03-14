@@ -9,4 +9,5 @@ export class AppRunResponse extends Resource {
   startedById: number;
   startedByName: number;
   visibleToPublic: boolean;
+  numberOfOutputs: number;
 }

@@ -20,6 +20,11 @@
     <td mat-cell *matCellDef="let element"> {{element.startedByName}} ({{element.startedById}}) </td>
   </ng-container>
 
+  <ng-container matColumnDef="numberOfOutputs">
+    <th mat-header-cell *matHeaderCellDef> Total canonic outputs</th>
+    <td mat-cell *matCellDef="let element"> {{element.numberOfOutputs}} </td>
+  </ng-container>
+
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>

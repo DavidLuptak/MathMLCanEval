@@ -28,4 +28,5 @@ public class ApplicationRunResponse {
   private Long startedById;
   private String startedByName;
   private Boolean visibleToPublic;
+  private int numberOfOutputs;
 }

@@ -26,6 +26,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Formula;
 
 @Getter
 @Setter
@@ -53,4 +54,7 @@ public class ApplicationRun extends BaseEntity {
   private User startedBy;
   @OneToMany(mappedBy = "applicationRun")
   private Set<CanonicOutput> canonicOutputs;
+
+  @Formula("(select count(co.id) from canonic_outputs co where co.application_run = id)")
+  private int numberOfOutputs;
 }
