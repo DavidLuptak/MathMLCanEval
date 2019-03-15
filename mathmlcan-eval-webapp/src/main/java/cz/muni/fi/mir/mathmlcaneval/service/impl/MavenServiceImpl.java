@@ -44,9 +44,10 @@ public class MavenServiceImpl implements MavenService {
 
   private static final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
   private static final XPathFactory xPathfactory = XPathFactory.newInstance();
-  private static final XPath xpath = xPathfactory.newXPath();
   private static final Properties properties = new Properties();
   private static final List<String> MAVEN_GOALS = List.of("clean", "package", "-B");
+  // cannot be static see squid:S2885
+  private final XPath xpath = xPathfactory.newXPath();
 
   private final Invoker invoker;
 

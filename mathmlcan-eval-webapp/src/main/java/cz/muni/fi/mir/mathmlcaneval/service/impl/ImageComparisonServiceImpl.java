@@ -18,6 +18,7 @@ package cz.muni.fi.mir.mathmlcaneval.service.impl;
 import cz.muni.fi.mir.mathmlcaneval.service.ImageComparisonService;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.UUID;
@@ -45,7 +46,9 @@ public class ImageComparisonServiceImpl implements ImageComparisonService {
       // todo this does not work when pictures have different dimensions
       comp.compareImages();
 
-      return Files.newInputStream(tmp).readAllBytes();
+      try(InputStream is = Files.newInputStream(tmp)) {
+        return is.readAllBytes();
+      }
     } catch (IOException ex) {
       log.error(ex);
 

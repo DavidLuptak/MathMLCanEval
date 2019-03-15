@@ -21,6 +21,8 @@ import cz.muni.fi.mir.mathmlcaneval.service.XmlDocumentService;
 import cz.muni.fi.mir.mathmlcaneval.service.impl.XmlDocumentServiceImpl;
 import cz.muni.fi.mir.mathmlcaneval.support.MavenInvokerOutputHandler;
 import java.net.URISyntaxException;
+import javax.cache.Caching;
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -44,7 +46,6 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.data.repository.config.BootstrapMode;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.zalando.problem.ProblemModule;
-import javax.cache.Caching;
 
 /**
  * @author dominik.szalai
@@ -87,15 +88,23 @@ public class ApplicationConfiguration {
   @SneakyThrows
   public DocumentBuilder documentBuilder() {
     DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
     return factory.newDocumentBuilder();
   }
 
   @Bean
   @SneakyThrows
   public Transformer transformer() {
-    Transformer transformer = TransformerFactory.newInstance().newTransformer();
+    TransformerFactory factory = TransformerFactory.newInstance();
+    factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
+    factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
+    factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
+
+    Transformer transformer = factory.newTransformer();
+
     transformer.setOutputProperty(OutputKeys.INDENT, "yes");
     transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
+
 
     return transformer;
   }
