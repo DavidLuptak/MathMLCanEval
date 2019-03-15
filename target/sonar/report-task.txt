@@ -1,6 +1,0 @@
-projectKey=cz.muni.fi.mir:mathmlcan-eval-parent
-serverUrl=http://localhost:9000
-serverVersion=7.6.0.21501
-dashboardUrl=http://localhost:9000/dashboard?id=cz.muni.fi.mir%3Amathmlcan-eval-parent
-ceTaskId=AWlOySpyepCi64tig8Xt
-ceTaskUrl=http://localhost:9000/api/ce/task?id=AWlOySpyepCi64tig8Xt
