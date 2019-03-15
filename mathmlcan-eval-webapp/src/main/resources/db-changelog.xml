@@ -414,4 +414,27 @@
     <renameColumn tableName="configurations" oldColumnName="user_id" newColumnName="owned_by" />
   </changeSet>
 
+
+
+  <changeSet id="2019.03.15.01" author="dominik.szalai">
+    <addForeignKeyConstraint baseTableName="canonic_outputs" baseColumnNames="application_run" constraintName="fk_co_run"
+      referencedTableName="application_runs" referencedColumnNames="id" />
+    <addForeignKeyConstraint baseTableName="canonic_outputs" baseColumnNames="similarity_form" constraintName="fk_co_similarity"
+      referencedTableName="canonic_outputs_similarity_forms" referencedColumnNames="id"/>
+    <addForeignKeyConstraint baseTableName="canonic_outputs" baseColumnNames="formula" constraintName="fk_co_formula"
+      referencedTableName="formulas" referencedColumnNames="id" />
+    <addForeignKeyConstraint baseTableName="application_runs" baseColumnNames="configuration" constraintName="fk_run_config"
+      referencedTableName="configurations" referencedColumnNames="id" />
+    <addForeignKeyConstraint baseTableName="application_runs" baseColumnNames="revision" constraintName="fk_run_revision"
+      referencedTableName="revisions" referencedColumnNames="id" />
+    <addForeignKeyConstraint baseTableName="application_runs" baseColumnNames="owned_by" constraintName="fk_run_owner"
+      referencedTableName="users" referencedColumnNames="id" />
+    <addForeignKeyConstraint baseTableName="formula_collections" baseColumnNames="owned_by" constraintName="fk_collection_owner"
+      referencedTableName="users" referencedColumnNames="id" />
+    <addForeignKeyConstraint baseTableName="formula_collections_formulas" baseColumnNames="formula_collection" constraintName="fk_collection_collection"
+      referencedTableName="formula_collections" referencedColumnNames="id" />
+    <addForeignKeyConstraint baseTableName="formula_collections_formulas" baseColumnNames="formula" constraintName="fk_collection_formula"
+      referencedTableName="formulas" referencedColumnNames="id"/>
+  </changeSet>
+
 </databaseChangeLog>
