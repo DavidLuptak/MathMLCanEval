@@ -4,13 +4,12 @@ import {IPageChangeEvent, TdMediaService} from '@covalent/core';
 import {FormulaService} from './formula.service';
 import {FormulaResponse} from '../../models/formula.response';
 import {QueryParamsBuilder} from '../../shared/query-params-builder';
-import {CollectionsService} from '../collections/collections.service';
 import {MatDialog} from '@angular/material';
 import {NewCollectionComponent} from '../collections/new-collection.component';
 import {FormulaCollectionNew} from '../../models/formula-collection.new';
-import {Form} from '@angular/forms';
 import {Page} from '../../models/page';
 import {Router} from '@angular/router';
+import {MathContent} from '../../shared/math/math-content';
 
 @Component({
   selector: 'formula-list',
@@ -21,24 +20,26 @@ export class FormulaListComponent extends BaseComponent implements OnInit {
   selectMode = false;
   eventResponsive: IPageChangeEvent;
   pageSizeResponsive: number = 25;
+
+  page: Page<FormulaResponse>;
+
   formulas: FormulaResponse[];
   selectedFormulas = new Set();
-
-  dateFrom: Date = new Date(new Date().getTime() - (2 * 60 * 60 * 24 * 1000));
-  dateTo: Date = new Date(new Date().getTime() - (1 * 60 * 60 * 24 * 1000));
 
   constructor(private formulaService: FormulaService,
               public media: TdMediaService,
               private dialog: MatDialog,
-              private router: Router,
-              private collectionsService: CollectionsService) {
+              private router: Router) {
     super();
   }
 
   ngOnInit(): void {
     this.formulaService
-    .query(new QueryParamsBuilder().withPage(2).build())
-    .subscribe((page: Page<FormulaResponse>) => this.formulas = page.content);
+    .query(new QueryParamsBuilder().withPage(1).build())
+    .subscribe((page: Page<FormulaResponse>) => {
+      this.formulas = page.content;
+      this.page = page;
+    });
   }
 
 
@@ -56,17 +57,6 @@ export class FormulaListComponent extends BaseComponent implements OnInit {
 
   switchSelectMode(): void {
     this.selectMode = !this.selectMode;
-    console.log(`FormulaListComponent@ is in select mode : ${this.selectMode}`);
-  }
-
-  formulaClicked(id: number, add: boolean) {
-    if (add) {
-      this.selectedFormulas.add(id);
-      console.log(`FormulaListComponent@ Formula ${id} selected`);
-    } else {
-      this.selectedFormulas.delete(id);
-      console.log(`FormulaListComponent@ Formula ${id} unselected`);
-    }
   }
 
   displayNewCollectionModal(): void {
@@ -75,5 +65,27 @@ export class FormulaListComponent extends BaseComponent implements OnInit {
     });
 
     ref.afterClosed().subscribe((col: FormulaCollectionNew) => this.router.navigate(['/collections']));
+  }
+
+  openOrSelect(formula: FormulaResponse): void {
+    if(this.selectMode) {
+      if(this.selectedFormulas.has(formula.id)) {
+        this.selectedFormulas.delete(formula.id);
+      } else {
+        this.selectedFormulas.add(formula.id);
+      }
+    } else {
+      this.router.navigate(['/formulas', formula.id]);
+    }
+  }
+
+  isSelected(formula: FormulaResponse) : boolean {
+    return this.selectMode && this.selectedFormulas.has(formula.id);
+  }
+
+  convert(formula: FormulaResponse): MathContent {
+    return {
+      mathml: formula.xml
+    }
   }
 }

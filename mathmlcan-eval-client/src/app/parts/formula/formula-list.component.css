@@ -9,3 +9,7 @@
 .fake-link {
   cursor: pointer;
 }
+
+.selected-formula {
+  background-color: #fff0d9; /* todo sync with themes */
+}
