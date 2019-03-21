@@ -52,13 +52,17 @@ public class XmlDocumentServiceImpl implements XmlDocumentService {
 
   @Override
   public Document buildDocument(XmlContent xmlContent) {
-    try (final var is = new ByteArrayInputStream(xmlContent.getXmlContent().getBytes())) {
+    return buildDocument(xmlContent.getXmlContent());
+  }
+
+  @Override
+  public Document buildDocument(String xmlContent) {
+    try (final var is = new ByteArrayInputStream(xmlContent.getBytes())) {
       return documentBuilder.parse(is);
     } catch (IOException | SAXException ex) {
       throw new RuntimeException(ex);
     }
   }
-
 
   @Override
   public Document prettyPrint(Document original) {

@@ -7,6 +7,9 @@
       !Create Collection
     </button>
     <button type="button" mat-button *ngIf="selectMode">!Add to collection</button>
+    <a mat-icon-button [routerLink]="['/formulas/import']">
+      <mat-icon>import_export</mat-icon>
+    </a>
     <button mat-icon-button [matMenuTriggerFor]="menu">
       <mat-icon>settings</mat-icon>
     </button>

@@ -20,6 +20,7 @@ import org.w3c.dom.Document;
 
 public interface XmlDocumentService {
   Document buildDocument(XmlContent xmlContent);
+  Document buildDocument(String xmlContent);
   Document prettyPrint(Document original);
   String prettyPrintToString(Document original);
 
