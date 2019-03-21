@@ -24,4 +24,7 @@ public interface FormulaRepository extends JpaRepository<Formula, Long> {
 
   @Query("SELECT fc.formulas FROM FormulaCollection fc WHERE fc.id = :collection")
   List<Formula> getFormulasInCollection(Long collection);
+
+  @Query("SELECT f.hashValue FROM Formula f WHERE f.hashValue IN :hashes")
+  List<String> getFormulasByHashes(List<String> hashes);
 }

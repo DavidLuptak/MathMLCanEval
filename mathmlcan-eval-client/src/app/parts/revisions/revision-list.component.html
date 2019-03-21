@@ -33,12 +33,12 @@
 
         <ng-container matColumnDef="commitTime">
           <th mat-header-cell *matHeaderCellDef> {{translations.revision.commitTime}}</th>
-          <td mat-cell *matCellDef="let element"> {{element.commitTime | date: 'MMMM d, y h:mm'}} </td>
+          <td mat-cell *matCellDef="let element"> {{element.commitTime | date: 'MMMM d, y HH:mm'}} </td>
         </ng-container>
 
         <ng-container matColumnDef="syncTime">
           <th mat-header-cell *matHeaderCellDef> {{translations.revision.syncTime}}</th>
-          <td mat-cell *matCellDef="let element"> {{element.syncTime | date: 'MMMM d, y h:mm'}} </td>
+          <td mat-cell *matCellDef="let element"> {{element.syncTime | date: 'MMMM d, y HH:mm'}} </td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

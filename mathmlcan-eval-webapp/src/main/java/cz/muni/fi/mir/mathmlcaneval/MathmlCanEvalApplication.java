@@ -15,12 +15,11 @@
  */
 package cz.muni.fi.mir.mathmlcaneval;
 
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class MathmlCanEvalApplication implements CommandLineRunner {
+public class MathmlCanEvalApplication {
 
   static {
     // fixme jaxb 2.3.0 produces error
@@ -30,10 +29,5 @@ public class MathmlCanEvalApplication implements CommandLineRunner {
 
   public static void main(String[] args) {
     SpringApplication.run(MathmlCanEvalApplication.class, args);
-  }
-
-  @Override
-  public void run(String... args) throws Exception {
-
   }
 }

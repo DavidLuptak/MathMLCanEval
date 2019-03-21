@@ -31,6 +31,7 @@ import java.util.List;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
@@ -93,6 +94,7 @@ public class CanonicalizationJob implements Job {
 
       final var sf = similarityService.generateSimilarity(docXml);
       co.setSimilarityForm(sf);
+      co.setHash(DigestUtils.sha256Hex(co.getRaw().getBytes()));
       co.setPretty(this.xmlDocumentService.prettyPrintToString(docXml));
     });
 

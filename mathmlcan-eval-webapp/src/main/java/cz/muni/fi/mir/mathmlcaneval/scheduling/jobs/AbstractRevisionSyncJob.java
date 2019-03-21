@@ -26,6 +26,8 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.eclipse.egit.github.core.Repository;
@@ -35,10 +37,11 @@ import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.task.AsyncTaskExecutor;
+import org.springframework.core.task.AsyncListenableTaskExecutor;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
+import org.springframework.util.concurrent.ListenableFutureCallback;
 
 @Log4j2
 public abstract class AbstractRevisionSyncJob implements Job {
@@ -54,7 +57,7 @@ public abstract class AbstractRevisionSyncJob implements Job {
   @Autowired
   private DeployService deployService;
   @Autowired
-  private AsyncTaskExecutor taskExecutor; // todo maybe use quartz here ?
+  private AsyncListenableTaskExecutor taskExecutor;
 
   private String jobId;
 
@@ -72,13 +75,32 @@ public abstract class AbstractRevisionSyncJob implements Job {
 
   @Override
   public void execute(JobExecutionContext context) throws JobExecutionException {
-
     try {
+      final var commits = filteredCommitsToImport();
+      final var counter = new AtomicInteger(0);
+
       for (RepositoryCommit rc : filteredCommitsToImport()) {
-        taskExecutor.submit(new CheckoutDeployBuildSubTask(rc));
+        taskExecutor.submitListenable(new CheckoutDeployBuildSubTask(rc)).addCallback(
+          new ListenableFutureCallback<Object>() {
+            @Override
+            public void onFailure(Throwable throwable) {
+              counter.incrementAndGet();
+            }
+
+            @Override
+            public void onSuccess(Object o) {
+              counter.incrementAndGet();
+            }
+          });
+      }
+
+      while(counter.get() != commits.size()) {
+        TimeUnit.MILLISECONDS.sleep(1500L);
       }
     } catch (IOException ex) {
       log.error(ex);
+    } catch (InterruptedException ex) {
+      Thread.currentThread().interrupt();
     }
   }
 

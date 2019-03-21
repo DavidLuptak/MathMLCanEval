@@ -28,7 +28,6 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
-import javax.xml.xpath.XPathExpression;
 import javax.xml.xpath.XPathFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -87,7 +86,7 @@ public class ApplicationConfiguration {
   @Bean
   @SneakyThrows
   public DocumentBuilder documentBuilder() {
-    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+    final var factory = DocumentBuilderFactory.newInstance();
     factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
     return factory.newDocumentBuilder();
   }
@@ -95,12 +94,12 @@ public class ApplicationConfiguration {
   @Bean
   @SneakyThrows
   public Transformer transformer() {
-    TransformerFactory factory = TransformerFactory.newInstance();
+    final var factory = TransformerFactory.newInstance();
     factory.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
     factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_DTD, "");
     factory.setAttribute(XMLConstants.ACCESS_EXTERNAL_STYLESHEET, "");
 
-    Transformer transformer = factory.newTransformer();
+    final var transformer = factory.newTransformer();
 
     transformer.setOutputProperty(OutputKeys.INDENT, "yes");
     transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "2");
@@ -112,7 +111,7 @@ public class ApplicationConfiguration {
   @Bean
   @SneakyThrows
   public XmlDocumentService xmlDocumentService(DocumentBuilder db, Transformer tf) {
-    XPathExpression xpath = XPathFactory.newInstance()
+    final var xpath = XPathFactory.newInstance()
       .newXPath().compile("//text()[normalize-space(.) = '']");
 
     return new XmlDocumentServiceImpl(db, tf, xpath);

@@ -8,6 +8,7 @@ import {generate, observe, Observer} from 'fast-json-patch';
 import {forkJoin} from 'rxjs';
 import {SecurityService} from '../../shared/security/security.service';
 import {Page} from '../../models/page';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'revision-list',
@@ -24,7 +25,8 @@ export class RevisionListComponent extends TableComponent<RevisionResponse> impl
 
   constructor(private revisionService: RevisionService,
               private dialog: MatDialog,
-              private securityService: SecurityService) {
+              private securityService: SecurityService,
+              private router: Router) {
     super();
 
     this.dataSource = new MatTableDataSource<RevisionResponse>();
@@ -37,14 +39,17 @@ export class RevisionListComponent extends TableComponent<RevisionResponse> impl
   }
 
   requestManualSync(): void {
-    this.dialog.open(NewRevisionComponent);
+    const ref = this.dialog.open(NewRevisionComponent);
+
+    ref.afterClosed().subscribe(this.navigate);
   }
 
   requestLatestSync(): void {
     this.revisionService
     .syncLatest()
-    .subscribe(() => console.log('ok'));
+    .subscribe(() => this.navigate());
   }
+
   switchToEdit(id: number): void {
     if (this.securityService.isAuthenticated()) {
       if (!this.revisionChanges.get(id)) {
@@ -59,6 +64,10 @@ export class RevisionListComponent extends TableComponent<RevisionResponse> impl
       this.currentKey = id;
     }
   }
+
+  navigate = () => {
+    this.router.navigate(['/running-tasks']);
+  };
 
   saveChanges(): void {
     const requests = [];

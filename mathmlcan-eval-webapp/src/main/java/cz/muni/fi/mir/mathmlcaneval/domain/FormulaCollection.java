@@ -15,6 +15,7 @@
  */
 package cz.muni.fi.mir.mathmlcaneval.domain;
 
+import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -49,5 +50,5 @@ public class FormulaCollection extends BaseEntity {
   @JoinTable(name = "formula_collections_formulas",
     joinColumns = @JoinColumn(name = "formula_collection", referencedColumnName = "id"),
     inverseJoinColumns = @JoinColumn(name = "formula", referencedColumnName = "id"))
-  private Set<Formula> formulas;
+  private Set<Formula> formulas = new HashSet<>();
 }

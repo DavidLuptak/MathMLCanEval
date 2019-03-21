@@ -16,10 +16,14 @@
 package cz.muni.fi.mir.mathmlcaneval.service.impl;
 
 import cz.muni.fi.mir.mathmlcaneval.domain.Formula;
+import cz.muni.fi.mir.mathmlcaneval.domain.FormulaCollection;
+import cz.muni.fi.mir.mathmlcaneval.domain.User;
 import cz.muni.fi.mir.mathmlcaneval.mappers.FormulaMapper;
+import cz.muni.fi.mir.mathmlcaneval.repository.FormulaCollectionRepository;
 import cz.muni.fi.mir.mathmlcaneval.repository.FormulaRepository;
 import cz.muni.fi.mir.mathmlcaneval.requests.FileImportRequest;
 import cz.muni.fi.mir.mathmlcaneval.responses.FormulaResponse;
+import cz.muni.fi.mir.mathmlcaneval.security.SecurityService;
 import cz.muni.fi.mir.mathmlcaneval.service.FormulaService;
 import cz.muni.fi.mir.mathmlcaneval.service.XmlDocumentService;
 import cz.muni.fi.mir.mathmlcaneval.support.FileValidator;
@@ -40,23 +44,26 @@ import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.compress.archivers.zip.ZipArchiveEntry;
 import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
-import org.w3c.dom.Document;
 
 @Log4j2
 @Service
 @RequiredArgsConstructor
 public class FormulaServiceImpl implements FormulaService {
+
   private static final int BUFFER_SIZE = 4096;
 
   private final FormulaRepository formulaRepository;
   private final FormulaMapper formulaMapper;
   private final FileValidator fileValidator;
   private final XmlDocumentService xmlDocumentService;
+  private final FormulaCollectionRepository formulaCollectionRepository;
+  private final SecurityService securityService;
 
   @ReadOnly
   @Override
@@ -82,25 +89,35 @@ public class FormulaServiceImpl implements FormulaService {
   @Transactional
   @Override
   public List<Long> massImport(FileImportRequest request) {
-    List<Formula> formulas = new ArrayList<>();
+    final var formulas = new ArrayList<Formula>();
+    FormulaCollection formulaCollection = null;
     for (MultipartFile file : request.getFile()) {
       if (file.getContentType() != null) {
-        try (BufferedInputStream buffer = new BufferedInputStream(file.getInputStream())) {
+        try (final var buffer = new BufferedInputStream(file.getInputStream())) {
           buffer.mark(0);
-          byte[] header = buffer.readNBytes(4);
+          final var header = buffer.readNBytes(4);
           buffer.reset();
           switch (file.getContentType()) {
             case "application/zip":
             case "application/x-zip-compressed": {
               if (fileValidator.isValid(header, FileType.ZIP)) {
-                try(ZipArchiveInputStream zip = new ZipArchiveInputStream(buffer)) {
-
+                try (final var zip = new ZipArchiveInputStream(buffer)) {
                   ZipArchiveEntry ze = null;
                   while ((ze = zip.getNextZipEntry()) != null) {
                     formulas.add(fromRaw(convert(zip)));
                   }
                 } catch (IOException ex) {
                   System.err.println(ex);
+                }
+
+                if(file.getOriginalFilename() != null && file.getOriginalFilename().startsWith("collection_")) {
+                  String collectionName = StringUtils.substringAfter(file.getOriginalFilename(), "collection_");
+                  collectionName = StringUtils.replaceChars(collectionName, '_', ' ');
+                  formulaCollection = new FormulaCollection();
+                  formulaCollection.setName(collectionName);
+                  formulaCollection.setVisibleToPublic(false);
+                  formulaCollection.setNote(String.format("Imported on %s from file %s", LocalDateTime.now().toString(), file.getOriginalFilename()));;
+                  formulaCollection.setOwnedBy(new User(securityService.getCurrentUserId(false)));
                 }
               } else {
                 System.out.println("invalid zip file");
@@ -127,28 +144,46 @@ public class FormulaServiceImpl implements FormulaService {
       }
     }
 
-    return formulaRepository
-      .saveAll(formulas)
-      .stream()
-      .map(Formula::getId)
-      .collect(Collectors.toList());
+    final var existing = formulaRepository
+      .getFormulasByHashes(formulas.stream()
+        .map(Formula::getHashValue).collect(Collectors.toList()));
+
+    final var result = new ArrayList<Long>();
+
+    for(Formula imported : formulas) {
+      if(!existing.contains(imported.getHashValue())) {
+        formulaRepository.save(imported);
+
+        if(formulaCollection != null) {
+          formulaCollection.getFormulas().add(imported);
+        }
+
+        result.add(imported.getId());
+      }
+    }
+
+    if(formulaCollection != null) {
+      formulaCollectionRepository.save(formulaCollection);
+    }
+
+    return result;
   }
 
   private Formula fromRaw(String raw) {
-    Formula formula = new Formula();
-    formula.setRaw(raw);
-    formula.setHashValue(DigestUtils.sha256Hex(formula.getRaw().getBytes()));
-    formula.setInsertTime(LocalDateTime.now());
-    Document document = xmlDocumentService.buildDocument(raw);
-    formula.setPretty(xmlDocumentService.prettyPrintToString(document));
+    final var result = new Formula();
+    result.setRaw(raw);
+    result.setHashValue(DigestUtils.sha256Hex(result.getRaw().getBytes()));
+    result.setInsertTime(LocalDateTime.now());
+    final var document = xmlDocumentService.buildDocument(raw);
+    result.setPretty(xmlDocumentService.prettyPrintToString(document));
 
-    return formula;
+    return result;
   }
 
   private String convert(InputStream inputStream) throws IOException {
-    try (ByteArrayOutputStream out = new ByteArrayOutputStream(BUFFER_SIZE)) {
-      byte[] buffer = new byte[BUFFER_SIZE];
-      int count = -1;
+    try (final var out = new ByteArrayOutputStream(BUFFER_SIZE)) {
+      final var buffer = new byte[BUFFER_SIZE];
+      var count = -1;
       while ((count = inputStream.read(buffer, 0, BUFFER_SIZE)) != -1) {
         out.write(buffer, 0, count);
       }
