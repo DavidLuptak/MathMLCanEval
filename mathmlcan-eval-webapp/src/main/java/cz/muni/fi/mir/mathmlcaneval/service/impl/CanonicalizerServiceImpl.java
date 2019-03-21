@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.stereotype.Component;
 
 @Log4j2
@@ -49,6 +50,7 @@ public class CanonicalizerServiceImpl implements CanonicalizerService {
 
     try {
       final var jar = locationProperties.getRepositoryFolder().resolve(revision + ".jar");
+      log.info("Checking for presence of canonicalization in local repository for revision {}", () -> revision);
       // todo try reinit ?
       if(!Files.exists(jar)) {
         throw new RuntimeException();
@@ -62,6 +64,7 @@ public class CanonicalizerServiceImpl implements CanonicalizerService {
 
         try(InputStream configStream = new ByteArrayInputStream(configuration.getBytes())) {
           final var canonicalizer = constructor.newInstance(configStream);
+          log.info("Canonicalizer runtime for revision {} created", () -> revision);
 
           for(Formula f : formulas) {
             result.add(canonicalize(f, run, canonicalizer, canonicalize));
@@ -83,8 +86,11 @@ public class CanonicalizerServiceImpl implements CanonicalizerService {
 
     try (InputStream in = new ByteArrayInputStream(f.getRaw().getBytes());
       final var out = new ByteArrayOutputStream()) {
+      log.info("Formula {} will be canonicalized", f::getId);
       canonicalize.invoke(canonicalizer, in, out);
+      log.info("Formula {} canonicalization was successful", f::getId);
       result.setRaw(out.toString());
+      result.setHash(DigestUtils.sha256Hex(result.getRaw().getBytes()));
     } catch (IOException | IllegalAccessException | InvocationTargetException ex) {
       log.info(ex);
       result.setError(ex.getMessage());

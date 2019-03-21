@@ -30,27 +30,33 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class DeployServiceImpl implements DeployService {
+
   private final LocationProperties locationProperties;
 
   @Override
   public void deploy(InputStream jarFile, String revision) throws IOException {
     final var jarLocation = locationProperties.getRepositoryFolder().resolve(revision + ".jar");
 
-    if(Files.exists(jarLocation)) {
+    log.info("Checking if revision {} exists.", () -> revision);
+    if (Files.exists(jarLocation)) {
       Files.delete(jarLocation);
+      log.debug("Revision {} deleted from local repository", () -> revision);
     }
 
     Files.createFile(jarLocation);
+    log.debug("Revision file {} created.", () -> revision);
 
-    try(InputStream is  = jarFile;
+    try (InputStream is = jarFile;
       OutputStream out = new FileOutputStream(jarLocation.toFile())) {
 
       var read = 0;
       final var bytes = new byte[1024];
 
+      log.trace("Copying jar file for revision {}", () -> revision);
       while ((read = is.read(bytes)) != -1) {
         out.write(bytes, 0, read);
       }
+      log.info("Revision jar {} stored inside local repository", () -> revision);
     }
   }
 

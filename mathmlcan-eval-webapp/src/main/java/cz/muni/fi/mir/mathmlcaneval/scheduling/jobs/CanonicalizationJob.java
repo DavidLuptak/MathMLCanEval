@@ -24,22 +24,22 @@ import cz.muni.fi.mir.mathmlcaneval.repository.FormulaRepository;
 import cz.muni.fi.mir.mathmlcaneval.service.CanonicalizerService;
 import cz.muni.fi.mir.mathmlcaneval.service.SimilarityService;
 import cz.muni.fi.mir.mathmlcaneval.service.XmlDocumentService;
-import cz.muni.fi.mir.mathmlcaneval.service.support.CanonicalizationPostProcessorRegistry;
 import java.time.LocalDateTime;
-import java.util.Collections;
 import java.util.List;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.apache.commons.codec.digest.DigestUtils;
+import lombok.extern.log4j.Log4j2;
 import org.quartz.Job;
 import org.quartz.JobExecutionContext;
 import org.quartz.JobExecutionException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.NonNull;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionCallbackWithoutResult;
 import org.springframework.transaction.support.TransactionTemplate;
 
+@Log4j2
 @Setter
 public class CanonicalizationJob implements Job {
 
@@ -64,8 +64,6 @@ public class CanonicalizationJob implements Job {
   @Autowired
   private CanonicalizerService canonicalizerService;
   @Autowired
-  private CanonicalizationPostProcessorRegistry postProcessorRegistry;
-  @Autowired
   private SimilarityService similarityService;
   @Autowired
   private XmlDocumentService xmlDocumentService;
@@ -78,6 +76,7 @@ public class CanonicalizationJob implements Job {
       final var run = applicationRunRepository.findByIdFetched(applicationRunId).orElseThrow();
       // we need to touch these fields in order to prevent lazyinit exception
 
+      log.info("Application run {} started", run::getId);
       run.setStart(LocalDateTime.now());
       return new CanonicData(formulas, run);
     });
@@ -86,16 +85,16 @@ public class CanonicalizationJob implements Job {
       .fireCanonicalizer(tmp.getRun().getRevision().getSha1(),
         tmp.getRun().getInputConfiguration().getContent(), tmp.getFormulas(), tmp.getRun());
 
-    final var postProcessors = postProcessorRegistry.getProcessors(Collections.emptyList());
     result.forEach(co -> {
-      postProcessors.forEach(pp -> pp.process(co));
-
+      log.debug("Building document for canonic output '{}'", co::getHash);
       final var docXml = this.xmlDocumentService.buildDocument(co);
 
+      log.debug("Preparing similarity output for {}", co::getHash);
       final var sf = similarityService.generateSimilarity(docXml);
       co.setSimilarityForm(sf);
-      co.setHash(DigestUtils.sha256Hex(co.getRaw().getBytes()));
+
       co.setPretty(this.xmlDocumentService.prettyPrintToString(docXml));
+      log.debug("CO {} pretty printed", co::getHash);
     });
 
 
@@ -115,7 +114,9 @@ public class CanonicalizationJob implements Job {
   @RequiredArgsConstructor
   class CanonicData {
 
+    @NonNull
     private final List<Formula> formulas;
+    @NonNull
     private final ApplicationRun run;
   }
 }

@@ -30,25 +30,30 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class RemoteRepositoryServiceImpl implements RemoteRepositoryService {
+
   private final LocationProperties locationProperties;
 
   @Override
   public Path cloneAndCheckout(String revision) {
     Git git = null;
     final var location = locationProperties.getBuildFolder().resolve(revision);
+    log.info("Location {} chosen for revision {}", () -> location, () -> revision);
     try {
       if (!Files.exists(location)) {
+        log.debug("Git repo does not exist at location {} calling git clone.", () -> location);
         Files.createDirectories(location);
         git = Git.cloneRepository()
           .setURI("https://github.com/MIR-MU/MathMLCan")
           .setDirectory(location.toFile())
           .call();
       } else {
+        log.debug("Git repo found at {} calling reset hard", () -> location);
         git = Git.open(location.toFile());
         git.reset().setMode(ResetType.HARD).call();
       }
 
       git.checkout().setName(revision).call();
+      log.info("Revision '{}' checked out", () -> revision);
 
       if (!git.getRepository().resolve("HEAD").name().equals(revision)) {
         throw new RuntimeException("invalid checkout");
@@ -58,7 +63,8 @@ public class RemoteRepositoryServiceImpl implements RemoteRepositoryService {
     } catch (Exception e) {
       log.fatal(e);
     } finally {
-      if(git != null) {
+      if (git != null) {
+        log.trace("Closing git location {}", location);
         git.close();
       }
     }

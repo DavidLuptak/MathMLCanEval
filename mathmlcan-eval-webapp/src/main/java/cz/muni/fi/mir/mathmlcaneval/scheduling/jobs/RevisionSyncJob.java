@@ -41,15 +41,20 @@ public class RevisionSyncJob extends AbstractRevisionSyncJob {
   @Override
   List<RepositoryCommit> filteredCommitsToImport() throws IOException {
     CommitService commitService = new CommitService();
+    log.info("About to filter revision fetched from remote git repository.");
 
     List<RepositoryCommit> data;
     if (!StringUtils.isEmpty(this.revisionId)) {
+      log.info("Specific revision is set for this job. Revision {} will be found and imported",
+        () -> revisionId);
       data = commitService
         .getCommits(getRepository())
         .stream()
         .filter(rc -> rc.getSha().equals(revisionId))
         .collect(Collectors.toList());
     } else {
+      log.info("No specific revision set for this job. Finding  revision between dates {} and {}",
+        () -> dateFrom, () -> dateTo);
       data = commitService
         .getCommits(getRepository())
         .stream()

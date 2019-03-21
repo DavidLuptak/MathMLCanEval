@@ -67,6 +67,9 @@ public class MavenServiceImpl implements MavenService {
         request.setGoals(MAVEN_GOALS);
         request.setProperties(properties);
 
+        log.info("Maven Goals, properties were set for build process for revision {}",
+          () -> revision);
+
         return invoker.execute(request);
       }, pom);
     } catch (IOException ex) {
@@ -76,6 +79,7 @@ public class MavenServiceImpl implements MavenService {
 
 
   private String version(Path pom) throws Exception {
+    log.trace("Finding version for pom file {}", () -> pom);
     final var doc = factory.newDocumentBuilder().parse(pom.toFile());
     final var expr = xpath.compile("/project/version");
 
@@ -88,12 +92,15 @@ public class MavenServiceImpl implements MavenService {
     throws IOException {
     //FileLock lock = null;
     try (FileChannel channel = FileChannel.open(pom)) {
+      log.info("Channel lock acquired for maven installation for {}", () -> pom);
       //lock = channel.lock();
       final var result = mavenFunction.runMaven(this.invoker);
+      log.debug("Maven invoked checking result code");
       if (result.getExitCode() != 0) {
         log.warn("Maven has failed");
         throw new RuntimeException("maven has failed");
       } else {
+        log.info("Maven build for pom {} has been successful", () -> pom);
         try {
           return Files
             .newInputStream(pom.getParent()

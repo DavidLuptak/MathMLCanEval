@@ -64,6 +64,7 @@ public abstract class AbstractRevisionSyncJob implements Job {
   abstract List<RepositoryCommit> filteredCommitsToImport() throws IOException;
 
   protected Repository getRepository() throws IOException {
+    log.info("Fetching repository details");
     for (Repository r : new RepositoryService().getRepositories("MIR-MU")) {
       if (r.getName().equals("MathMLCan")) {
         return r;
@@ -80,23 +81,28 @@ public abstract class AbstractRevisionSyncJob implements Job {
       final var counter = new AtomicInteger(0);
 
       for (RepositoryCommit rc : filteredCommitsToImport()) {
+        log.info("Revision '{}' will be checked and deployed", rc.getCommit()::getSha);
         taskExecutor.submitListenable(new CheckoutDeployBuildSubTask(rc)).addCallback(
           new ListenableFutureCallback<Object>() {
             @Override
             public void onFailure(Throwable throwable) {
+              log.warn("Revision {} subtask finished. But failed", rc.getCommit()::getSha);
               counter.incrementAndGet();
             }
 
             @Override
             public void onSuccess(Object o) {
+              log.info("Revision {} subtask finished", rc.getCommit()::getSha);
               counter.incrementAndGet();
             }
           });
       }
 
       while(counter.get() != commits.size()) {
+        log.trace("Waiting until all revision have finished current status {}/{}", counter::get, commits::size);
         TimeUnit.MILLISECONDS.sleep(1500L);
       }
+      log.info("Sync revision job done.");
     } catch (IOException ex) {
       log.error(ex);
     } catch (InterruptedException ex) {
@@ -112,9 +118,12 @@ public abstract class AbstractRevisionSyncJob implements Job {
     @Override
     public void run() {
       try {
+        log.info("Preparing remote repository service for revision {}", repositoryCommit::getSha);
         final var revision = remoteRepositoryService.cloneAndCheckout(repositoryCommit.getSha());
 
+        log.info("Preparing maven service for revision {}", repositoryCommit::getSha);
         final var artifact = mavenService.invokeMavenBuild(revision);
+        log.info("Preparing local deployment service for revision {}", repositoryCommit::getSha);
         deployService.deploy(artifact, repositoryCommit.getSha());
 
         transactionTemplate.execute(new TransactionCallbackWithoutResult() {
@@ -125,8 +134,9 @@ public abstract class AbstractRevisionSyncJob implements Job {
             db.setCommitTime(commitTime(repositoryCommit.getCommit().getCommitter().getDate()));
             db.setSyncTime(LocalDateTime.now());
             db.setName(repositoryCommit.getSha());
-
             revisionRepository.save(db);
+
+            log.info("Revision {} stored with id {}", db::getSha1, db::getId);
           }
         });
       } catch (Exception e) {

@@ -1,8 +1,10 @@
 package cz.muni.fi.mir.mathmlcaneval.support;
 
 import java.util.Arrays;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 
+@Log4j2
 @Component
 public class FileValidatorImpl implements FileValidator {
   //50 4B 03 04
@@ -11,6 +13,7 @@ public class FileValidatorImpl implements FileValidator {
 
   @Override
   public boolean isValid(byte[] header, FileType fileType) {
+    log.trace("Checking if {} is valid header for {}", () -> Arrays.toString(header), () -> fileType);
     if(fileType == FileType.ZIP) {
       return Arrays.equals(header, ZIP_HEADER);
     } else {

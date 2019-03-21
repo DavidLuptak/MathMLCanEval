@@ -24,12 +24,14 @@ import java.util.List;
 import java.util.Map;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import mikera.vectorz.AVector;
 import mikera.vectorz.Vectorz;
 import org.springframework.stereotype.Service;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 
+@Log4j2
 @Service
 @RequiredArgsConstructor
 public class SimilarityServiceImpl implements SimilarityService {
@@ -38,10 +40,11 @@ public class SimilarityServiceImpl implements SimilarityService {
 
   @Override
   public SimilarityForm generateSimilarity(Document document) {
+    log.info("Creating similarity forms");
     final var result = new SimilarityForm();
     final var forms = new Forms();
 
-    countTravel(document.getDocumentElement(), forms);
+    travel(document.getDocumentElement(), forms);
 
     result.setVectorForm(toVector(forms.getMap()).toNormal().asDoubleArray());
     result.setTextForm(forms.getStrings().toString());
@@ -59,7 +62,7 @@ public class SimilarityServiceImpl implements SimilarityService {
   }
 
 
-  private void countTravel(Node node, Forms forms) {
+  private void travel(Node node, Forms forms) {
     if (node == null) {
       return;
     }
@@ -74,7 +77,7 @@ public class SimilarityServiceImpl implements SimilarityService {
         forms.pushText(currentNode.getTextContent());
       }
 
-      countTravel(currentNode, forms);
+      travel(currentNode, forms);
     }
   }
 

@@ -18,14 +18,17 @@ package cz.muni.fi.mir.mathmlcaneval.scheduling.jobs;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.extern.log4j.Log4j2;
 import org.eclipse.egit.github.core.RepositoryCommit;
 import org.eclipse.egit.github.core.service.CommitService;
 
+@Log4j2
 public class LatestRevisionSyncJob extends AbstractRevisionSyncJob {
 
   @Override
   List<RepositoryCommit> filteredCommitsToImport() throws IOException {
     CommitService cs = new CommitService();
+    log.info("About to filter all revisions to latest one.");
 
     return cs.getCommits(getRepository()).stream().limit(1).collect(Collectors.toList());
   }

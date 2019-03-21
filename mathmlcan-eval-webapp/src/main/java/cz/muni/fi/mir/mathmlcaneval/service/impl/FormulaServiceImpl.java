@@ -89,6 +89,7 @@ public class FormulaServiceImpl implements FormulaService {
   @Transactional
   @Override
   public List<Long> massImport(FileImportRequest request) {
+    log.debug("Mass imported stared with {} files", () -> request.getFile().length);
     final var formulas = new ArrayList<Formula>();
     FormulaCollection formulaCollection = null;
     for (MultipartFile file : request.getFile()) {
@@ -101,40 +102,51 @@ public class FormulaServiceImpl implements FormulaService {
             case "application/zip":
             case "application/x-zip-compressed": {
               if (fileValidator.isValid(header, FileType.ZIP)) {
+                log.debug("File resolved to zip with valid header.");
                 try (final var zip = new ZipArchiveInputStream(buffer)) {
                   ZipArchiveEntry ze = null;
                   while ((ze = zip.getNextZipEntry()) != null) {
+                    log.trace("Handling file {} from zip file", ze::getName);
                     final var formula = fromRaw(convert(zip));
-                    formula.setNote("From file: "+ ze.getName());
+                    formula.setNote("From file: " + ze.getName());
                     formulas.add(formula);
+
+                    log.debug("Formula '{}' added to result set", formula::getHashValue);
                   }
                 } catch (IOException ex) {
-                  System.err.println(ex);
+                  log.error(ex);
                 }
 
-                if(file.getOriginalFilename() != null && file.getOriginalFilename().startsWith("collection_")) {
-                  String collectionName = StringUtils.substringAfter(file.getOriginalFilename(), "collection_");
+                if (file.getOriginalFilename() != null && file.getOriginalFilename()
+                  .startsWith("collection_")) {
+                  String collectionName = StringUtils
+                    .substringAfter(file.getOriginalFilename(), "collection_");
                   collectionName = StringUtils.replaceChars(collectionName, '_', ' ');
                   formulaCollection = new FormulaCollection();
                   formulaCollection.setName(collectionName);
                   formulaCollection.setVisibleToPublic(false);
-                  formulaCollection.setNote(String.format("Imported on %s from file %s", LocalDateTime.now().toString(), file.getOriginalFilename()));;
+                  formulaCollection.setNote(String
+                    .format("Imported on %s from file %s", LocalDateTime.now().toString(),
+                      file.getOriginalFilename()));
+
+                  log.info("Imported formulas from zip file will be added to collecton '{}'", formulaCollection::getName);
                   formulaCollection.setOwnedBy(new User(securityService.getCurrentUserId(false)));
                 }
               } else {
-                System.out.println("invalid zip file");
+                log.warn("Imported file appearing to be a zip has wrong header.");
               }
             }
             break;
             case "text/xml":
             case "application/xml": {
               if (fileValidator.isValid(header, FileType.XML)) {
+                log.debug("File resolved to xml with valid header.");
                 final var formula = fromRaw(IOUtils.toString(file.getInputStream(), "UTF-8"));
-                formula.setNote("From file: "+ file.getOriginalFilename());
+                formula.setNote("From file: " + file.getOriginalFilename());
 
                 formulas.add(formula);
               } else {
-                System.out.println("invalid xml");
+                log.warn("Imported file appearing to be a xml has wrong header.");
               }
             }
             break;
@@ -142,34 +154,44 @@ public class FormulaServiceImpl implements FormulaService {
               throw new RuntimeException();
           }
         } catch (IOException ex) {
-          System.err.println(ex);
+          log.error(ex);
         }
       } else {
-        System.out.println("missing content type");
+        log.warn("Imported file has missing content type and won't be imported.");
       }
     }
 
+    log.trace("Checking if imported formulas are not already imported.");
     final var existing = formulaRepository
       .getFormulasByHashes(formulas.stream()
         .map(Formula::getHashValue).collect(Collectors.toList()));
 
+    log.trace("Total {} formulas found", existing::size);
+
     final var result = new ArrayList<Long>();
 
-    for(Formula imported : formulas) {
-      if(!existing.contains(imported.getHashValue())) {
+    for (Formula imported : formulas) {
+      if (!existing.contains(imported.getHashValue())) {
+        log.info("Formula {} is new and will be saved", imported::getHashValue);
         formulaRepository.save(imported);
 
-        if(formulaCollection != null) {
+        if (formulaCollection != null) {
           formulaCollection.getFormulas().add(imported);
+          log.info("Formula {} will be added to collection", formulaCollection::getName);
         }
 
         result.add(imported.getId());
+      } else {
+        log.info("Skipping formula {} as it already exists in database.", imported::getHashValue);
       }
     }
 
-    if(formulaCollection != null) {
+    if (formulaCollection != null && !formulaCollection.getFormulas().isEmpty()) {
       formulaCollectionRepository.save(formulaCollection);
+      log.info("Set of {} formulas saved to Collection '{}'", formulaCollection.getFormulas()::size, formulaCollection::getName);
     }
+
+    log.info("Total {} formulas were imported", result::size);
 
     return result;
   }
@@ -181,6 +203,8 @@ public class FormulaServiceImpl implements FormulaService {
     result.setInsertTime(LocalDateTime.now());
     final var document = xmlDocumentService.buildDocument(raw);
     result.setPretty(xmlDocumentService.prettyPrintToString(document));
+
+    log.trace("Checksum '{}' generated for raw formula {}", result::getHashValue, result::getRaw);
 
     return result;
   }
