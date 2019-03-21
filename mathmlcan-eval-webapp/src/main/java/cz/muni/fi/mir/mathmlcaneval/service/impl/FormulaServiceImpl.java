@@ -104,7 +104,9 @@ public class FormulaServiceImpl implements FormulaService {
                 try (final var zip = new ZipArchiveInputStream(buffer)) {
                   ZipArchiveEntry ze = null;
                   while ((ze = zip.getNextZipEntry()) != null) {
-                    formulas.add(fromRaw(convert(zip)));
+                    final var formula = fromRaw(convert(zip));
+                    formula.setNote("From file: "+ ze.getName());
+                    formulas.add(formula);
                   }
                 } catch (IOException ex) {
                   System.err.println(ex);
@@ -127,7 +129,10 @@ public class FormulaServiceImpl implements FormulaService {
             case "text/xml":
             case "application/xml": {
               if (fileValidator.isValid(header, FileType.XML)) {
-                formulas.add(fromRaw(IOUtils.toString(file.getInputStream(), "UTF-8")));
+                final var formula = fromRaw(IOUtils.toString(file.getInputStream(), "UTF-8"));
+                formula.setNote("From file: "+ file.getOriginalFilename());
+
+                formulas.add(formula);
               } else {
                 System.out.println("invalid xml");
               }
