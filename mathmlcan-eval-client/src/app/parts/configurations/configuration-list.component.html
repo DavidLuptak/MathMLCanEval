@@ -58,28 +58,24 @@
   </div>
   <div flex>
     <mat-card>
-      <mat-card-header>
-        <mat-card-title>
-          <div layout="row" layout-align="start center">
-            <span flex>{{translations.configs.preview}}</span>
-            <span>
-          <button mat-icon-button
-                  matTooltip="Card settings"
-                  [mat-menu-trigger-for]="settings1">
-            <mat-icon>more_vert</mat-icon>
-          </button>
-          <mat-menu xPosition="before" #settings1="matMenu">
-            <button mat-menu-item> todo</button>
-          </mat-menu>
-        </span>
-          </div>
-        </mat-card-title>
+      <mat-card-header layout="row">
+        <mat-card-title>{{translations.configs.preview}}</mat-card-title>
+        <div flex></div>
+        <button mat-icon-button
+                matTooltip="Card settings"
+                [mat-menu-trigger-for]="settings1">
+          <mat-icon>more_vert</mat-icon>
+        </button>
+        <mat-menu xPosition="before" #settings1="matMenu">
+          <button mat-menu-item (click)="renameConfiguration()"> !rename</button>
+          <button mat-menu-item *ngIf="appRunsDs.data.length === 0"> !delete</button>
+        </mat-menu>
       </mat-card-header>
       <mat-divider></mat-divider>
       <mat-card-content>
         <!--<td-highlight lang="xml" #preview *ngIf="previewSelected"></td-highlight>-->
         <configuration-preview-component
-          [configurationEmitter]="selectedConfiguration"></configuration-preview-component>
+          [configurationEmitter]="selectConfigurationEvent"></configuration-preview-component>
       </mat-card-content>
     </mat-card>
   </div>

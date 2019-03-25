@@ -7,13 +7,17 @@ import {MatDialog, MatTableDataSource} from '@angular/material';
 import {NewConfigurationComponent} from './new-configuration.component';
 import {AppRunResponse} from '../../models/app-run.response';
 import {Page} from '../../models/page';
+import {RenameConfigurationComponent} from './rename-configuration.component';
+import {filter} from 'rxjs/operators';
+import {generate, observe} from 'fast-json-patch';
 
 @Component({
   selector: 'configuration-list',
   templateUrl: 'configuration-list.component.html'
 })
 export class ConfigurationListComponent extends TableComponent<ConfigurationResponse> implements OnInit {
-  selectedConfiguration = new EventEmitter<ConfigurationResponse>();
+  selectConfigurationEvent = new EventEmitter<ConfigurationResponse>();
+  selectedConfiguration: ConfigurationResponse;
   displayedColumns: string[] = ['id', 'name', 'owner'];
 
 
@@ -37,7 +41,8 @@ export class ConfigurationListComponent extends TableComponent<ConfigurationResp
   selectConfig(id: number): void {
     for (const c of this.dataSource.data) {
       if (c.id === id) {
-        this.selectedConfiguration.emit(c);
+        this.selectConfigurationEvent.emit(c);
+        this.selectedConfiguration = c;
 
         this.configurationService
         .getRunsUsedByConfiguration(c.id)
@@ -46,6 +51,31 @@ export class ConfigurationListComponent extends TableComponent<ConfigurationResp
         break;
       }
     }
+  }
+
+  renameConfiguration(): void {
+    const observer = observe(this.selectedConfiguration);
+    const ref = this.dialog.open(RenameConfigurationComponent, {
+      data: {
+        configuration: this.selectedConfiguration
+      }
+    });
+
+    ref.afterClosed()
+    .pipe(
+      filter(Boolean)
+    )
+    .subscribe((res: any) => {
+      const changes = generate(observer);
+      if(changes && changes.length) {
+        // console.log(changes);
+        this.configurationService
+        .patch(this.selectedConfiguration.id, changes)
+        .subscribe((res: ConfigurationResponse) => console.log('ok'));
+      } else {
+        console.log('no changes detected');
+      }
+    });
   }
 
   newConfigModal(): void {

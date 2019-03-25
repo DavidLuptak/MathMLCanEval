@@ -15,6 +15,7 @@
  */
 package cz.muni.fi.mir.mathmlcaneval.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -40,6 +41,7 @@ public class InputConfiguration extends BaseEntity {
   @Column(name = "visible_to_public")
   private Boolean visibleToPublic;
 
+  @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
   @ManyToOne(fetch = FetchType.LAZY)
   @JoinColumn(name = "owned_by")
   private User ownedBy;

@@ -17,6 +17,8 @@ package cz.muni.fi.mir.mathmlcaneval.service.impl;
 
 import static cz.muni.fi.mir.mathmlcaneval.repository.specs.ConfigurationSpecification.publicOrMine;
 
+import com.github.fge.jsonpatch.JsonPatch;
+import cz.muni.fi.mir.mathmlcaneval.domain.InputConfiguration;
 import cz.muni.fi.mir.mathmlcaneval.domain.User;
 import cz.muni.fi.mir.mathmlcaneval.mappers.ConfigurationMapper;
 import cz.muni.fi.mir.mathmlcaneval.repository.InputConfigurationRepository;
@@ -24,6 +26,7 @@ import cz.muni.fi.mir.mathmlcaneval.requests.CreateConfigurationRequest;
 import cz.muni.fi.mir.mathmlcaneval.responses.ConfigurationResponse;
 import cz.muni.fi.mir.mathmlcaneval.security.SecurityService;
 import cz.muni.fi.mir.mathmlcaneval.service.InputConfigurationService;
+import cz.muni.fi.mir.mathmlcaneval.service.PatchingService;
 import cz.muni.fi.mir.mathmlcaneval.support.ReadOnly;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +41,7 @@ public class InputConfigurationServiceImpl implements InputConfigurationService 
 
   private final ConfigurationMapper configurationMapper;
   private final InputConfigurationRepository inputConfigurationRepository;
+  private final PatchingService patchingService;
   private final SecurityService securityService;
 
   @Override
@@ -65,5 +69,17 @@ public class InputConfigurationServiceImpl implements InputConfigurationService 
     final var saved = inputConfigurationRepository.save(preSave);
 
     return configurationMapper.map(saved);
+  }
+
+  @Transactional
+  @Override
+  public ConfigurationResponse update(Long id, JsonPatch patch) {
+    final var config = inputConfigurationRepository
+      .findById(id)
+      .orElseThrow();
+
+    final var result = patchingService.patch(patch, config, InputConfiguration.class);
+
+    return configurationMapper.map(inputConfigurationRepository.save(result));
   }
 }

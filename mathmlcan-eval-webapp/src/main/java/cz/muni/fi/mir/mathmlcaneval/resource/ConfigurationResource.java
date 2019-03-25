@@ -15,11 +15,14 @@
  */
 package cz.muni.fi.mir.mathmlcaneval.resource;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.github.fge.jsonpatch.JsonPatch;
 import cz.muni.fi.mir.mathmlcaneval.requests.CreateConfigurationRequest;
 import cz.muni.fi.mir.mathmlcaneval.responses.ApplicationRunResponse;
 import cz.muni.fi.mir.mathmlcaneval.responses.ConfigurationResponse;
 import cz.muni.fi.mir.mathmlcaneval.service.ApplicationRunService;
 import cz.muni.fi.mir.mathmlcaneval.service.InputConfigurationService;
+import cz.muni.fi.mir.mathmlcaneval.service.support.JsonPatchParser;
 import java.net.URI;
 import java.util.List;
 import javax.validation.Valid;
@@ -28,6 +31,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -58,5 +62,12 @@ public class ConfigurationResource {
   @GetMapping("/{configId}/app-runs")
   public List<ApplicationRunResponse> runsWithConfiguration(@PathVariable Long configId) {
     return applicationRunService.getRunsByConfiguration(configId);
+  }
+
+  @PatchMapping("/{id}")
+  public ResponseEntity<ConfigurationResponse> patch(@PathVariable Long id, @RequestBody JsonNode input) {
+    JsonPatch patch = JsonPatchParser.validateInput(input, null, null);
+
+    return ResponseEntity.ok(inputConfigurationService.update(id, patch));
   }
 }
