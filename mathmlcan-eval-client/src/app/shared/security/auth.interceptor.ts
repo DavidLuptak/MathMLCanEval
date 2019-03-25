@@ -4,14 +4,12 @@ import {
   HttpEvent,
   HttpHandler,
   HttpInterceptor,
-  HttpRequest,
-  HttpResponse
+  HttpRequest
 } from '@angular/common/http';
 import {Observable, throwError} from 'rxjs';
 import {SecurityService} from './security.service';
 import {environment} from '../../../environments/environment';
-import {catchError, map} from 'rxjs/operators';
-import {TdDialogService} from '@covalent/core';
+import {catchError} from 'rxjs/operators';
 import {MatSnackBar} from '@angular/material';
 
 const TOKEN_URL = `${environment.apiUrl}/api/oauth/token`;
@@ -37,7 +35,8 @@ export class AuthInterceptor implements HttpInterceptor {
           new RegExp(/^\/api\/revisions\/latest$/i),
           new RegExp(/^\/api\/app-runs$/i)]],
         ['PATCH', [new RegExp(/^\/api\/revisions\/\d+$/i),
-          new RegExp(/^\/api\/configurations\/\d+$/i)]]
+          new RegExp(/^\/api\/configurations\/\d+$/i)]],
+        ['DELETE', [new RegExp(/^\/api\/configurations\/\d+$/i)]]
       ]
     );
   }
@@ -45,24 +44,24 @@ export class AuthInterceptor implements HttpInterceptor {
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     // todo https://stackoverflow.com/a/45932412/1203690
 
-    if(req.url !== TOKEN_URL && req.url !== REVOKE_URL) {
+    if (req.url !== TOKEN_URL && req.url !== REVOKE_URL) {
       for (const resource of this.protectedResources.get(req.method)) {
-        if(resource.test(this.path(req.url))) {
-         req = req.clone({
-              headers: req.headers.set('Authorization', `Bearer ${this.securityService.getToken()}`)
-            });
+        if (resource.test(this.path(req.url))) {
+          req = req.clone({
+            headers: req.headers.set('Authorization', `Bearer ${this.securityService.getToken()}`)
+          });
         }
       }
     }
 
     return next.handle(req).pipe(
       catchError((error: HttpErrorResponse) => {
-        if(error.status === 401) {
+        if (error.status === 401) {
           this.snackService.open('Token expired. You have been logged out.', 'Close', {
             duration: 3000
           });
           this.securityService.clearLocalStorage();
-        } else if(error.status === 403) {
+        } else if (error.status === 403) {
           this.securityService.deniedModal();
         }
         let data = {};
@@ -72,9 +71,9 @@ export class AuthInterceptor implements HttpInterceptor {
         };
         console.log(data);
 
-      /*  if(data.reason === 'invalid_token') {
-          this.securityService.logout();
-        }*/
+        /*  if(data.reason === 'invalid_token') {
+            this.securityService.logout();
+          }*/
         return throwError(error);
       }));
   }

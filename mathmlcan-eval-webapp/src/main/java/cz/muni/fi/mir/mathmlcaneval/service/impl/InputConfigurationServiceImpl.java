@@ -21,6 +21,7 @@ import com.github.fge.jsonpatch.JsonPatch;
 import cz.muni.fi.mir.mathmlcaneval.domain.InputConfiguration;
 import cz.muni.fi.mir.mathmlcaneval.domain.User;
 import cz.muni.fi.mir.mathmlcaneval.mappers.ConfigurationMapper;
+import cz.muni.fi.mir.mathmlcaneval.repository.ApplicationRunRepository;
 import cz.muni.fi.mir.mathmlcaneval.repository.InputConfigurationRepository;
 import cz.muni.fi.mir.mathmlcaneval.requests.CreateConfigurationRequest;
 import cz.muni.fi.mir.mathmlcaneval.responses.ConfigurationResponse;
@@ -38,9 +39,11 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class InputConfigurationServiceImpl implements InputConfigurationService {
+  private static final Long ZERO = 0L;
 
   private final ConfigurationMapper configurationMapper;
   private final InputConfigurationRepository inputConfigurationRepository;
+  private final ApplicationRunRepository applicationRunRepository;
   private final PatchingService patchingService;
   private final SecurityService securityService;
 
@@ -81,5 +84,15 @@ public class InputConfigurationServiceImpl implements InputConfigurationService 
     final var result = patchingService.patch(patch, config, InputConfiguration.class);
 
     return configurationMapper.map(inputConfigurationRepository.save(result));
+  }
+
+  @Transactional
+  @Override
+  public void delete(Long id) {
+    if(applicationRunRepository.countByInputConfiguration(id)) {
+      throw new RuntimeException();
+    } else {
+      this.inputConfigurationRepository.deleteById(id);
+    }
   }
 }

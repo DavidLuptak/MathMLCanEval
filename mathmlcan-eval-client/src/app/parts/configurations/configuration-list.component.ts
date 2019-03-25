@@ -78,6 +78,19 @@ export class ConfigurationListComponent extends TableComponent<ConfigurationResp
     });
   }
 
+  deleteConfiguration(): void {
+    console.log('clicked');
+    this.configurationService
+    .delete(this.selectedConfiguration.id)
+    .subscribe(() => {
+      console.log('ok');
+      this.dataSource
+      .data = this.dataSource.data.filter(e => e.id !== this.selectedConfiguration.id);
+
+      this.selectedConfiguration = null;
+    })
+  }
+
   newConfigModal(): void {
     const ref = this.dialog.open(NewConfigurationComponent, {
       minWidth: 550

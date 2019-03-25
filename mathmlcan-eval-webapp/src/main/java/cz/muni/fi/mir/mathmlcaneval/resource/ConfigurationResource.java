@@ -23,6 +23,7 @@ import cz.muni.fi.mir.mathmlcaneval.responses.ConfigurationResponse;
 import cz.muni.fi.mir.mathmlcaneval.service.ApplicationRunService;
 import cz.muni.fi.mir.mathmlcaneval.service.InputConfigurationService;
 import cz.muni.fi.mir.mathmlcaneval.service.support.JsonPatchParser;
+import cz.muni.fi.mir.mathmlcaneval.support.Response;
 import java.net.URI;
 import java.util.List;
 import javax.validation.Valid;
@@ -30,6 +31,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -69,5 +71,12 @@ public class ConfigurationResource {
     JsonPatch patch = JsonPatchParser.validateInput(input, null, null);
 
     return ResponseEntity.ok(inputConfigurationService.update(id, patch));
+  }
+
+  @DeleteMapping("/{id}")
+  public ResponseEntity<Response> delete(@PathVariable Long id) {
+    this.inputConfigurationService.delete(id);
+
+    return Response.OK;
   }
 }

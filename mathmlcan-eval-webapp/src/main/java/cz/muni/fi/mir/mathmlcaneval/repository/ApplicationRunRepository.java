@@ -30,4 +30,7 @@ public interface ApplicationRunRepository extends JpaRepository<ApplicationRun, 
 
   @Query("SELECT ar FROM ApplicationRun ar WHERE ar.inputConfiguration.id = :configId")
   List<ApplicationRun> findByConfiguration(Long configId);
+
+  @Query("SELECT CASE WHEN COUNT(ar.id) > 0 THEN true ELSE false END FROM ApplicationRun ar WHERE ar.inputConfiguration.id = :configId")
+  Boolean countByInputConfiguration(Long configId);
 }

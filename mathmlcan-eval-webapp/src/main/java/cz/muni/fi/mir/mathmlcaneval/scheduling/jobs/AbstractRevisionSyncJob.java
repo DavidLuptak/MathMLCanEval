@@ -100,7 +100,7 @@ public abstract class AbstractRevisionSyncJob implements Job {
 
       while(counter.get() != commits.size()) {
         log.trace("Waiting until all revision have finished current status {}/{}", counter::get, commits::size);
-        TimeUnit.MILLISECONDS.sleep(1500L);
+        TimeUnit.SECONDS.sleep(5L);
       }
       log.info("Sync revision job done.");
     } catch (IOException ex) {

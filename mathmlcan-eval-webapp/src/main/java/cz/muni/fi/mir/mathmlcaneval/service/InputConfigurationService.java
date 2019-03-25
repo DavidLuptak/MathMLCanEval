@@ -22,4 +22,6 @@ import cz.muni.fi.mir.mathmlcaneval.responses.ConfigurationResponse;
 public interface InputConfigurationService extends BaseService<ConfigurationResponse, CreateConfigurationRequest> {
 
   ConfigurationResponse update(Long id, JsonPatch patch);
+
+  void delete(Long id);
 }

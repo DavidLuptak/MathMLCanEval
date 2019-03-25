@@ -25,7 +25,11 @@ export abstract class AbstractService<T extends Resource, ID> {
   }
 
   public delete(id: ID): Observable<Boolean> {
-    return null;
+    return this._httpClient
+      .delete(`${this.resource}/${id}`, {observe: 'response'})
+      .pipe(
+        map((data: HttpResponse<any>) => true)
+      );
   }
 
   public get(id: ID): Observable<T> {
