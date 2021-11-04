@@ -1,0 +1,37 @@
+version: '3.3'
+
+volumes:
+  postgres-data:
+
+services:
+  postgresql:
+    image: postgres
+    container_name: mathmleval_db
+    environment:
+      - POSTGRES_USER=mathml
+      - POSTGRES_PASSWORD=mathml
+      - POSTGRES_DB=mathmleval
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    expose:
+      - 5432
+    ports:
+      - "55432:5432"
+  server:
+    image: fimuni/mathmlcan-eval-webapp
+    container_name: mathmleval_be
+    depends_on:
+      - mathmleval_db
+    environment:
+      - POSTGRES_DB_HOST=postgresql
+      - SERVER_PORT=8080
+    ports:
+      - "8080:8080"
+  frontend:
+    image: fimuni/mathcaleval-fe
+    container_name: mathmleval_fe
+    depends_on:
+      - mathmleval_db
+      - server
+    ports:
+      - "9080:80"

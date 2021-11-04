@@ -14,43 +14,25 @@
   <build>
     <plugins>
       <plugin>
-        <groupId>com.github.eirslett</groupId>
-        <artifactId>frontend-maven-plugin</artifactId>
-        <version>1.6</version>
-        <configuration>
-          <!-- node version starts with previs v -->
-          <nodeVersion>v11.11.0</nodeVersion>
-          <npmVersion>$6.9.0</npmVersion>
-          <workingDirectory>src</workingDirectory>
-        </configuration>
-
+        <groupId>com.spotify</groupId>
+        <artifactId>dockerfile-maven-plugin</artifactId>
         <executions>
           <execution>
-            <id>install node and npm</id>
+            <id>build</id>
+            <phase>package</phase>
             <goals>
-              <goal>install-node-and-npm</goal>
+              <goal>build</goal>
             </goals>
-          </execution>
-
-          <execution>
-            <id>npm install</id>
-            <goals>
-              <goal>npm</goal>
-            </goals>
-          </execution>
-
-          <execution>
-            <id>npm run build</id>
-            <goals>
-              <goal>npm</goal>
-            </goals>
-
             <configuration>
-              <arguments>run build</arguments>
+              <tag>${maven.build.timestamp}</tag>
+              <tag>latest</tag>
+              <finalName>${project.artifactId}</finalName>
+              <repository>fimuni/mathcaleval-fe</repository>
+              <verbose>true</verbose>
             </configuration>
           </execution>
-
         </executions>
+
       </plugin>
     </plugins>
 

@@ -18,15 +18,16 @@ package cz.muni.fi.mir.mathmlcaneval.test;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-@ExtendWith(SpringExtension.class)
-@MathTest
+
 public class ConfigurationResourceTest extends AbstractResourceTest {
 
   @Test
+  @Disabled
   void testGetall() throws Exception {
     this.mockMvc
       .perform(get("/api/configurations"))
@@ -35,6 +36,7 @@ public class ConfigurationResourceTest extends AbstractResourceTest {
   }
 
   @Test
+  @Disabled
   void testCreateConfigDenied() throws Exception {
     //super.isDenied(post("/api/configurations").);
   }

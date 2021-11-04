@@ -1,9 +1,8 @@
 
 # Maven
-/mathmlcan-eval-client/target/
-/mathmlcan-eval-client/node_modules/
-/mathmlcan-eval-webapp/target/
-/target/
+target
+node_modules
+node
 
 # IntelliJ project files
 *.iml
