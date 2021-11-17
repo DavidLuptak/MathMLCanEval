@@ -14,6 +14,26 @@ Canonicalizer.
  [mathmlcan]: https://github.com/MIR-MU/MathMLCan
  [mathmlcaneval]: https://mir.fi.muni.cz/mathml-normalization/#mathml-canonicalizer-evaluation
 
+
+How to build the project
+========================
+
+A possible way to reproduce the code is to run VM with Debian distro. We use
+[Stratus.FI](https://stratus.fi.muni.cz/) for this purpose. Follow the instructions
+to create your instance:
+
+1. Log in with faculty login and password
+2. Add your public SSH key (Settings > Auth)
+3. Instantiate VM template (Templates > VMs)
+   - Select `Debian 11 [CVTFI]`
+   - Increase Disk size to at least 8 GB
+4. SSH to the VM (from inside FI network, e.g. VPN FI)
+   - `ssh root@<IP>`, where `<IP>` is VM's IP
+5. `git clone https://github.com/DavidLuptak/MathMLCanEval.git`
+6. `cd MathMLCanEval`
+7. `./init.sh`
+8. Open `<IP>:9080`, where `<IP>` is VM's IP, in your browser and have fun!
+
 Citing MathMLCanEval
 ====================
 Text
