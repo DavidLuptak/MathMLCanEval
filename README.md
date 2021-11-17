@@ -31,8 +31,9 @@ to create your instance:
    - `ssh root@<IP>`, where `<IP>` is VM's IP
 5. `git clone https://github.com/DavidLuptak/MathMLCanEval.git`
 6. `cd MathMLCanEval`
-7. `./init.sh`
-8. Open `<IP>:9080`, where `<IP>` is VM's IP, in your browser and have fun!
+7. `git checkout v-2docker` (`v-2docker` should be the default branch, though)
+8. `./init.sh`
+9. Open `<IP>:9080`, where `<IP>` is VM's IP, in your browser and have fun!
 
 Citing MathMLCanEval
 ====================
