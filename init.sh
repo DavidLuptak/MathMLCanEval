@@ -14,12 +14,12 @@ apt update && sudo apt -y upgrade
 
 echo '## Install Java'
 # This should install OpenJDK 11 JDK
-apt install default-jdk
+apt -y install default-jdk
 # Verify the Java version
 java -version
 
 echo '## Install Maven'
-apt install maven
+apt -y install maven
 # Verify the Maven version
 mvn -version
 
@@ -27,14 +27,14 @@ echo '## Install Docker'
 # https://docs.docker.com/engine/install/debian/
 # Set up the repository
 # apt update
-apt install ca-certificates curl gnupg lsb-release
+apt -y install ca-certificates curl gnupg lsb-release
 curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
 echo \
   "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/debian \
   $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 # Install Docker Engine
 apt update
-apt install docker-ce docker-ce-cli containerd.io
+apt -y install docker-ce docker-ce-cli containerd.io
 # Verify that Docker Engine is installed correctly
 docker run hello-world
 
