@@ -1,5 +1,5 @@
-MathMLCanEval – A web application for evaluating the [MathML Canonicalizer][mathmlcan]
-======================================================================================
+# MathMLCanEval – A web application for evaluating the [MathML Canonicalizer][mathmlcan]
+
 [![CircleCI](https://circleci.com/gh/MIR-MU/MathMLCanEval/tree/master.svg?style=shield)][ci]
 
  [ci]: https://circleci.com/gh/MIR-MU/MathMLCanEval/tree/master (CircleCI)
@@ -15,8 +15,7 @@ Canonicalizer.
  [mathmlcaneval]: https://mir.fi.muni.cz/mathml-normalization/#mathml-canonicalizer-evaluation
 
 
-How to build the project
-========================
+## How to build the project
 
 A possible way to reproduce the code is to run VM with Debian distro. We use
 [Stratus.FI](https://stratus.fi.muni.cz/) for this purpose. Follow the instructions
@@ -35,16 +34,16 @@ to create your instance:
 8. `./init.sh`
 9. Open `<IP>:9080`, where `<IP>` is VM's IP, in your browser and have fun!
 
-Citing MathMLCanEval
-====================
-Text
-----
+## Citing MathMLCanEval
+
+### Text
+
 FORMÁNEK, David, Martin LÍŠKA, Michal RŮŽIČKA and Petr SOJKA. Normalization of
 Digital Mathematics Library Content. *CEUR Workshop Proceedings,* Aachen, 2012,
 vol. 921, October, pp. 91–103, ISSN 1613-0073. 
 
-BibTeX
-------
+### BibTeX
+
 ``` bib
 @inproceedings{ceur:921:05,
       title = {Normalization of Digital Mathematics Library Content},
