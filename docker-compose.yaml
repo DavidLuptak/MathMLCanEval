@@ -21,7 +21,7 @@ services:
     image: fimuni/mathmlcan-eval-webapp
     container_name: mathmleval_be
     depends_on:
-      - mathmleval_db
+      - postgresql
     environment:
       - POSTGRES_DB_HOST=postgresql
       - SERVER_PORT=8080
@@ -31,7 +31,7 @@ services:
     image: fimuni/mathcaleval-fe
     container_name: mathmleval_fe
     depends_on:
-      - mathmleval_db
+      - postgresql
       - server
     ports:
       - "9080:80"
